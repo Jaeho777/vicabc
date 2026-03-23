@@ -36,4 +36,7 @@ def create_app():
     from app.routes.story import story_bp
     app.register_blueprint(story_bp)
 
+    from app.routes.village import village_bp
+    app.register_blueprint(village_bp)
+
     return app

@@ -61,16 +61,28 @@
                         </td>
                     </tr>
                     
-                    <!-- CONV 행 -->
+                    <!-- Village 행 -->
                     <tr>
-                        <td class="text-center fw-bold" style="vertical-align: middle;">CONV</td>
-                        <td class="text-center" style="vertical-align: middle;">4</td>
-                        <td class="text-center" style="vertical-align: middle;">2023-05-05</td>
-                        <td class="text-center">
-                            <a href="#" class="btn btn-primary">시작</a>
+                        <td class="text-center fw-bold" style="vertical-align: middle;">Village</td>
+                        <td class="text-center" style="vertical-align: middle;">
+                            {% if village_latest %}
+                                {{ village_latest.level_label }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center" style="vertical-align: middle;">
+                            {% if village_latest %}
+                                {{ village_latest.exam_date.strftime('%Y-%m-%d') }}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td class="text-center">
-                            <a href="#" class="btn btn-primary">시작</a>
+                            <a href="{{ url_for('village.index') }}" class="btn btn-primary">시작</a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('village.exam') }}" class="btn btn-primary">시작</a>
                         </td>
                     </tr>
                 </tbody>

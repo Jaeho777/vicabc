@@ -8,3 +8,4 @@ from app.models.chapter import Chapter
 from app.models.story import Story
 from app.models.story_progress import StoryProgress
 from app.models.story_certification import StoryCertification
+from app.models.village_certification import VillageCertification

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Village - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="m-0">Village 대화 학습</h4>
+        </div>
+        <div class="card-body">
+            <p class="mb-4">
+                Village는 실제 질문과 답변 흐름으로 말하기 수준을 확인하는 대화형 영역입니다.
+                인증시험에 들어가면 바로 영어 인사로 대화가 시작되고, 사용자의 답변을 바탕으로 다음 질문이 이어집니다.
+            </p>
+
+            {% if latest_result %}
+            <div class="alert alert-info">
+                <strong>최근 결과:</strong> {{ latest_result.level_label }} /
+                {{ latest_result.score }}점 /
+                {{ latest_result.exam_date.strftime('%Y-%m-%d') }}
+            </div>
+            {% endif %}
+
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('village.exam') }}" class="btn btn-warning btn-lg text-dark">Village 인증시험 시작</a>
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary btn-lg">대시보드로</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}Village 인증시험 - VOCA 애플리케이션{% endblock %}
+
+{% block extra_head %}
+<style>
+    .prompt-card,
+    .history-card,
+    .result-card {
+        border-radius: 14px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+    .recording-indicator {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background: #dc3545;
+        border-radius: 50%;
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
+    .conversation-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 14px 0;
+    }
+    .conversation-item:last-child {
+        border-bottom: 0;
+    }
+    .score-badge {
+        font-size: 0.95rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card prompt-card mb-4">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h4 class="m-0">Village 인증시험</h4>
+                    <span class="badge bg-dark" id="turn-badge">1 / {{ max_turns }}</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-2">시험에 들어오면 바로 영어 대화가 시작됩니다. 질문을 듣고 영어로 답하세요.</p>
+                    <div class="alert alert-secondary" id="assistant-prompt">{{ initial_prompt }}</div>
+
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                        <button id="btn-replay" class="btn btn-outline-warning">질문 다시 듣기</button>
+                        <button id="btn-record" class="btn btn-danger">답변 녹음 시작</button>
+                        <button id="btn-stop-record" class="btn btn-secondary" disabled>녹음 중지</button>
+                        <span id="recording-status"></span>
+                    </div>
+
+                    <div id="transcription-box" class="alert alert-info" style="display:none;"></div>
+                    <div id="turn-feedback" class="alert alert-light border" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="card history-card">
+                <div class="card-header bg-light">
+                    <strong>대화 기록</strong>
+                </div>
+                <div class="card-body" id="conversation-history">
+                    <p class="text-muted mb-0">첫 질문이 자동으로 시작됩니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            {% if latest_result %}
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <strong>최근 결과</strong>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>레벨:</strong> {{ latest_result.level_label }}</p>
+                    <p class="mb-2"><strong>점수:</strong> {{ latest_result.score }}점</p>
+                    <p class="mb-0"><strong>시험일:</strong> {{ latest_result.exam_date.strftime('%Y-%m-%d') }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card result-card" id="result-card" style="display:none;">
+                <div class="card-header bg-success text-white">
+                    <strong>평가 결과</strong>
+                </div>
+                <div class="card-body">
+                    <h3 id="result-level" class="mb-2"></h3>
+                    <p class="mb-2"><strong>총점:</strong> <span id="result-score"></span></p>
+                    <p class="mb-3" id="result-feedback"></p>
+                    <div id="result-status" class="mb-3"></div>
+                    <a href="{{ url_for('village.exam') }}" class="btn btn-success w-100 mb-2">다시 시험 보기</a>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary w-100">대시보드로</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+let currentPrompt = {{ initial_prompt|tojson }};
+let currentTurn = 1;
+const maxTurns = {{ max_turns }};
+
+function speakPrompt(text) {
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find((voice) => voice.lang === 'en-US');
+    if (preferredVoice) {
+        utterance.voice = preferredVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+}
+
+function updateTurnBadge() {
+    document.getElementById('turn-badge').textContent = `${Math.min(currentTurn, maxTurns)} / ${maxTurns}`;
+}
+
+function addConversationItem(prompt, response, score, feedback) {
+    const history = document.getElementById('conversation-history');
+    if (history.querySelector('p.text-muted')) {
+        history.innerHTML = '';
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'conversation-item';
+    wrapper.innerHTML = `
+        <div class="mb-2"><strong>Teacher:</strong> ${prompt}</div>
+        <div class="mb-2"><strong>You:</strong> ${response || '(인식된 답변 없음)'}</div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="badge bg-primary score-badge">${score}점</span>
+        </div>
+        <div class="text-muted small">${feedback}</div>
+    `;
+    history.appendChild(wrapper);
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+            audioChunks.push(event.data);
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            sendAudioToServer(audioBlob);
+        });
+
+        mediaRecorder.start();
+        isRecording = true;
+        document.getElementById('btn-record').disabled = true;
+        document.getElementById('btn-stop-record').disabled = false;
+        document.getElementById('recording-status').innerHTML = '<span class="recording-indicator"></span>';
+    } catch (error) {
+        alert('마이크 접근에 실패했습니다. 브라우저 권한을 확인해주세요.');
+        console.error(error);
+    }
+}
+
+function stopRecording() {
+    if (!mediaRecorder || !isRecording) {
+        return;
+    }
+
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+    isRecording = false;
+    document.getElementById('btn-record').disabled = false;
+    document.getElementById('btn-stop-record').disabled = true;
+    document.getElementById('recording-status').innerHTML = '';
+    document.getElementById('transcription-box').style.display = 'block';
+    document.getElementById('transcription-box').textContent = '음성 처리 중...';
+}
+
+function showResult(data) {
+    document.getElementById('result-card').style.display = 'block';
+    document.getElementById('result-level').textContent = data.level_label;
+    document.getElementById('result-score').textContent = `${data.overall_score}점`;
+    document.getElementById('result-feedback').textContent = data.level_feedback;
+    document.getElementById('result-status').innerHTML = data.passed
+        ? '<span class="badge bg-success">인증 통과</span>'
+        : '<span class="badge bg-warning text-dark">추가 연습 필요</span>';
+    document.getElementById('btn-record').disabled = true;
+    document.getElementById('btn-stop-record').disabled = true;
+    document.getElementById('assistant-prompt').textContent = '시험이 완료되었습니다.';
+}
+
+function sendAudioToServer(audioBlob) {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'village-recording.webm');
+
+    fetch('{{ url_for("village.process_audio") }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (!data.success) {
+            throw new Error(data.error || '오류가 발생했습니다.');
+        }
+
+        document.getElementById('transcription-box').style.display = 'block';
+        document.getElementById('transcription-box').innerHTML = `<strong>인식된 답변:</strong> ${data.transcribed_text || '(없음)'}`;
+        document.getElementById('turn-feedback').style.display = 'block';
+        document.getElementById('turn-feedback').innerHTML = `<strong>이번 평가:</strong> ${data.turn_score}점<br>${data.turn_feedback}`;
+
+        addConversationItem(currentPrompt, data.transcribed_text, data.turn_score, data.turn_feedback);
+
+        if (data.completed) {
+            showResult(data);
+            return;
+        }
+
+        currentTurn = data.current_turn + 1;
+        updateTurnBadge();
+        currentPrompt = data.next_prompt;
+        document.getElementById('assistant-prompt').textContent = currentPrompt;
+        setTimeout(() => speakPrompt(currentPrompt), 350);
+    })
+    .catch((error) => {
+        console.error(error);
+        document.getElementById('transcription-box').style.display = 'block';
+        document.getElementById('transcription-box').textContent = `오디오 처리 중 오류가 발생했습니다: ${error.message}`;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateTurnBadge();
+
+    document.getElementById('btn-replay').addEventListener('click', () => {
+        speakPrompt(currentPrompt);
+    });
+
+    document.getElementById('btn-record').addEventListener('click', () => {
+        startRecording();
+    });
+
+    document.getElementById('btn-stop-record').addEventListener('click', () => {
+        stopRecording();
+    });
+
+    const startPrompt = () => setTimeout(() => speakPrompt(currentPrompt), 600);
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', startPrompt, { once: true });
+    } else {
+        startPrompt();
+    }
+});
+</script>
+{% endblock %}
