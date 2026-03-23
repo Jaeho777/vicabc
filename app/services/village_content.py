@@ -103,6 +103,26 @@ VILLAGE_CONTENT = {
             _lesson(4, 12, "Are we all here?", "Yes, we are all here.", ["Is everyone here?", "Is everybody here?", "Are we all together?"]),
         ],
     },
+    5: {
+        "number": 5,
+        "theme_ko": "식당",
+        "theme_en": "Restaurant",
+        "summary": "식당에서 주문하고 맛을 표현하며 식사 상황에서 쓰는 기본 회화를 연습합니다.",
+        "lessons": [
+            _lesson(5, 1, "Are you hungry?", "Yes, I am.", ["thirsty", "full", "starving"]),
+            _lesson(5, 2, "What do you want to eat?", "I want a burger.", ["pizza", "taco", "sandwich"]),
+            _lesson(5, 3, "Can I have some water?", "Sure. Here you are.", ["juice", "milk", "soda"]),
+            _lesson(5, 4, "How does it taste?", "It's delicious!", ["spicy", "sweet", "salty"]),
+            _lesson(5, 5, "Is it hot?", "No, it's cold.", ["warm", "cool", "freezing"]),
+            _lesson(5, 6, "Do you like spaghetti?", "Yes, I like it.", ["steak", "salad", "soup"]),
+            _lesson(5, 7, "Where is the spoon?", "It's on the table.", ["fork", "knife", "napkin"]),
+            _lesson(5, 8, "Can I have more bread?", "Of course.", ["butter", "jam", "honey"]),
+            _lesson(5, 9, "Are you finished?", "Not yet.", ["ready", "done", "almost"]),
+            _lesson(5, 10, "Do you want dessert?", "Yes, ice cream please.", ["cake", "cookie", "fruit"]),
+            _lesson(5, 11, "How much is it?", "It's five dollars.", ["ten", "seven", "twelve"]),
+            _lesson(5, 12, "Did you enjoy the meal?", "Yes, it was great.", ["wonderful", "nice", "good"]),
+        ],
+    },
 }
 
 
