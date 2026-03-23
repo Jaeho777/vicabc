@@ -1,0 +1,51 @@
+
+{% extends "base.html" %}
+
+{% block title %}인증시험 결과 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.voca_index') }}">인증시험</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.voca_index') }}">{{ level.name }}</a></li>
+            <li class="breadcrumb-item active">시험 결과</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="m-0">{{ level.name }} 인증시험 결과</h4>
+        </div>
+        <div class="card-body text-center">
+            <div class="alert {% if is_passed %}alert-success{% else %}alert-danger{% endif %} mb-4 p-4">
+                <h3 class="mb-3">
+                    {% if is_passed %}
+                    <i class="bi bi-award"></i> 합격 <i class="bi bi-award"></i>
+                    {% else %}
+                    <i class="bi bi-exclamation-triangle"></i> 불합격 <i class="bi bi-exclamation-triangle"></i>
+                    {% endif %}
+                </h3>
+                <h5>전체 점수: {{ overall_score }}점</h5>
+                <p>총 {{ total_words }}개 중 {{ passed_words }}개 단어 합격 (80점 이상)</p>
+                
+                {% if is_passed %}
+                <p class="mt-3">축하합니다! {{ level.name }} 레벨의 인증시험에 합격하였습니다.</p>
+                {% else %}
+                <p class="mt-3">모든 단어에서 80점 이상을 받아야 합격입니다. 다시 시도해보세요.</p>
+                {% endif %}
+            </div>
+            
+            <div class="d-flex justify-content-center mt-4">
+                <a href="{{ url_for('exam.voca_index') }}" class="btn btn-primary btn-lg me-3">
+                    <i class="bi bi-list"></i> 인증시험 목록으로
+                </a>
+                
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-house"></i> 홈으로
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}`

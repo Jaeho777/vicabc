@@ -1,0 +1,260 @@
+<!-- app/templates/admin/import_story_enhanced.html -->
+{% extends "base.html" %}
+
+{% block title %}스토리 가져오기 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h3 class="m-0">엑셀 파일에서 스토리 가져오기</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="story_file" class="form-label">엑셀 파일 선택 <span class="text-danger">*</span></label>
+                            <input class="form-control" type="file" id="story_file" name="story_file" accept=".xlsx, .xls" required>
+                            <div class="form-text">
+                                .xlsx 또는 .xls 형식의 파일을 업로드하세요.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="audio_zip" class="form-label">오디오 ZIP 파일 (선택사항)</label>
+                            <input class="form-control" type="file" id="audio_zip" name="audio_zip" accept=".zip">
+                            <div class="form-text">
+                                모든 오디오 파일을 압축한 .zip 파일을 업로드하세요.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-success btn-lg">파일 업로드 및 미리보기</button>
+                    </div>
+                </form>
+                
+                <div class="mt-4">
+                    <h4>엑셀 파일 형식 안내</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>학년</th>
+                                    <th>학기</th>
+                                    <th>챕터순서</th>
+                                    <th>챕터제목</th>
+                                    <th>스토리순서</th>
+                                    <th>한국어텍스트</th>
+                                    <th>영어텍스트</th>
+                                    <th>오디오파일명</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>When God Made Everything</td>
+                                    <td>1</td>
+                                    <td>하나님이 빛을 만드셨습니다</td>
+                                    <td>God created light on the first day.</td>
+                                    <td>1-1-1-01.m4a</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td>하나님이 하늘을 만드셨습니다</td>
+                                    <td>God created the sky on the second day.</td>
+                                    <td>1-1-1-02.m4a</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>3</td>
+                                    <td>하나님이 땅과 바다를 만드셨습니다</td>
+                                    <td>God created the land and sea on the third day.</td>
+                                    <td>1-1-1-03.m4a</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2</td>
+                                    <td>Who Made Us?</td>
+                                    <td>1</td>
+                                    <td>하나님이 우리를 만드셨습니다</td>
+                                    <td>God made us in His image.</td>
+                                    <td>1-1-2-01.m4a</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h5><i class="bi bi-info-circle"></i> 중요한 안내사항</h5>
+                        <ul class="mb-0">
+                            <li><strong>필수 열:</strong> 학년, 학기, 챕터순서, 챕터제목, 스토리순서, 한국어텍스트, 영어텍스트, 오디오파일명</li>
+                            <li><strong>병합된 셀:</strong> 같은 챕터 내에서는 학년, 학기, 챕터순서, 챕터제목 병합 가능</li>
+                            <li><strong>학년 범위:</strong> 1~6(초등), 7~9(중등), 10~12(고등)</li>
+                            <li><strong>오디오 파일명:</strong> 실제 ZIP 파일 내의 파일명과 정확히 일치해야 함</li>
+                            <li><strong>권장 파일명 형식:</strong> 학년-학기-챕터순서-스토리순서.확장자 (예: 1-1-1-01.m4a)</li>
+                            <li><strong>지원 오디오 형식:</strong> .mp3, .m4a, .wav, .ogg</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <h5><i class="bi bi-exclamation-triangle"></i> 주의사항</h5>
+                        <ul class="mb-0">
+                            <li>업로드 전에 엑셀 파일의 데이터를 미리보기로 확인할 수 있습니다</li>
+                            <li>동일한 챕터-스토리순서가 있으면 기존 내용이 업데이트됩니다</li>
+                            <li>오디오 파일이 없어도 텍스트 스토리는 업로드됩니다</li>
+                            <li>업로드된 오디오 파일은 서버의 static/audio/stories/ 폴더에 저장됩니다</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- =============================================== -->
+
+<!-- app/templates/admin/story_import_preview.html -->
+{% extends "base.html" %}
+
+{% block title %}스토리 업로드 미리보기 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h3 class="m-0">스토리 업로드 미리보기</h3>
+        </div>
+        <div class="card-body">
+            <!-- 통계 정보 -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ stats.total_chapters }}</h4>
+                            <p class="m-0">총 챕터 수</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ stats.total_stories }}</h4>
+                            <p class="m-0">총 스토리 수</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ stats.audio_matched }}</h4>
+                            <p class="m-0">오디오 매칭</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ stats.audio_missing }}</h4>
+                            <p class="m-0">오디오 누락</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 오디오 파일 정보 -->
+            {% if audio_files %}
+            <div class="alert alert-info">
+                <h5>업로드된 오디오 파일 ({{ stats.total_audio_files }}개)</h5>
+                <div class="row">
+                    {% for audio_file in audio_files[:10] %}
+                    <div class="col-md-4 col-sm-6">
+                        <small>{{ audio_file }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if stats.total_audio_files > 10 %}
+                <small class="text-muted">... 외 {{ stats.total_audio_files - 10 }}개</small>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- 데이터 미리보기 테이블 -->
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>행</th>
+                            <th>학년-학기</th>
+                            <th>챕터</th>
+                            <th>스토리 순서</th>
+                            <th>한국어 텍스트</th>
+                            <th>영어 텍스트</th>
+                            <th>오디오 파일</th>
+                            <th>오디오 상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in preview_data %}
+                        <tr>
+                            <td>{{ item.row }}</td>
+                            <td>{{ item.grade }}-{{ item.semester }}</td>
+                            <td>
+                                <strong>{{ item.chapter_order }}.</strong> {{ item.chapter_title }}
+                                <br><small class="text-muted">({{ item.category }})</small>
+                            </td>
+                            <td class="text-center">{{ item.story_order }}</td>
+                            <td>
+                                <small>{{ item.korean_text }}</small>
+                            </td>
+                            <td>
+                                <small>{{ item.english_text }}</small>
+                            </td>
+                            <td>
+                                <small>{{ item.audio_filename }}</small>
+                            </td>
+                            <td class="text-center">
+                                {% if item.audio_status == '확인' %}
+                                    <span class="badge bg-success">{{ item.audio_status }}</span>
+                                {% elif item.audio_status == '누락' %}
+                                    <span class="badge bg-warning">{{ item.audio_status }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ item.audio_status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 확인 버튼들 -->
+            <div class="d-flex justify-content-between mt-4">
+                <form method="POST" action="{{ url_for('content.story_import_cancel') }}" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-x-circle"></i> 취소
+                    </button>
+                </form>
+                
+                <form method="POST" action="{{ url_for('content.story_import_confirm') }}" style="display: inline;">
+                    <button type="submit" class="btn btn-success btn-lg" 
+                            onclick="return confirm('정말로 {{ stats.total_stories }}개의 스토리를 업로드하시겠습니까?')">
+                        <i class="bi bi-check-circle"></i> 업로드 확정
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

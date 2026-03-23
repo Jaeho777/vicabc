@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}사용자 관리 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+           <h4 class="m-0">사용자 관리</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>사용자명</th>
+                            <th>이메일</th>
+                            <th>이름</th>
+                            <th>성별</th>
+                            <th>나이</th>
+                            <th>연락처</th>
+                            <th>소속교회</th>
+                            <th>가입일</th>
+                            <th>관리자</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.full_name }}</td>
+                            <td>{{ user.gender }}</td>
+                            <td>{{ user.age }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.church }}</td>
+                            <td>{{ user.registered_date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                    {% if user.admin_type == 'A' %}
+                                        <span class="badge bg-danger">최종관리자</span>
+                                    {% elif user.admin_type == 'B' %}
+                                        <span class="badge bg-warning">교회관리자</span>
+                                    {% elif user.admin_type == 'C' %}
+                                        <span class="badge bg-info">학생관리자</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">일반</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if current_user.admin_type == 'A' %}
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton{{ user.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        권한 변경
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ user.id }}">
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.change_admin', user_id=user.id, admin_type='A') }}">최종관리자</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.change_admin', user_id=user.id, admin_type='B') }}">교회관리자</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.change_admin', user_id=user.id, admin_type='C') }}">학생관리자</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.change_admin', user_id=user.id, admin_type='none') }}">일반</a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}학생 관리 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+           <h4 class="m-0">학생 관리</h4>
+        </div>
+        <div class="card-body">
+            <!-- 교회 정보 표시 부분 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5>
+                        교회 : 
+                        {% if current_user.admin_type == 'A' %}
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="churchDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ selected_church or '교회 선택' }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="churchDropdown">
+                                    {% for church in churches %}
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.student_management', church=church) }}">{{ church }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            {{ selected_church }}
+                        {% endif %}
+                    </h5>
+                </div>
+            </div>
+            
+            <!-- 탭 메뉴 -->
+            <ul class="nav nav-tabs mb-3" id="studentTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if tab == 'voca' %}active{% endif %}" href="{{ url_for('admin.student_management', church=selected_church, tab='voca') }}">단어</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if tab == 'sentence' %}active{% endif %}" href="{{ url_for('admin.student_management', church=selected_church, tab='sentence') }}">문장</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if tab == 'story' %}active{% endif %}" href="{{ url_for('admin.student_management', church=selected_church, tab='story') }}">스토리</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if tab == 'average' %}active{% endif %}" href="{{ url_for('admin.student_management', church=selected_church, tab='average') }}">평균</a>
+                </li>
+            </ul>
+            
+            <!-- 탭 컨텐츠 -->
+            <div class="tab-content" id="studentTabContent">
+                {% if tab == 'voca' %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>순번</th>
+                                <th>이름</th>
+                                <th>성별</th>
+                                <th>학년</th>
+                                <th>등급</th>
+                                <th>인증일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ student.full_name }}</td>
+                                <td>{{ student.gender }}</td>
+                                <td>{{ student.grade }}</td>
+                                <td>
+                                    <!-- 추후 등급 정보 추가 -->
+                                    초B
+                                </td>
+                                <td>
+                                    <!-- 추후 인증일 정보 추가 -->
+                                    2025.4.10
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% elif tab == 'sentence' %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>순번</th>
+                                <th>이름</th>
+                                <th>성별</th>
+                                <th>학년</th>
+                                <th>등급</th>
+                                <th>인증일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ student.full_name }}</td>
+                                <td>{{ student.gender }}</td>
+                                <td>{{ student.grade }}</td>
+                                <td>
+                                    <!-- 추후 등급 정보 추가 -->
+                                    중등
+                                </td>
+                                <td>
+                                    <!-- 추후 인증일 정보 추가 -->
+                                    2025.3.15
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% elif tab == 'story' %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>순번</th>
+                                <th>이름</th>
+                                <th>성별</th>
+                                <th>학년</th>
+                                <th>등급</th>
+                                <th>인증일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ student.full_name }}</td>
+                                <td>{{ student.gender }}</td>
+                                <td>{{ student.grade }}</td>
+                                <td>
+                                    <!-- 추후 등급 정보 추가 -->
+                                    고등
+                                </td>
+                                <td>
+                                    <!-- 추후 인증일 정보 추가 -->
+                                    2025.2.20
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% elif tab == 'average' %}
+                    <div class="mb-4">
+                        <ul class="nav nav-pills mb-3" id="averageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="voca-avg-tab" data-bs-toggle="pill" href="#voca-avg" role="tab" aria-controls="voca-avg" aria-selected="true">단어 평균</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="story-avg-tab" data-bs-toggle="pill" href="#story-avg" role="tab" aria-controls="story-avg" aria-selected="false">스토리 평균</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="conv-avg-tab" data-bs-toggle="pill" href="#conv-avg" role="tab" aria-controls="conv-avg" aria-selected="false">회화 평균</a>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="averageTabContent">
+                            <!-- 단어 평균 -->
+                            <div class="tab-pane fade show active" id="voca-avg" role="tabpanel" aria-labelledby="voca-avg-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>학년</th>
+                                                <th>단어</th>
+                                                <th>인증 평균</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>초등 1-3학년</td>
+                                                <td>9그룹 (1-9)</td>
+                                                <td>1.8</td>
+                                            </tr>
+                                            <tr>
+                                                <td>초등 4-6학년</td>
+                                                <td>12그룹 (10-21)</td>
+                                                <td>2.3</td>
+                                            </tr>
+                                            <tr>
+                                                <td>중등</td>
+                                                <td>12그룹 (22-33)</td>
+                                                <td>2.1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>고등</td>
+                                                <td>12그룹 (34-45)</td>
+                                                <td>1.9</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- 스토리 평균 -->
+                            <div class="tab-pane fade" id="story-avg" role="tabpanel" aria-labelledby="story-avg-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>학년</th>
+                                                <th>스토리</th>
+                                                <th>인증 평균</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>초등 1-3학년</td>
+                                                <td>12 story (1-12)</td>
+                                                <td>1.5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>초등 4-6학년</td>
+                                                <td>16 story (13-28)</td>
+                                                <td>2.0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>중등</td>
+                                                <td>16 story (29-44)</td>
+                                                <td>1.8</td>
+                                            </tr>
+                                            <tr>
+                                                <td>고등</td>
+                                                <td>16 story (45-60)</td>
+                                                <td>1.6</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- 회화 평균 -->
+                            <div class="tab-pane fade" id="conv-avg" role="tabpanel" aria-labelledby="conv-avg-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>학년</th>
+                                                <th>회화</th>
+                                                <th>인증 평균</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>초등 1-3학년</td>
+                                                <td>4 village (1-4)</td>
+                                                <td>1.2</td>
+                                            </tr>
+                                            <tr>
+                                                <td>초등 4-6학년</td>
+                                                <td>4 village (5-8)</td>
+                                                <td>1.7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>중등</td>
+                                                <td>4 village (9-12)</td>
+                                                <td>1.5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>고등</td>
+                                                <td>4 village (13-16)</td>
+                                                <td>1.3</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

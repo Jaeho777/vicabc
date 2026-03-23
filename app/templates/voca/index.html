@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}단어 학습 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+           <h4 class="m-0">단어 학습</h4>
+        </div>
+        <div class="card-body">
+            <!-- 상위 탭: 초등, 중등, 고등 -->
+            <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="elementary-tab" data-bs-toggle="tab" data-bs-target="#elementary" type="button" role="tab" aria-controls="elementary" aria-selected="true">초등</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="middle-tab" data-bs-toggle="tab" data-bs-target="#middle" type="button" role="tab" aria-controls="middle" aria-selected="false">중등</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="high-tab" data-bs-toggle="tab" data-bs-target="#high" type="button" role="tab" aria-controls="high" aria-selected="false">고등</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content p-3" id="categoryTabsContent">
+                <!-- 초등 탭 -->
+                <div class="tab-pane fade show active" id="elementary" role="tabpanel" aria-labelledby="elementary-tab">
+                    <!-- 하위 탭: 초등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="elementaryGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="elem-grade1-tab" data-bs-toggle="pill" data-bs-target="#elem-grade1" type="button" role="tab" aria-controls="elem-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade2-tab" data-bs-toggle="pill" data-bs-target="#elem-grade2" type="button" role="tab" aria-controls="elem-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade3-tab" data-bs-toggle="pill" data-bs-target="#elem-grade3" type="button" role="tab" aria-controls="elem-grade3" aria-selected="false">3학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade4-tab" data-bs-toggle="pill" data-bs-target="#elem-grade4" type="button" role="tab" aria-controls="elem-grade4" aria-selected="false">4학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade5-tab" data-bs-toggle="pill" data-bs-target="#elem-grade5" type="button" role="tab" aria-controls="elem-grade5" aria-selected="false">5학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade6-tab" data-bs-toggle="pill" data-bs-target="#elem-grade6" type="button" role="tab" aria-controls="elem-grade6" aria-selected="false">6학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="elementaryGradeTabsContent">
+                        {% for grade in range(1, 7) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="elem-grade{{ grade }}" role="tabpanel" aria-labelledby="elem-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% set has_levels = false %}
+                                {% for level in elementary_levels %}
+                                    {% if '초등' ~ grade ~ '-' in level.name %}
+                                    {% set has_levels = true %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-primary text-white text-center py-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h3 class="m-0">
+                                                        {% set parts = level.name.replace('-G', '-').split('-') %}
+                                                        {% if parts|length >= 3 %}
+                                                            {{ parts[0] }}-{{ parts[1] }} {{ parts[2] }}
+                                                        {% else %}
+                                                            {{ level.name }}
+                                                        {% endif %}
+                                                    </h3>
+                                                    {% if current_user.is_admin and current_user.admin_type == 'A' %}
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ level.id }}', '{{ level.name }}')">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="card-body text-center">
+                                               
+                                        
+                                                <div class="progress mb-3" style="height: 20px;">
+                                                    {% set progress = level_progress[level.id] %}
+                                                    <div class="progress-bar bg-success" role="progressbar" 
+                                                        style="width: {{ progress.progress_percent }}%;" 
+                                                        aria-valuenow="{{ progress.progress_percent }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">{{ progress.progress_percent }}%</div>
+                                                </div>
+
+                                                <p class="mb-3">진도: {{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
+
+                                                <div class="mb-4">
+                                                    {% if progress.completed_words == progress.total_words and progress.total_words > 0 %}
+                                                        <span class="badge bg-success text-white py-2 px-3">완료</span>
+                                                    {% elif progress.completed_words > 0 or progress.in_progress_words > 0 %}
+                                                        <span class="badge bg-info text-white py-2 px-3">진행 중</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary text-white py-2 px-3">미시작</span>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                
+                                                
+                                                <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info btn-lg w-100">
+                                                    <i class="bi bi-book"></i> 학습하기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- 중등 탭 -->
+                <div class="tab-pane fade" id="middle" role="tabpanel" aria-labelledby="middle-tab">
+                    <!-- 하위 탭: 중등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="middleGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="mid-grade1-tab" data-bs-toggle="pill" data-bs-target="#mid-grade1" type="button" role="tab" aria-controls="mid-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mid-grade2-tab" data-bs-toggle="pill" data-bs-target="#mid-grade2" type="button" role="tab" aria-controls="mid-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mid-grade3-tab" data-bs-toggle="pill" data-bs-target="#mid-grade3" type="button" role="tab" aria-controls="mid-grade3" aria-selected="false">3학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="middleGradeTabsContent">
+                        {% for grade in range(1, 4) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="mid-grade{{ grade }}" role="tabpanel" aria-labelledby="mid-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% set has_levels = false %}
+                                {% for level in middle_levels %}
+                                    {% if '중등' ~ grade ~ '-' in level.name %}
+                                    {% set has_levels = true %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                           <div class="card-header bg-primary text-white text-center py-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h3 class="m-0">
+                                                        {% set parts = level.name.replace('-G', '-').split('-') %}
+                                                        {% if parts|length >= 3 %}
+                                                            {{ parts[0] }}-{{ parts[1] }} {{ parts[2] }}
+                                                        {% else %}
+                                                            {{ level.name }}
+                                                        {% endif %}
+                                                    </h3>
+                                                    {% if current_user.is_admin and current_user.admin_type == 'A' %}
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ level.id }}', '{{ level.name }}')">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                
+                                                <div class="progress mb-3" style="height: 20px;">
+                                                    {% set progress = level_progress[level.id] %}
+                                                    <div class="progress-bar bg-success" role="progressbar" 
+                                                        style="width: {{ progress.progress_percent }}%;" 
+                                                        aria-valuenow="{{ progress.progress_percent }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">{{ progress.progress_percent }}%</div>
+                                                </div>
+
+                                                <p class="mb-3">진도: {{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
+
+                                                <div class="mb-4">
+                                                    {% if progress.completed_words == progress.total_words and progress.total_words > 0 %}
+                                                        <span class="badge bg-success text-white py-2 px-3">완료</span>
+                                                    {% elif progress.completed_words > 0 or progress.in_progress_words > 0 %}
+                                                        <span class="badge bg-info text-white py-2 px-3">진행 중</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary text-white py-2 px-3">미시작</span>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                
+                                                <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info btn-lg w-100">
+                                                    <i class="bi bi-book"></i> 학습하기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- 고등 탭 -->
+                <div class="tab-pane fade" id="high" role="tabpanel" aria-labelledby="high-tab">
+                    <!-- 하위 탭: 고등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="highGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="high-grade1-tab" data-bs-toggle="pill" data-bs-target="#high-grade1" type="button" role="tab" aria-controls="high-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="high-grade2-tab" data-bs-toggle="pill" data-bs-target="#high-grade2" type="button" role="tab" aria-controls="high-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="high-grade3-tab" data-bs-toggle="pill" data-bs-target="#high-grade3" type="button" role="tab" aria-controls="high-grade3" aria-selected="false">3학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="highGradeTabsContent">
+                        {% for grade in range(1, 4) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="high-grade{{ grade }}" role="tabpanel" aria-labelledby="high-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% set has_levels = false %}
+                                {% for level in high_levels %}
+                                    {% if '고등' ~ grade ~ '-' in level.name %}
+                                    {% set has_levels = true %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                           <div class="card-header bg-primary text-white text-center py-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h3 class="m-0">
+                                                        {% set parts = level.name.replace('-G', '-').split('-') %}
+                                                        {% if parts|length >= 3 %}
+                                                            {{ parts[0] }}-{{ parts[1] }} {{ parts[2] }}
+                                                        {% else %}
+                                                            {{ level.name }}
+                                                        {% endif %}
+                                                    </h3>
+                                                    {% if current_user.is_admin and current_user.admin_type == 'A' %}
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ level.id }}', '{{ level.name }}')">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                
+                                                <!-- 진도 바 -->
+                                                <div class="progress mb-3" style="height: 20px;">
+                                                    {% set progress = level_progress[level.id] %}
+                                                    <div class="progress-bar bg-success" role="progressbar" 
+                                                        style="width: {{ progress.progress_percent }}%;" 
+                                                        aria-valuenow="{{ progress.progress_percent }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">{{ progress.progress_percent }}%</div>
+                                                </div>
+
+                                                <p class="mb-3">진도: {{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
+
+                                                <div class="mb-4">
+                                                    {% if progress.completed_words == progress.total_words and progress.total_words > 0 %}
+                                                        <span class="badge bg-success text-white py-2 px-3">완료</span>
+                                                    {% elif progress.completed_words > 0 or progress.in_progress_words > 0 %}
+                                                        <span class="badge bg-info text-white py-2 px-3">진행 중</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary text-white py-2 px-3">미시작</span>
+                                                    {% endif %}
+                                                </div>
+                                                                        
+                                                
+                                                <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info btn-lg w-100">
+                                                    <i class="bi bi-book"></i> 학습하기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">레벨 삭제 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>경고!</strong> 이 작업은 되돌릴 수 없습니다.
+                </div>
+                <p><strong id="levelNameToDelete"></strong> 레벨을 정말 삭제하시겠습니까?</p>
+                <p class="text-muted">삭제되는 데이터:</p>
+                <ul class="text-muted">
+                    <li>해당 레벨의 모든 단어</li>
+                    <li>모든 사용자의 학습 진도 기록</li>
+                    <li>모든 사용자의 인증 시험 기록</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(levelId, levelName) {
+    document.getElementById('levelNameToDelete').textContent = levelName;
+    document.getElementById('deleteForm').action = `/admin/delete_level/${levelId}`;
+    
+    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

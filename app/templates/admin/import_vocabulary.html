@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}단어 가져오기 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="m-0">엑셀 파일에서 단어 가져오기</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="vocabulary_file" class="form-label">엑셀 파일 선택</label>
+                        <input class="form-control" type="file" id="vocabulary_file" name="vocabulary_file" accept=".xlsx, .xls" required>
+                        <div class="form-text">
+                            .xlsx 또는 .xls 형식의 파일을 업로드하세요. 파일에는 '순번', '학년', '그룹이름', '영어단어', '한국어뜻' 열이 포함되어야 합니다.
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">파일 업로드</button>
+                    </div>
+                </form>
+                
+                <div class="mt-4">
+                    <h4>엑셀 파일 형식 안내</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>순번</th>
+                                    <th>학년</th>
+                                    <th>그룹이름</th>
+                                    <th>영어단어</th>
+                                    <th>한국어뜻</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>G1-학교 (school)</td>
+                                    <td>class</td>
+                                    <td>(명)수업, 반</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>homework</td>
+                                    <td>(명)숙제</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>introduce</td>
+                                    <td>(동)소개하다</td>
+                                </tr>
+                                <tr>
+                                    <td>...</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>29</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>note</td>
+                                    <td>(명)쪽지</td>
+                                </tr>
+                                <tr>
+                                    <td>30</td>
+                                    <td></td>
+                                    <td>G2-도서관 (Library)</td>
+                                    <td>no</td>
+                                    <td>(감)아니</td>
+                                </tr>
+                                <tr>
+                                    <td>31</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>you</td>
+                                    <td>(대)너, 당신</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <h5><i class="bi bi-info-circle"></i> 중요한 안내사항</h5>
+                        <ul class="mb-0">
+                            <li><strong>필수 열:</strong> 순번, 학년, 그룹이름, 영어단어, 한국어뜻</li>
+                            <li><strong>병합된 셀:</strong> 학년과 그룹이름은 같은 그룹 내에서 병합 가능</li>
+                            <li><strong>학년 범위:</strong> 1~6(초등), 7~9(중등), 10~12(고등)</li>
+                            <li><strong>그룹이름 형식:</strong> "G숫자-주제명 (영문명)" (예: G1-학교 (school))</li>
+                            <li><strong>한국어뜻 형식:</strong> "(품사)의미" (예: (명)수업, 반) - 품사는 선택사항</li>
+                            <li><strong>기존 단어 업데이트:</strong> 동일한 단어가 있으면 내용만 업데이트되고 기존 학습 점수는 유지됩니다</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

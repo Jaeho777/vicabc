@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+
+{% block title %}인증시험 - {{ level.name }} - VOCA 애플리케이션{% endblock %}
+
+{% block extra_head %}
+<style>
+    .learning-step {
+        display: none;
+        margin-bottom: 30px;
+    }
+    .learning-step.active {
+        display: block;
+    }
+    .word-card {
+        padding: 30px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recording-indicator {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: red;
+        border-radius: 50%;
+        margin-left: 10px;
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    .score-display {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.voca_index') }}">인증시험</a></li>
+            <li class="breadcrumb-item active">
+            {% set parts = level.name.replace('-G', '-').split('-') %}
+            {% if parts|length >= 3 %}
+                {{ parts[0] }}-{{ parts[1] }} {{ parts[2] }}
+            {% else %}
+                {{ level.name }}
+            {% endif %}
+        </li>
+        </ol>
+    </nav>
+
+    <!-- 단어 정보 카드 -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="m-0">인증시험</h2>
+                <span class="badge bg-light text-dark">{{ word_number }} / {{ total_words }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="word-card" id="word-card">
+                <!-- 처음에는 단어나 뜻을 보여주지 않음, 듣기 버튼만 표시 -->
+                <div class="text-center">
+                    <h4 class="mb-4">아래 듣기 버튼을 눌러 단어를 들어보세요</h4>
+                    <button id="btn-listen" class="btn btn-primary btn-lg mb-3">
+                        <i class="bi bi-volume-up"></i> 듣기
+                    </button>
+                    <div id="listen-again-container" style="display:none;">
+                        <button id="btn-listen-again" class="btn btn-outline-primary mb-3">
+                            <i class="bi bi-volume-up"></i> 다시 한번 더 듣기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 진행 단계 표시 -->
+            <div class="progress mb-4">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">1/3</div>
+            </div>
+
+            <!-- 말하기 단계 -->
+            <div id="step-speaking" class="learning-step active">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="m-0">1. 말하기 (Speaking)</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="mb-3">단어를 영어로 말해보세요.</p>
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <button id="btn-record" class="btn btn-danger btn-lg me-2">
+                                <i class="bi bi-mic"></i> 말하기 시작
+                            </button>
+                            <button id="btn-stop-record" class="btn btn-secondary btn-lg" disabled>
+                                <i class="bi bi-stop-fill"></i> 중지
+                            </button>
+                            <div id="recording-indicator-container" class="ms-2"></div>
+                        </div>
+                        <div id="transcription-result" class="alert alert-info mb-3" style="display:none;">
+                            인식된 텍스트가 여기에 표시됩니다.
+                        </div>
+
+                        <div id="playback-container" style="display:none;">
+                        <button id="btn-play-recording" class="btn btn-outline-success mb-3">
+                            <i class="bi bi-play-circle"></i> 내 녹음 듣기
+                        </button>
+                        </div>
+                        <button id="btn-next-to-writing" class="btn btn-success" style="display:none;">
+                            다음 단계로 <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 쓰기 단계 -->
+            <div id="step-writing" class="learning-step">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="m-0">2. 쓰기 (Writing)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="english-input" class="form-label">영어 단어:</label>
+                                <input type="text" id="english-input" class="form-control form-control-lg" placeholder="영어 단어를 입력하세요">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="korean-input" class="form-label">한글 뜻:</label>
+                                <input type="text" id="korean-input" class="form-control form-control-lg" placeholder="한글 뜻을 입력하세요">
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button id="btn-next-to-result" class="btn btn-success btn-lg">
+                                제출 <i class="bi bi-check-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결과 단계 -->
+            <div id="step-result" class="learning-step">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="m-0">3. 결과</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="mb-4">단어 시험 결과</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">말하기</div>
+                                    <div class="card-body">
+                                        <div class="score-display" id="speaking-score">0점</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">영어 쓰기</div>
+                                    <div class="card-body">
+                                        <div class="score-display" id="english-writing-score">0점</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">한글 쓰기</div>
+                                    <div class="card-body">
+                                        <div class="score-display" id="korean-writing-score">0점</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <h5>정답</h5>
+                            <p><strong>영어:</strong> {{ vocabulary.word }}</p>
+                            <p><strong>한글:</strong> {{ vocabulary.meaning }}</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            {% if is_last_word %}
+                                <a href="{{ url_for('exam.voca_exam_result', level_id=level.id) }}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-flag"></i> 시험 완료하기
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('exam.voca_take_exam', level_id=level.id, word_index=next_index) }}" class="btn btn-primary btn-lg me-2" id="next-word-btn">
+                                    <i class="bi bi-arrow-right"></i> 다음 단어
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 현재 단계 변수
+let currentStep = 1;
+let listenCount = 0;
+
+// 단계 업데이트 함수
+function updateStep(stepNumber) {
+    // 모든 단계 숨기기
+    document.querySelectorAll('.learning-step').forEach(step => {
+        step.classList.remove('active');
+    });
+    
+    // 현재 단계 표시
+    const currentStepElement = document.getElementById(`step-${getStepName(stepNumber)}`);
+    if (currentStepElement) {
+        currentStepElement.classList.add('active');
+    }
+    
+    // 진행바 업데이트
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = `${stepNumber * 33}%`;
+    progressBar.setAttribute('aria-valuenow', stepNumber * 33);
+    progressBar.textContent = `${stepNumber}/3`;
+    
+    // 현재 단계 업데이트
+    currentStep = stepNumber;
+}
+
+// 단계명 가져오기
+function getStepName(stepNumber) {
+    const steps = ['speaking', 'writing', 'result'];
+    return steps[stepNumber - 1];
+}
+
+// 단어 발음 함수
+function speakWord(word) {
+    // 이전에 재생 중인 모든 음성 중지
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US';
+    
+    // 음성 가져오기 및 설정
+    const voices = window.speechSynthesis.getVoices();
+    const usFemaleVoice = voices.find(voice => 
+        voice.lang === 'en-US' && (voice.name.includes('Female') || voice.name.includes('Woman') || voice.name.includes('Google'))
+    );
+    
+    if (usFemaleVoice) {
+        utterance.voice = usFemaleVoice;
+    }
+    
+    utterance.rate = 0.8; // 약간 느리게
+    utterance.pitch = 1;
+    
+    window.speechSynthesis.speak(utterance);
+}
+
+// 녹음 관련 변수
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+let recordedAudioBlob = null;
+
+async function startRecording() {
+    try {
+        // 오디오 스트림 획득
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // MediaRecorder 설정
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        // 데이터 수집
+        mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+        });
+        
+        // 녹음 완료 시 처리
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            recordedAudioBlob = audioBlob;
+            sendAudioToServer(audioBlob);
+        });
+        
+        // 녹음 시작
+        mediaRecorder.start();
+        isRecording = true;
+        
+        // UI 업데이트
+        document.getElementById('btn-record').disabled = true;
+        document.getElementById('btn-stop-record').disabled = false;
+        
+        // 녹음 표시기 추가
+        const indicator = document.createElement('div');
+        indicator.className = 'recording-indicator';
+        document.getElementById('recording-indicator-container').appendChild(indicator);
+        
+    } catch (error) {
+        console.error('녹음 시작 오류:', error);
+        alert('마이크 접근에 실패했습니다. 마이크 권한을 확인해주세요.');
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        // 녹음 중지
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        // 트랙 중지 (마이크 해제)
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        
+        // UI 업데이트
+        document.getElementById('btn-record').disabled = false;
+        document.getElementById('btn-stop-record').disabled = true;
+        
+        // 녹음 표시기 제거
+        document.getElementById('recording-indicator-container').innerHTML = '';
+        
+        // 처리 중 표시
+        document.getElementById('transcription-result').style.display = 'block';
+        document.getElementById('transcription-result').textContent = '음성 처리 중...';
+    }
+}
+
+// 서버에 오디오 전송 함수
+function sendAudioToServer(audioBlob) {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'recording.webm');
+    formData.append('word', "{{ vocabulary.word }}");
+    
+    // 처리 중 메시지 표시
+    document.getElementById('transcription-result').style.display = 'block';
+    document.getElementById('transcription-result').textContent = '음성 처리 중...';
+    
+    // 서버로 오디오 전송
+    fetch('/voca/process_audio', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 결과 표시
+            document.getElementById('transcription-result').innerHTML = `
+                <strong>인식된 텍스트:</strong> ${data.transcribed_text}<br>
+                <strong>정확도:</strong> ${data.accuracy}점<br>
+                <div class="mt-2 small text-muted">${data.details.replace(/\n/g, '<br>')}</div>
+            `;
+            document.getElementById('playback-container').style.display = 'block';
+            // 현재 점수 저장
+            sessionStorage.setItem('speakingScore', data.accuracy);
+            // 결과 페이지 점수 업데이트
+            const speakingScoreElement = document.getElementById('speaking-score');
+            if (speakingScoreElement) {
+                speakingScoreElement.textContent = data.accuracy + '점';
+            }
+            
+            // 다음 단계 버튼 표시
+            document.getElementById('btn-next-to-writing').style.display = 'block';
+        } else {
+            // 오류 메시지 표시
+            document.getElementById('transcription-result').textContent = '음성 인식 오류: ' + (data.error || '알 수 없는 오류');
+            
+            // 다음 단계 버튼 표시 (오류가 있어도 계속 진행)
+            document.getElementById('btn-next-to-writing').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('오디오 처리 오류:', error);
+        document.getElementById('transcription-result').textContent = '오디오 처리 중 오류가 발생했습니다.';
+        
+        // 오류 발생 시에도 다음 단계 버튼 표시
+        document.getElementById('btn-next-to-writing').style.display = 'block';
+    });
+}
+
+// 문자열 유사도 계산 함수
+function calculateSimilarity(a, b) {
+    if (a === b) return 1.0;
+    if (a.length === 0 || b.length === 0) return 0.0;
+    
+    // 레벤슈타인 거리 계산
+    const matrix = [];
+    
+    // 초기화
+    for (let i = 0; i <= a.length; i++) {
+        matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= b.length; j++) {
+        matrix[0][j] = j;
+    }
+    
+    // 채우기
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            if (a.charAt(i - 1) === b.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // 변경
+                    matrix[i][j - 1] + 1,     // 삽입
+                    matrix[i - 1][j] + 1      // 삭제
+                );
+            }
+        }
+    }
+    
+    // 유사도 계산 (0.0 ~ 1.0)
+    const distance = matrix[a.length][b.length];
+    const maxLength = Math.max(a.length, b.length);
+    return 1.0 - (distance / maxLength);
+}
+
+// 단어 맞춤 검사 함수
+function checkWordMatch() {
+    const englishInput = document.getElementById('english-input').value.trim().toLowerCase();
+    const koreanInput = document.getElementById('korean-input').value.trim();
+    
+    const correctEnglish = "{{ vocabulary.word }}".toLowerCase();
+    const correctKorean = "{{ vocabulary.meaning }}";
+    
+    // 유사도 기반 점수 계산
+    const englishSimilarity = calculateSimilarity(englishInput, correctEnglish);
+    const koreanSimilarity = calculateSimilarity(koreanInput, correctKorean);
+    
+    const englishScore = Math.round(englishSimilarity * 100);
+    const koreanScore = Math.round(koreanSimilarity * 100);
+    
+    // 세션에 점수 저장
+    sessionStorage.setItem('englishWritingScore', englishScore);
+    sessionStorage.setItem('koreanWritingScore', koreanScore);
+    
+    // 결과 페이지에 점수 표시
+    document.getElementById('english-writing-score').textContent = englishScore + '점';
+    document.getElementById('korean-writing-score').textContent = koreanScore + '점';
+    
+    // 전체 진행 완료
+    updateStep(3);
+    
+    return { englishScore, koreanScore };
+}
+
+// 서버에 시험 결과 저장
+function saveExamResult() {
+    const vocabularyId = {{ vocabulary.id }};
+    const levelId = {{ level.id }};
+    const speakingScore = parseInt(sessionStorage.getItem('speakingScore') || '0');
+    const englishWritingScore = parseInt(sessionStorage.getItem('englishWritingScore') || '0');
+    const koreanWritingScore = parseInt(sessionStorage.getItem('koreanWritingScore') || '0');
+    
+    // 서버에 결과 저장
+    fetch('/exam/save_voca_result', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            level_id: levelId,
+            vocabulary_id: vocabularyId,
+            speaking_score: speakingScore,
+            english_writing_score: englishWritingScore,
+            korean_writing_score: koreanWritingScore
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('시험 결과가 저장되었습니다.');
+        } else {
+            console.error('시험 결과 저장 실패:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('시험 결과 저장 중 오류 발생:', error);
+    });
+}
+
+// 이벤트 리스너 등록
+document.addEventListener('DOMContentLoaded', function() {
+    // 초기 세션 스토리지 설정
+    sessionStorage.setItem('speakingScore', '0');
+    sessionStorage.setItem('englishWritingScore', '0');
+    sessionStorage.setItem('koreanWritingScore', '0');
+    
+    // 듣기 버튼
+    document.getElementById('btn-listen').addEventListener('click', function() {
+        speakWord("{{ vocabulary.word }}");
+        
+        // 듣기 버튼 숨기기
+        this.style.display = 'none';
+        
+        // 다시 듣기 버튼 표시
+        document.getElementById('listen-again-container').style.display = 'block';
+    });
+    
+    // 다시 듣기 버튼
+    document.getElementById('btn-listen-again').addEventListener('click', function() {
+        speakWord("{{ vocabulary.word }}");
+    });
+    
+    // 말하기 시작 버튼
+    document.getElementById('btn-record').addEventListener('click', function() {
+        startRecording();
+    });
+    
+    // 중지 버튼
+    document.getElementById('btn-stop-record').addEventListener('click', function() {
+        stopRecording();
+    });
+    
+    // 다음 단계로 버튼 (말하기 -> 쓰기)
+    document.getElementById('btn-next-to-writing').addEventListener('click', function() {
+        updateStep(2);
+    });
+    
+    // 제출 버튼
+    document.getElementById('btn-next-to-result').addEventListener('click', function() {
+        // 단어 맞춤 검사 실행
+        checkWordMatch();
+        // 시험 결과 저장
+        saveExamResult();
+    });
+    
+    document.getElementById('btn-play-recording').addEventListener('click', function() {
+    if (recordedAudioBlob) {
+        const audioUrl = URL.createObjectURL(recordedAudioBlob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+        
+        // 재생 완료 후 URL 해제
+        audio.addEventListener('ended', function() {
+            URL.revokeObjectURL(audioUrl);
+        });
+        }
+    });
+    // 초기 상태 설정
+    updateStep(1);
+    
+
+    // 음성 합성 API 초기화 처리
+    if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.addEventListener('voiceschanged', function() {
+            console.log('음성 목록 로드 완료:', window.speechSynthesis.getVoices().length);
+        });
+    }
+});
+</script>
+{% endblock %}

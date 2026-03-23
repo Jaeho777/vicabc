@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}스토리 인증시험 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-success text-white">
+           <h4 class="m-0">스토리 인증시험</h4>
+        </div>
+        <div class="card-body">
+            <!-- 상위 탭: 초등, 중등, 고등 -->
+            <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="elementary-tab" data-bs-toggle="tab" data-bs-target="#elementary" type="button" role="tab" aria-controls="elementary" aria-selected="true">초등</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="middle-tab" data-bs-toggle="tab" data-bs-target="#middle" type="button" role="tab" aria-controls="middle" aria-selected="false">중등</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="high-tab" data-bs-toggle="tab" data-bs-target="#high" type="button" role="tab" aria-controls="high" aria-selected="false">고등</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content p-3" id="categoryTabsContent">
+                <!-- 초등 탭 -->
+                <div class="tab-pane fade show active" id="elementary" role="tabpanel" aria-labelledby="elementary-tab">
+                    <!-- 하위 탭: 초등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="elementaryGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="elem-grade1-tab" data-bs-toggle="pill" data-bs-target="#elem-grade1" type="button" role="tab" aria-controls="elem-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade2-tab" data-bs-toggle="pill" data-bs-target="#elem-grade2" type="button" role="tab" aria-controls="elem-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade3-tab" data-bs-toggle="pill" data-bs-target="#elem-grade3" type="button" role="tab" aria-controls="elem-grade3" aria-selected="false">3학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade4-tab" data-bs-toggle="pill" data-bs-target="#elem-grade4" type="button" role="tab" aria-controls="elem-grade4" aria-selected="false">4학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade5-tab" data-bs-toggle="pill" data-bs-target="#elem-grade5" type="button" role="tab" aria-controls="elem-grade5" aria-selected="false">5학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="elem-grade6-tab" data-bs-toggle="pill" data-bs-target="#elem-grade6" type="button" role="tab" aria-controls="elem-grade6" aria-selected="false">6학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="elementaryGradeTabsContent">
+                        {% for grade in range(1, 7) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="elem-grade{{ grade }}" role="tabpanel" aria-labelledby="elem-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% for level in elementary_levels %}
+                                    {% if '초등' ~ grade ~ '-' in level.name %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-success text-white text-center py-3">
+                                                <h3 class="m-0">{{ level.name }}</h3>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title mb-3">{{ level.name }} 레벨 인증시험</h5>
+                                                
+                                                <!-- 이전 시험 결과 표시 -->
+                                                {% if level.id in previous_results %}
+                                                    {% set result = previous_results[level.id] %}
+                                                    <div class="alert {% if result.passed %}alert-success{% else %}alert-danger{% endif %} mb-3">
+                                                        <p><strong>최근 시험:</strong> {{ result.exam_date.strftime('%Y-%m-%d') }}</p>
+                                                        <p><strong>점수:</strong> {{ result.score }}점</p>
+                                                        <p><strong>결과:</strong> 
+                                                            {% if result.passed %}
+                                                                <span class="badge bg-success">합격</span>
+                                                            {% else %}
+                                                                <span class="badge bg-danger">불합격</span>
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-info mb-3">
+                                                        <p>아직 시험을 치르지 않았습니다.</p>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <a href="{{ url_for('story.story_start_exam', level_id=level.id) }}" class="btn btn-success btn-lg w-100">
+                                                    <i class="bi bi-award"></i> 시험 보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- 중등 탭 -->
+                <div class="tab-pane fade" id="middle" role="tabpanel" aria-labelledby="middle-tab">
+                    <!-- 하위 탭: 중등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="middleGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="mid-grade1-tab" data-bs-toggle="pill" data-bs-target="#mid-grade1" type="button" role="tab" aria-controls="mid-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mid-grade2-tab" data-bs-toggle="pill" data-bs-target="#mid-grade2" type="button" role="tab" aria-controls="mid-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="mid-grade3-tab" data-bs-toggle="pill" data-bs-target="#mid-grade3" type="button" role="tab" aria-controls="mid-grade3" aria-selected="false">3학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="middleGradeTabsContent">
+                        {% for grade in range(1, 4) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="mid-grade{{ grade }}" role="tabpanel" aria-labelledby="mid-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% for level in middle_levels %}
+                                    {% if '중등' ~ grade ~ '-' in level.name %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-success text-white text-center py-3">
+                                                <h3 class="m-0">{{ level.name }}</h3>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title mb-3">{{ level.name }} 레벨 인증시험</h5>
+                                                
+                                                <!-- 이전 시험 결과 표시 -->
+                                                {% if level.id in previous_results %}
+                                                    {% set result = previous_results[level.id] %}
+                                                    <div class="alert {% if result.passed %}alert-success{% else %}alert-danger{% endif %} mb-3">
+                                                        <p><strong>최근 시험:</strong> {{ result.exam_date.strftime('%Y-%m-%d') }}</p>
+                                                        <p><strong>점수:</strong> {{ result.score }}점</p>
+                                                        <p><strong>결과:</strong> 
+                                                            {% if result.passed %}
+                                                                <span class="badge bg-success">합격</span>
+                                                            {% else %}
+                                                                <span class="badge bg-danger">불합격</span>
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-info mb-3">
+                                                        <p>아직 시험을 치르지 않았습니다.</p>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <a href="{{ url_for('story.story_start_exam', level_id=level.id) }}" class="btn btn-success btn-lg w-100">
+                                                    <i class="bi bi-award"></i> 시험 보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- 고등 탭 -->
+                <div class="tab-pane fade" id="high" role="tabpanel" aria-labelledby="high-tab">
+                    <!-- 하위 탭: 고등 학년별 -->
+                    <ul class="nav nav-pills mb-3" id="highGradeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="high-grade1-tab" data-bs-toggle="pill" data-bs-target="#high-grade1" type="button" role="tab" aria-controls="high-grade1" aria-selected="true">1학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="high-grade2-tab" data-bs-toggle="pill" data-bs-target="#high-grade2" type="button" role="tab" aria-controls="high-grade2" aria-selected="false">2학년</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="high-grade3-tab" data-bs-toggle="pill" data-bs-target="#high-grade3" type="button" role="tab" aria-controls="high-grade3" aria-selected="false">3학년</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="highGradeTabsContent">
+                        {% for grade in range(1, 4) %}
+                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" id="high-grade{{ grade }}" role="tabpanel" aria-labelledby="high-grade{{ grade }}-tab">
+                            <div class="row">
+                                {% for level in high_levels %}
+                                    {% if '고등' ~ grade ~ '-' in level.name %}
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-success text-white text-center py-3">
+                                                <h3 class="m-0">{{ level.name }}</h3>
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title mb-3">{{ level.name }} 레벨 인증시험</h5>
+                                                
+                                                <!-- 이전 시험 결과 표시 -->
+                                                {% if level.id in previous_results %}
+                                                    {% set result = previous_results[level.id] %}
+                                                    <div class="alert {% if result.passed %}alert-success{% else %}alert-danger{% endif %} mb-3">
+                                                        <p><strong>최근 시험:</strong> {{ result.exam_date.strftime('%Y-%m-%d') }}</p>
+                                                        <p><strong>점수:</strong> {{ result.score }}점</p>
+                                                        <p><strong>결과:</strong> 
+                                                            {% if result.passed %}
+                                                                <span class="badge bg-success">합격</span>
+                                                            {% else %}
+                                                                <span class="badge bg-danger">불합격</span>
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="alert alert-info mb-3">
+                                                        <p>아직 시험을 치르지 않았습니다.</p>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <a href="{{ url_for('story.story_start_exam', level_id=level.id) }}" class="btn btn-success btn-lg w-100">
+                                                    <i class="bi bi-award"></i> 시험 보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

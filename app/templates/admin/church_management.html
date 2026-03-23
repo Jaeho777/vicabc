@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}교회 관리 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+           <h4 class="m-0">교회 관리</h4>
+        </div>
+        <div class="card-body">
+           <!-- 교회 선택 드롭다운 -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>
+                            교회 : 
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="churchDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ selected_church or '교회 선택' }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="churchDropdown">
+                                    {% for church in all_churches %}
+                                        <li><a class="dropdown-item" href="{{ url_for('admin.church_management', church=church) }}">{{ church }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+            
+            <!-- 교회별 학년 평균 표 -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>교회</th>
+                            <th>학년</th>
+                            <th>단어 평균</th>
+                            <th>스토리 평균</th>
+                            <th>회화 평균</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grade in grade_groups %}
+                        <tr>
+                            {% if loop.first %}
+                            <td rowspan="{{ grade_groups|length }}">{{ selected_church }}</td>
+                            {% endif %}
+                            <td>{{ grade.name }}</td>
+                            <td>{{ grade.voca_avg }}</td>
+                            <td>{{ grade.story_avg }}</td>
+                            <td>{{ grade.conv_avg }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

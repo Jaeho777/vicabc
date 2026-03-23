@@ -1,0 +1,173 @@
+/* 전체 스타일 */
+body {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* ==================== 색상 변수 ==================== */
+:root {
+    --main-blue: #4A90E2;
+    --main-blue-dark: #357ABD;
+    --main-blue-light: #5FA3F5;
+    --main-blue-hover: #3A7BC8;
+}
+
+/* 헤더 스타일 */
+.card-header {
+    padding: 1.5rem;
+}
+
+/* 카드 스타일 */
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* 폼 스타일 */
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--main-blue-light);
+    box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+    background-color: var(--main-blue);
+    border-color: var(--main-blue);
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--main-blue-hover);
+    border-color: var(--main-blue-hover);
+}
+
+/* 링크 스타일 */
+a {
+    color: var(--main-blue);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--main-blue-dark);
+    text-decoration: underline;
+}
+
+/* 섹션 스타일 */
+h4 {
+    color: #212529;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5rem;
+}
+
+/* 알림 메시지 스타일 */
+.alert {
+    border-radius: 5px;
+}
+
+/* ==================== 추가 색상 통일 ==================== */
+
+/* Bootstrap Primary 클래스 덮어쓰기 */
+.bg-primary {
+    background-color: var(--main-blue) !important;
+}
+
+/* Info 색상 통일 */
+.bg-info {
+    background-color: var(--main-blue-light) !important;
+}
+
+.card-header.bg-info {
+    background-color: var(--main-blue) !important;
+}
+
+/* 테이블 헤더 */
+.table-primary {
+    --bs-table-bg: var(--main-blue-light) !important;
+    --bs-table-border-color: var(--main-blue) !important;
+}
+
+.table-primary th {
+    background-color: var(--main-blue) !important;
+    color: white !important;
+}
+
+/* Progress Bar */
+.progress-bar {
+    background-color: var(--main-blue) !important;
+}
+
+/* Badge Primary */
+.badge.bg-primary {
+    background-color: var(--main-blue) !important;
+}
+
+/* 버튼 Outline 스타일 */
+.btn-outline-primary {
+    color: var(--main-blue) !important;
+    border-color: var(--main-blue) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--main-blue) !important;
+    border-color: var(--main-blue) !important;
+    color: white !important;
+}
+
+/* Breadcrumb 활성 항목 */
+.breadcrumb-item.active {
+    color: var(--main-blue) !important;
+}
+
+/* Alert Info */
+.alert-info {
+    background-color: rgba(74, 144, 226, 0.1) !important;
+    border-color: var(--main-blue-light) !important;
+    color: var(--main-blue-dark) !important;
+}
+
+/* Info 버튼도 메인 색상으로 */
+.btn-info {
+    background-color: var(--main-blue) !important;
+    border-color: var(--main-blue) !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    background-color: var(--main-blue-hover) !important;
+    border-color: var(--main-blue-hover) !important;
+    color: white !important;
+}
+
+.btn-info:active,
+.btn-info:focus {
+    background-color: var(--main-blue-dark) !important;
+    border-color: var(--main-blue-dark) !important;
+    color: white !important;
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    h4 {
+        font-size: 1.2rem;
+    }
+}

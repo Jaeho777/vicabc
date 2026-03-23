@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ level.name }} 단어 목록 - VOCA 애플리케이션{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('voca.index') }}">VOCA 레벨</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ level.name }}</li>
+    </ol>
+</nav>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h2 class="m-0">
+            {% set parts = level.name.replace('-G', '-').split('-') %}
+            {% if parts|length >= 3 %}
+                {{ parts[0] }}-{{ parts[1] }} {{ parts[2] }}
+            {% else %}
+                {{ level.name }}
+            {% endif %}
+        </h2>
+        <a href="{{ url_for('voca.level_practice', level_id=level.id) }}" class="btn btn-light">
+            <i class="bi bi-shuffle"></i> 랜덤 단어 학습
+        </a>
+    </div>
+    <div class="card-body">
+        {% if level.description %}
+            <p>{{ level.description }}</p>
+        {% endif %}
+        
+        <!-- 레벨 진도 정보 부분 -->
+        {% set percent = (completed_words / total_words * 100) | round if total_words > 0 else 0 %}
+
+        <div class="progress mb-3" style="height: 20px;">
+            <div class="progress-bar bg-success" role="progressbar" 
+                style="width: {{ percent }}%" 
+                aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">
+                {{ percent }}%
+            </div>
+        </div>
+
+        <p class="mb-0">
+            <strong>진도:</strong> {{ completed_words }}/{{ total_words }} 단어 완료
+        </p>
+    </div>
+</div>
+
+<h3 class="mb-3">단어 목록</h3>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th>#</th>
+                <th>단어</th>
+                <th>품사</th>
+                <th>의미</th>
+                <th>학습 상태</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vocabulary in vocabularies %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ vocabulary.word }}</td>
+                <td>{{ vocabulary.part_of_speech or '-' }}</td>
+                <td>{{ vocabulary.meaning }}</td>
+                <!-- voca_level_words.html의 학습 상태 부분 변경 -->
+                <td>
+                    {% if vocabulary.id in vocabulary_progress %}
+                        {% set progress = vocabulary_progress[vocabulary.id] %}
+                        {% if progress.status == 2 %}
+                            <span class="badge bg-success">학습 완료 ({{ progress.total_score }}점)</span>
+                        {% elif progress.status == 1 %}
+                            <span class="badge bg-warning">학습 중 ({{ progress.total_score }}점)</span>
+                        {% else %}
+                            <span class="badge bg-secondary">미학습</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="badge bg-secondary">미학습</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">이 레벨에 등록된 단어가 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
