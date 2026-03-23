@@ -14,8 +14,10 @@ def _lesson(village_number, lesson_number, prompt, response, practice_keywords):
             {"label": "Sentence A", "text": prompt},
             {"label": "Sentence B", "text": response},
         ],
+        "base_reference_text": f"{prompt} {response}",
         "base_audio_path": _audio_path(village_number, f"{lesson_prefix}a.m4a"),
         "practice_audio_path": _audio_path(village_number, f"{lesson_prefix}b.m4a"),
+        "practice_reference_text": None,
         "practice_keywords": practice_keywords,
     }
 

@@ -10,7 +10,11 @@ from flask_login import current_user, login_required
 from app.extensions import db
 from app.models.village_certification import VillageCertification
 from app.services.village_content import get_village, get_village_catalog
-from app.services.speech_service import transcribe_audio
+from app.services.speech_service import (
+    build_pronunciation_feedback,
+    calculate_pronunciation_accuracy,
+    transcribe_audio,
+)
 from app.services.village_service import (
     INTRO_PROMPT,
     MAX_TURNS,
@@ -82,6 +86,50 @@ def exam():
         initial_prompt=INTRO_PROMPT,
         max_turns=MAX_TURNS,
         latest_result=latest_result,
+    )
+
+
+@village_bp.route("/practice_audio", methods=["POST"])
+@login_required
+def practice_audio():
+    if "audio" not in request.files:
+        return jsonify({"error": "No audio file provided"}), 400
+
+    reference_text = (request.form.get("reference_text") or "").strip()
+    if not reference_text:
+        return jsonify({"error": "비교할 기준 문장이 없습니다."}), 400
+
+    audio_file = request.files["audio"]
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_audio:
+        audio_file.save(temp_audio.name)
+        temp_filename = temp_audio.name
+
+    try:
+        result = transcribe_audio(temp_filename)
+        transcribed_text = result["text"]
+        accuracy, details = calculate_pronunciation_accuracy(transcribed_text, reference_text)
+        feedback = build_pronunciation_feedback(transcribed_text, reference_text)
+    except Exception as exc:
+        if os.path.exists(temp_filename):
+            os.unlink(temp_filename)
+        print(f"Village 학습 음성 처리 오류: {exc}")
+        return jsonify({"error": str(exc)}), 500
+
+    if os.path.exists(temp_filename):
+        os.unlink(temp_filename)
+
+    return jsonify(
+        {
+            "success": True,
+            "transcribed_text": transcribed_text,
+            "reference_text": reference_text,
+            "accuracy": accuracy,
+            "details": details,
+            "feedback_summary": feedback["summary"],
+            "matched_words": feedback["matched_words"],
+            "missing_words": feedback["missing_words"],
+            "extra_words": feedback["extra_words"],
+        }
     )
 
 

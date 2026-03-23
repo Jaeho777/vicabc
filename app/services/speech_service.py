@@ -34,6 +34,49 @@ def calculate_pronunciation_accuracy(transcribed_text, original_text):
     """발음 정확도를 계산하는 함수"""
     return evaluate_pronunciation(transcribed_text, original_text)
 
+
+def build_pronunciation_feedback(recognized_text, reference_text):
+    """발음 비교 결과를 사람이 읽기 쉬운 피드백으로 정리"""
+
+    def normalize_text(text):
+        import re
+
+        return re.sub(r"[^\w\s]", "", (text or "").lower()).strip()
+
+    recognized_words = normalize_text(recognized_text).split()
+    reference_words = normalize_text(reference_text).split()
+
+    remaining_recognized = list(recognized_words)
+    matched_words = []
+    missing_words = []
+
+    for word in reference_words:
+        if word in remaining_recognized:
+            matched_words.append(word)
+            remaining_recognized.remove(word)
+        else:
+            missing_words.append(word)
+
+    extra_words = remaining_recognized
+
+    if not reference_words:
+        summary = "비교할 기준 문장이 없습니다."
+    elif not recognized_words:
+        summary = "음성이 거의 인식되지 않았습니다. 조금 더 천천히 또렷하게 말해보세요."
+    elif not missing_words and not extra_words:
+        summary = "기준 문장과 거의 같게 말했습니다."
+    elif len(missing_words) <= 2 and len(extra_words) <= 2:
+        summary = "대체로 잘 따라 했습니다. 몇 단어만 더 정확히 말하면 됩니다."
+    else:
+        summary = "핵심 단어가 몇 개 빠지거나 다른 단어가 섞였습니다. 기준 문장을 다시 듣고 이어서 말해보세요."
+
+    return {
+        "summary": summary,
+        "matched_words": matched_words,
+        "missing_words": missing_words,
+        "extra_words": extra_words,
+    }
+
 def evaluate_pronunciation(recognized_text, reference_text):
     """
     인식된 텍스트와 참조 텍스트를 비교하여 발음 점수 계산

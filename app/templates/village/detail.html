@@ -32,6 +32,26 @@
     audio {
         width: 100%;
     }
+    .practice-panel {
+        border-radius: 14px;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        padding: 16px;
+        height: 100%;
+    }
+    .recording-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: #dc3545;
+        border-radius: 50%;
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
 </style>
 {% endblock %}
 
@@ -89,21 +109,50 @@
 
                 <div class="row g-3 mb-3">
                     <div class="col-lg-6">
-                        <div class="dialogue-box">
+                        <div class="practice-panel"
+                             data-reference-text="{{ lesson.base_reference_text }}"
+                             data-panel-label="Lesson {{ lesson.number }} 기본 대화">
                             <div class="text-muted small mb-2">기본 대화 음원</div>
-                            <div class="small text-secondary mb-3">Sentence A, B가 함께 들어 있는 첫 번째 파일</div>
+                            <div class="small text-secondary mb-3">첫 번째 파일입니다. Sentence A와 Sentence B를 이어서 따라 말하세요.</div>
                             <audio controls preload="none">
                                 <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
                             </audio>
+
+                            <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+                                <button type="button" class="btn btn-danger js-record-start">따라 말하기 시작</button>
+                                <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
+                                <button type="button" class="btn btn-outline-success js-play-recording d-none">내 녹음 듣기</button>
+                                <span class="js-recording-status"></span>
+                            </div>
+
+                            <div class="alert alert-info mt-3 mb-0 d-none js-result-box"></div>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="dialogue-box">
+                        <div class="practice-panel"
+                             {% if lesson.practice_reference_text %}
+                             data-reference-text="{{ lesson.practice_reference_text }}"
+                             data-panel-label="Lesson {{ lesson.number }} 응용 대화"
+                             {% endif %}>
                             <div class="text-muted small mb-2">응용 대화 음원</div>
-                            <div class="small text-secondary mb-3">응용 키워드를 적용한 두 번째 파일</div>
+                            <div class="small text-secondary mb-3">두 번째 파일입니다. 응용 키워드가 적용된 녹음본을 먼저 들어보세요.</div>
                             <audio controls preload="none">
                                 <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
                             </audio>
+
+                            {% if lesson.practice_reference_text %}
+                            <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+                                <button type="button" class="btn btn-danger js-record-start">응용 문장 따라 말하기</button>
+                                <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
+                                <button type="button" class="btn btn-outline-success js-play-recording d-none">내 녹음 듣기</button>
+                                <span class="js-recording-status"></span>
+                            </div>
+                            <div class="alert alert-info mt-3 mb-0 d-none js-result-box"></div>
+                            {% else %}
+                            <div class="alert alert-light border mt-3 mb-0">
+                                현재는 응용 음원 재생만 가능합니다. 이 파일까지 자동 비교하려면 실제 응용 문장 스크립트가 필요합니다.
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -121,4 +170,166 @@
     </div>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const practiceState = {
+    recorder: null,
+    stream: null,
+    chunks: [],
+    panel: null,
+};
+
+function setRecordingUI(panel, isRecording) {
+    const startButton = panel.querySelector('.js-record-start');
+    const stopButton = panel.querySelector('.js-record-stop');
+    const status = panel.querySelector('.js-recording-status');
+
+    startButton.disabled = isRecording;
+    stopButton.disabled = !isRecording;
+    status.innerHTML = isRecording ? '<span class="recording-indicator"></span> 녹음 중' : '';
+}
+
+function showResult(panel, html) {
+    const resultBox = panel.querySelector('.js-result-box');
+    resultBox.classList.remove('d-none');
+    resultBox.innerHTML = html;
+}
+
+async function startPracticeRecording(panel) {
+    if (practiceState.recorder) {
+        alert('다른 녹음이 진행 중입니다. 먼저 끝내주세요.');
+        return;
+    }
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+
+        practiceState.stream = stream;
+        practiceState.recorder = recorder;
+        practiceState.chunks = [];
+        practiceState.panel = panel;
+
+        recorder.addEventListener('dataavailable', (event) => {
+            practiceState.chunks.push(event.data);
+        });
+
+        recorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(practiceState.chunks, { type: 'audio/webm' });
+
+            if (practiceState.stream) {
+                practiceState.stream.getTracks().forEach((track) => track.stop());
+            }
+
+            practiceState.recorder = null;
+            practiceState.stream = null;
+            practiceState.chunks = [];
+
+            sendPracticeAudio(panel, audioBlob);
+        });
+
+        recorder.start();
+        setRecordingUI(panel, true);
+        showResult(panel, '음성 녹음 중입니다...');
+    } catch (error) {
+        console.error(error);
+        alert('마이크 접근에 실패했습니다. 브라우저 권한을 확인해주세요.');
+    }
+}
+
+function stopPracticeRecording(panel) {
+    if (!practiceState.recorder || practiceState.panel !== panel) {
+        return;
+    }
+
+    setRecordingUI(panel, false);
+    showResult(panel, '음성 처리 중...');
+    practiceState.recorder.stop();
+}
+
+function bindRecordingPlayback(panel, audioBlob) {
+    const button = panel.querySelector('.js-play-recording');
+    if (!button) {
+        return;
+    }
+
+    if (panel.dataset.recordingUrl) {
+        URL.revokeObjectURL(panel.dataset.recordingUrl);
+    }
+
+    panel.dataset.recordingUrl = URL.createObjectURL(audioBlob);
+    button.classList.remove('d-none');
+}
+
+function renderWordList(words) {
+    if (!words || words.length === 0) {
+        return '없음';
+    }
+    return words.join(', ');
+}
+
+function sendPracticeAudio(panel, audioBlob) {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'village-practice.webm');
+    formData.append('reference_text', panel.dataset.referenceText || '');
+
+    fetch('{{ url_for("village.practice_audio") }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (!data.success) {
+            throw new Error(data.error || '오류가 발생했습니다.');
+        }
+
+        bindRecordingPlayback(panel, audioBlob);
+
+        const scoreClass = data.accuracy >= 85 ? 'text-success' : (data.accuracy >= 65 ? 'text-primary' : 'text-danger');
+        showResult(panel, `
+            <div class="fw-semibold mb-2">${panel.dataset.panelLabel || '따라 말하기'} 결과</div>
+            <div class="mb-2"><strong>인식된 문장:</strong> ${data.transcribed_text || '(없음)'}</div>
+            <div class="mb-2"><strong>정확도:</strong> <span class="${scoreClass}">${data.accuracy}점</span></div>
+            <div class="mb-2"><strong>평가:</strong> ${data.feedback_summary}</div>
+            <div class="small text-muted mb-2">${data.details.replace(/\n/g, '<br>')}</div>
+            <div class="small"><strong>잘한 단어:</strong> ${renderWordList(data.matched_words)}</div>
+            <div class="small"><strong>빠진 단어:</strong> ${renderWordList(data.missing_words)}</div>
+            <div class="small"><strong>추가된 단어:</strong> ${renderWordList(data.extra_words)}</div>
+        `);
+    })
+    .catch((error) => {
+        console.error(error);
+        showResult(panel, `오디오 처리 중 오류가 발생했습니다: ${error.message}`);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.practice-panel').forEach((panel) => {
+        const startButton = panel.querySelector('.js-record-start');
+        const stopButton = panel.querySelector('.js-record-stop');
+        const playButton = panel.querySelector('.js-play-recording');
+
+        if (startButton) {
+            startButton.addEventListener('click', () => startPracticeRecording(panel));
+        }
+
+        if (stopButton) {
+            stopButton.addEventListener('click', () => stopPracticeRecording(panel));
+        }
+
+        if (playButton) {
+            playButton.addEventListener('click', () => {
+                if (!panel.dataset.recordingUrl) {
+                    return;
+                }
+
+                const audio = new Audio(panel.dataset.recordingUrl);
+                audio.play();
+            });
+        }
+    });
+});
+</script>
 {% endblock %}
