@@ -4,11 +4,12 @@ import tempfile
 from datetime import datetime
 
 import pytz
-from flask import Blueprint, jsonify, render_template, request, session
+from flask import Blueprint, abort, jsonify, render_template, request, session
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models.village_certification import VillageCertification
+from app.services.village_content import get_village, get_village_catalog
 from app.services.speech_service import transcribe_audio
 from app.services.village_service import (
     INTRO_PROMPT,
@@ -42,7 +43,26 @@ def get_latest_village_result(user_id):
 @login_required
 def index():
     latest_result = get_latest_village_result(current_user.id)
-    return render_template("village/index.html", latest_result=latest_result)
+    return render_template(
+        "village/index.html",
+        latest_result=latest_result,
+        village_catalog=get_village_catalog(),
+    )
+
+
+@village_bp.route("/<int:village_number>")
+@login_required
+def detail(village_number):
+    village = get_village(village_number)
+    if not village:
+        abort(404)
+
+    latest_result = get_latest_village_result(current_user.id)
+    return render_template(
+        "village/detail.html",
+        village=village,
+        latest_result=latest_result,
+    )
 
 
 @village_bp.route("/exam")

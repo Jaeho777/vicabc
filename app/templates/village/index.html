@@ -2,16 +2,47 @@
 
 {% block title %}Village - VOCA 애플리케이션{% endblock %}
 
+{% block extra_head %}
+<style>
+    .village-hero,
+    .village-card {
+        border-radius: 18px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+    .village-card {
+        border: 0;
+        height: 100%;
+    }
+    .village-card.available {
+        background: linear-gradient(180deg, #fff8db 0%, #ffffff 100%);
+    }
+    .village-card.pending {
+        background: #f8f9fa;
+    }
+    .village-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        background: rgba(13, 110, 253, 0.08);
+        color: #0d6efd;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="card shadow mb-4">
-        <div class="card-header bg-warning text-dark">
+    <div class="card village-hero mb-4 border-0">
+        <div class="card-header bg-warning text-dark border-0">
             <h4 class="m-0">Village 대화 학습</h4>
         </div>
         <div class="card-body">
             <p class="mb-4">
-                Village는 실제 질문과 답변 흐름으로 말하기 수준을 확인하는 대화형 영역입니다.
-                인증시험에 들어가면 바로 영어 인사로 대화가 시작되고, 사용자의 답변을 바탕으로 다음 질문이 이어집니다.
+                Village는 녹음본과 대화 패턴을 따라 들으며 익히고, 이후 인증시험에서 실제 말하기 흐름으로 점검하는 영역입니다.
+                지금은 Village 1, 2 학습이 열려 있고 이후 16개 Village까지 같은 구조로 계속 확장할 수 있게 구성했습니다.
             </p>
 
             {% if latest_result %}
@@ -22,11 +53,47 @@
             </div>
             {% endif %}
 
-            <div class="d-flex gap-2">
+            <div class="d-flex flex-wrap gap-2">
                 <a href="{{ url_for('village.exam') }}" class="btn btn-warning btn-lg text-dark">Village 인증시험 시작</a>
                 <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary btn-lg">대시보드로</a>
             </div>
         </div>
+    </div>
+
+    <div class="row g-4">
+        {% for village in village_catalog %}
+        <div class="col-md-6 col-xl-4">
+            <div class="card village-card {% if village.available %}available{% else %}pending{% endif %}">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="text-muted small mb-1">Village {{ village.number }}</div>
+                            <h5 class="card-title mb-1">{{ village.theme_ko }}</h5>
+                            <div class="text-secondary">{{ village.theme_en }}</div>
+                        </div>
+                        {% if village.available %}
+                        <span class="badge bg-success">OPEN</span>
+                        {% else %}
+                        <span class="badge bg-secondary">READY</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="card-text flex-grow-1">{{ village.summary }}</p>
+
+                    {% if village.available %}
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="village-chip">{{ village.lesson_count }} lessons</span>
+                    </div>
+                    <a href="{{ url_for('village.detail', village_number=village.number) }}" class="btn btn-outline-dark">
+                        학습하러 가기
+                    </a>
+                    {% else %}
+                    <div class="text-muted small">텍스트 정리 후 바로 이어서 추가 가능합니다.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
