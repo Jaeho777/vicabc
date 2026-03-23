@@ -28,7 +28,6 @@ def ensure_village_certification_table():
 
 def get_latest_village_result(user_id):
     try:
-        ensure_village_certification_table()
         return (
             VillageCertification.query.filter_by(user_id=user_id)
             .order_by(VillageCertification.exam_date.desc())

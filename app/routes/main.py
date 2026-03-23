@@ -13,7 +13,6 @@ def index():
     village_latest = None
 
     try:
-        VillageCertification.__table__.create(bind=db.engine, checkfirst=True)
         village_latest = (
             VillageCertification.query.filter_by(user_id=current_user.id)
             .order_by(VillageCertification.exam_date.desc())
