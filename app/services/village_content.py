@@ -10,18 +10,12 @@ def _lesson(village_number, lesson_number, prompt, response, practice_keywords):
     return {
         "number": lesson_number,
         "title": f"Lesson {lesson_number}",
-        "dialogue": [
-            {
-                "label": "Sentence A",
-                "text": prompt,
-                "audio_path": _audio_path(village_number, f"{lesson_prefix}a.m4a"),
-            },
-            {
-                "label": "Sentence B",
-                "text": response,
-                "audio_path": _audio_path(village_number, f"{lesson_prefix}b.m4a"),
-            },
+        "dialogue_lines": [
+            {"label": "Sentence A", "text": prompt},
+            {"label": "Sentence B", "text": response},
         ],
+        "base_audio_path": _audio_path(village_number, f"{lesson_prefix}a.m4a"),
+        "practice_audio_path": _audio_path(village_number, f"{lesson_prefix}b.m4a"),
         "practice_keywords": practice_keywords,
     }
 

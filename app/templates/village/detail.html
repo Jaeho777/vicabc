@@ -16,6 +16,9 @@
         padding: 14px 16px;
         height: 100%;
     }
+    .sentence-line {
+        font-size: 1.05rem;
+    }
     .keyword-chip {
         display: inline-flex;
         align-items: center;
@@ -72,21 +75,37 @@
                         <div class="text-muted small">Lesson {{ lesson.number }}</div>
                         <h4 class="mb-0">{{ lesson.title }}</h4>
                     </div>
-                    <span class="badge bg-primary">핵심 대화 2문장</span>
+                    <span class="badge bg-primary">기본 대화 + 응용 음원</span>
+                </div>
+
+                <div class="dialogue-box mb-3">
+                    <div class="text-muted small mb-3">기본 문장</div>
+                    {% for item in lesson.dialogue_lines %}
+                    <div class="sentence-line {% if not loop.last %}mb-2{% endif %}">
+                        <strong>{{ item.label }}.</strong> {{ item.text }}
+                    </div>
+                    {% endfor %}
                 </div>
 
                 <div class="row g-3 mb-3">
-                    {% for item in lesson.dialogue %}
                     <div class="col-lg-6">
                         <div class="dialogue-box">
-                            <div class="text-muted small mb-2">{{ item.label }}</div>
-                            <div class="fs-5 mb-3">{{ item.text }}</div>
+                            <div class="text-muted small mb-2">기본 대화 음원</div>
+                            <div class="small text-secondary mb-3">Sentence A, B가 함께 들어 있는 첫 번째 파일</div>
                             <audio controls preload="none">
-                                <source src="{{ url_for('static', filename=item.audio_path) }}" type="audio/mp4">
+                                <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
                             </audio>
                         </div>
                     </div>
-                    {% endfor %}
+                    <div class="col-lg-6">
+                        <div class="dialogue-box">
+                            <div class="text-muted small mb-2">응용 대화 음원</div>
+                            <div class="small text-secondary mb-3">응용 키워드를 적용한 두 번째 파일</div>
+                            <audio controls preload="none">
+                                <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
+                            </audio>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
