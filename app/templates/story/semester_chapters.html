@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Bible Story {{ grade }}학년 {{ semester }}학기{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년 {{ semester }}학기</li>
+    </ol>
+</nav>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <h4 class="m-0">{{ grade }}학년 {{ semester }}학기 챕터</h4>
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-0">학습할 챕터를 선택하면 스토리 목록과 진도를 확인할 수 있습니다.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for chapter in chapters %}
+    {% set progress = chapter_progress.get(chapter.id, {}) %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <div class="small text-muted mb-1">Chapter {{ chapter.order }}</div>
+                <h5 class="m-0">{{ chapter.title }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3" style="height: 18px;">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ progress.get('progress_percent', 0) }}%;"
+                         aria-valuenow="{{ progress.get('progress_percent', 0) }}"
+                         aria-valuemin="0" aria-valuemax="100">
+                        {{ progress.get('progress_percent', 0) }}%
+                    </div>
+                </div>
+
+                <p class="mb-2"><strong>스토리 수:</strong> {{ progress.get('total_stories', 0) }}</p>
+                <p class="mb-2"><strong>완료:</strong> {{ progress.get('completed_stories', 0) }}</p>
+                <p class="text-muted mb-0"><strong>학습 중:</strong> {{ progress.get('in_progress_stories', 0) }}</p>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-success w-100">챕터 열기</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info mb-0">이 학기에 등록된 챕터가 없습니다.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

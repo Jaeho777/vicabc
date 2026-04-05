@@ -291,13 +291,15 @@ def exam_semester_chapters(grade, semester):
     # 사용자의 이전 인증 시험 결과 가져오기
     previous_results = {}
     for chapter in chapters:
-        # 해당 챕터의 최근 시험 결과
-        latest_cert = (StoryCertification.query
-                       .join(Story)
-                       .filter(StoryCertification.user_id == current_user.id,
-                              Story.chapter_id == chapter.id)
-                       .order_by(StoryCertification.exam_date.desc())
-                       .first())
+        latest_cert = (
+            StoryCertification.query
+            .filter(
+                StoryCertification.user_id == current_user.id,
+                StoryCertification.chapter_id == chapter.id,
+            )
+            .order_by(StoryCertification.exam_date.desc())
+            .first()
+        )
         
         if latest_cert:
             previous_results[chapter.id] = {
@@ -325,10 +327,12 @@ def story_start_exam(chapter_id):
     
     # 세션에 시험 정보 저장
     session_key = f'story_exam_chapter_{chapter_id}'
+    results_key = f'story_exam_results_{chapter_id}'
     
     # 스토리 ID 목록을 순서대로 세션에 저장 (랜덤 없음)
     story_ids = [s.id for s in stories]
     session[session_key] = story_ids
+    session[results_key] = {}
     
     # 첫 번째 스토리로 리다이렉트
     return redirect(url_for('story.story_take_exam', chapter_id=chapter_id, story_index=1))
@@ -382,8 +386,11 @@ def save_story_exam_result():
     english_writing_score = data.get('english_writing_score', 0)
     korean_writing_score = data.get('korean_writing_score', 0)
     
+    if not chapter_id or not story_id:
+        return jsonify({'success': False, 'error': '시험 정보가 올바르지 않습니다.'}), 400
+
     # 총점 계산 (말하기 40%, 영어 쓰기 30%, 한글 쓰기 30%)
-    total_score = (speaking_score * 0.4 + english_writing_score * 0.3 + korean_writing_score * 0.3)
+    total_score = round(speaking_score * 0.4 + english_writing_score * 0.3 + korean_writing_score * 0.3)
     
     # 결과를 세션에 저장
     results_key = f'story_exam_results_{chapter_id}'
@@ -394,7 +401,7 @@ def save_story_exam_result():
         'speaking_score': speaking_score,
         'english_writing_score': english_writing_score,
         'korean_writing_score': korean_writing_score,
-        'total_score': round(total_score),
+        'total_score': total_score,
         'passed': total_score >= 80  # 80점 이상이면 합격으로 간주
     }
     
@@ -432,17 +439,38 @@ def story_exam_result(chapter_id):
     korea_tz = pytz.timezone('Asia/Seoul')
     korea_time = datetime.now(korea_tz)
     
-    # 각 스토리별로 인증 기록 저장
-    for story_id_str, result in results.items():
-        story_id = int(story_id_str)
-        certification = StoryCertification(
-            user_id=current_user.id,
-            level_id=0,  # Chapter 기반이므로 level_id는 0으로 설정
-            passed=result['passed'],
-            score=result['total_score'],
-            exam_date=korea_time,
-        )
-        db.session.add(certification)
+    story_ids = [int(story_id_str) for story_id_str in results.keys()]
+    stories = Story.query.filter(Story.id.in_(story_ids)).order_by(Story.order).all()
+    stories_by_id = {story.id: story for story in stories}
+
+    story_result_rows = []
+    for story_id in story_ids:
+        story = stories_by_id.get(story_id)
+        if not story:
+            continue
+
+        result = results.get(str(story_id), {})
+        story_result_rows.append({
+            'order': story.order,
+            'english_text': story.english_text,
+            'korean_text': story.korean_text,
+            'speaking_score': result.get('speaking_score', 0),
+            'english_writing_score': result.get('english_writing_score', 0),
+            'korean_writing_score': result.get('korean_writing_score', 0),
+            'total_score': result.get('total_score', 0),
+            'passed': result.get('passed', False),
+        })
+    story_result_rows.sort(key=lambda row: row['order'])
+
+    certification = StoryCertification(
+        user_id=current_user.id,
+        level_id=None,
+        chapter_id=chapter.id,
+        passed=is_passed,
+        score=overall_score,
+        exam_date=korea_time,
+    )
+    db.session.add(certification)
     
     db.session.commit()
     
@@ -459,7 +487,8 @@ def story_exam_result(chapter_id):
                           overall_score=overall_score,
                           total_stories=total_stories,
                           passed_stories=passed_stories,
-                          is_passed=is_passed)
+                          is_passed=is_passed,
+                          story_result_rows=story_result_rows)
 
 @story_bp.route('/api/chapters/<int:grade>/<int:semester>')
 @login_required

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Bible Story 인증시험 {{ grade }}학년 {{ semester }}학기{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년 {{ semester }}학기</li>
+    </ol>
+</nav>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <h4 class="m-0">{{ grade }}학년 {{ semester }}학기 인증시험</h4>
+    </div>
+    <div class="card-body">
+        <p class="text-muted mb-0">챕터를 선택하면 등록된 스토리 순서대로 시험이 진행됩니다.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for chapter in chapters %}
+    {% set result = previous_results.get(chapter.id) %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <div class="small text-muted mb-1">Chapter {{ chapter.order }}</div>
+                <h5 class="m-0">{{ chapter.title }}</h5>
+            </div>
+            <div class="card-body">
+                {% if result %}
+                <div class="alert {% if result.passed %}alert-success{% else %}alert-warning{% endif %} mb-3">
+                    <div><strong>최근 결과:</strong> {% if result.passed %}합격{% else %}재도전 필요{% endif %}</div>
+                    <div><strong>점수:</strong> {{ result.score }}점</div>
+                    <div><strong>일시:</strong> {{ result.exam_date.strftime('%Y-%m-%d %H:%M') }}</div>
+                </div>
+                {% else %}
+                <div class="alert alert-light border mb-3">
+                    아직 인증시험 기록이 없습니다.
+                </div>
+                {% endif %}
+
+                <p class="mb-0 text-muted">이 챕터의 스토리 전체를 듣고 말하기와 쓰기로 평가합니다.</p>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="{{ url_for('story.story_start_exam', chapter_id=chapter.id) }}" class="btn btn-success w-100">시험 시작</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info mb-0">이 학기에 등록된 챕터가 없습니다.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

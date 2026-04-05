@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ chapter.title }} 스토리 목록 - VOCA 애플리케이션{% endblock %}
+{% block title %}{{ chapter.title }} Bible Story 목록{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">스토리 학습</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ chapter.title }}</li>
     </ol>
 </nav>

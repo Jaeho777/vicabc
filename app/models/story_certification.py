@@ -7,7 +7,8 @@ class StoryCertification(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    level_id = db.Column(db.Integer, db.ForeignKey('levels.id'), nullable=False)
+    level_id = db.Column(db.Integer, db.ForeignKey('levels.id'), nullable=True)
+    chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'), nullable=True)
     
     # 시험 결과 (0: 불합격, 1: 합격)
     passed = db.Column(db.Boolean, default=False)
@@ -21,6 +22,10 @@ class StoryCertification(db.Model):
     # 관계 설정
     user = db.relationship('User', backref=db.backref('story_certifications', lazy='dynamic'))
     level = db.relationship('Level', backref=db.backref('story_certifications', lazy='dynamic'))
+    chapter = db.relationship('Chapter', backref=db.backref('story_certifications', lazy='dynamic'))
     
     def __repr__(self):
-        return f'<StoryCertification user_id={self.user_id} level_id={self.level_id} passed={self.passed}>'
+        return (
+            f'<StoryCertification user_id={self.user_id} '
+            f'level_id={self.level_id} chapter_id={self.chapter_id} passed={self.passed}>'
+        )
