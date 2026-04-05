@@ -35,6 +35,11 @@ def _parse_positive_int(value):
     return parsed if parsed > 0 else None
 
 
+def _get_json_payload():
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else {}
+
+
 def _normalize_text_for_similarity(text):
     return " ".join((text or "").strip().lower().split())
 
@@ -288,13 +293,13 @@ def process_audio():
         if os.path.exists(temp_filename):
             os.unlink(temp_filename)
         print(f"Story 음성 처리 에러: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': '음성 처리 중 오류가 발생했습니다. 다시 시도해 주세요.'}), 500
 
 
 @story_bp.route('/exam/evaluate_writing', methods=['POST'])
 @login_required
 def evaluate_exam_writing():
-    data = request.get_json(silent=True) or {}
+    data = _get_json_payload()
     chapter_id = _parse_positive_int(data.get('chapter_id'))
     story_id = _parse_positive_int(data.get('story_id'))
     english_input = data.get('english_input', '')
@@ -319,11 +324,18 @@ def evaluate_exam_writing():
 @story_bp.route('/save_progress', methods=['POST'])
 @login_required
 def save_progress():
-    data = request.json
-    story_id = data.get('story_id')
-    speaking_score = data.get('speaking_score', 0)
-    english_writing_score = data.get('english_writing_score', 0)
-    korean_writing_score = data.get('korean_writing_score', 0)
+    data = _get_json_payload()
+    story_id = _parse_positive_int(data.get('story_id'))
+    speaking_score = _normalize_score(data.get('speaking_score', 0))
+    english_writing_score = _normalize_score(data.get('english_writing_score', 0))
+    korean_writing_score = _normalize_score(data.get('korean_writing_score', 0))
+
+    if not story_id:
+        return jsonify({'success': False, 'error': '학습 정보가 올바르지 않습니다.'}), 400
+
+    story = Story.query.get(story_id)
+    if not story:
+        return jsonify({'success': False, 'error': '존재하지 않는 스토리입니다.'}), 404
     
     # 총점 계산 - 말하기, 영어 쓰기, 한글 쓰기 평균
     total_score = (speaking_score + english_writing_score + korean_writing_score) // 3
@@ -430,6 +442,10 @@ def story_start_exam(chapter_id):
     if not stories:
         flash('이 챕터에 등록된 스토리가 없습니다.', 'info')
         return redirect(url_for('story.story_exam_index'))
+
+    if any(not story.audio_filename for story in stories):
+        flash('이 챕터에는 시험용 음원이 없는 스토리가 있어 시험을 시작할 수 없습니다.', 'warning')
+        return redirect(url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester))
     
     # 세션에 시험 정보 저장
     session_key = _story_exam_session_key(chapter_id)
@@ -458,6 +474,9 @@ def story_take_exam(chapter_id, story_index):
     
     story_ids = session[session_key]
     total_stories = len(story_ids)
+    if total_stories == 0:
+        flash('시험 정보를 다시 불러와 주세요.', 'warning')
+        return redirect(url_for('story.story_start_exam', chapter_id=chapter_id))
     
     # 인덱스 조정 (세션 인덱스는 0부터 시작)
     array_index = story_index - 1
@@ -494,7 +513,7 @@ def story_take_exam(chapter_id, story_index):
 @login_required
 def save_story_exam_result():
     """Story 시험 결과 저장 (AJAX)"""
-    data = request.get_json(silent=True) or {}
+    data = _get_json_payload()
     chapter_id = _parse_positive_int(data.get('chapter_id'))
     story_id = _parse_positive_int(data.get('story_id'))
     english_input = data.get('english_input', '')
