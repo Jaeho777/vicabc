@@ -28,12 +28,16 @@
         font-weight: 700;
         line-height: 1.7;
         color: #0f172a;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
     .korean-line {
         margin-top: 10px;
         font-size: 1rem;
         color: #64748b;
         line-height: 1.6;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
     .score-tile {
         border-radius: 14px;
@@ -74,12 +78,32 @@
         color: #0d6efd;
         font-size: 0.9rem;
         font-weight: 600;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
     audio {
         width: 100%;
     }
     textarea.form-control {
         min-height: 120px;
+    }
+    @media (max-width: 576px) {
+        .story-summary .card-body,
+        .story-card .card-body {
+            padding: 1rem !important;
+        }
+        .reference-box,
+        .practice-panel,
+        .writing-panel,
+        .result-panel {
+            padding: 14px;
+        }
+        .english-line {
+            font-size: 1.05rem;
+        }
+        .score-value {
+            font-size: 1.5rem;
+        }
     }
     @keyframes pulse {
         0% { opacity: 1; }
