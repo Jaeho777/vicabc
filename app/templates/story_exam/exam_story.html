@@ -108,7 +108,7 @@
                         <source src="{{ url_for('static', filename='audio/stories/' + story.audio_filename) }}" type="audio/mpeg">
                     </audio>
                     {% else %}
-                    <div class="alert alert-light border mb-3">등록된 녹음 파일이 없습니다. TTS로 들으세요.</div>
+                    <div class="alert alert-light border mb-3">등록된 녹음 파일이 없습니다. 관리자에게 시험용 음원 등록을 요청해 주세요.</div>
                     {% endif %}
 
                     {% if story.audio_filename %}

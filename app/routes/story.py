@@ -27,6 +27,14 @@ def _normalize_score(value):
     return max(0, min(score, 100))
 
 
+def _parse_positive_int(value):
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 0 else None
+
+
 def _normalize_text_for_similarity(text):
     return " ".join((text or "").strip().lower().split())
 
@@ -287,13 +295,14 @@ def process_audio():
 @login_required
 def evaluate_exam_writing():
     data = request.get_json(silent=True) or {}
-    chapter_id = data.get('chapter_id')
-    story_id = data.get('story_id')
+    chapter_id = _parse_positive_int(data.get('chapter_id'))
+    story_id = _parse_positive_int(data.get('story_id'))
     english_input = data.get('english_input', '')
     korean_input = data.get('korean_input', '')
 
-    chapter_id = int(chapter_id) if chapter_id is not None else None
-    story_id = int(story_id) if story_id is not None else None
+    if not chapter_id or not story_id:
+        return jsonify({'success': False, 'error': '시험 정보가 올바르지 않습니다.'}), 400
+
     story = _get_story_exam_story(chapter_id, story_id)
     if not story:
         return jsonify({'success': False, 'error': 'Invalid exam context'}), 400
@@ -460,6 +469,10 @@ def story_take_exam(chapter_id, story_index):
     if not story or story.chapter_id != chapter_id:
         flash('시험 스토리를 불러오지 못했습니다.', 'danger')
         return redirect(url_for('story.story_start_exam', chapter_id=chapter_id))
+
+    if not story.audio_filename:
+        flash('이 스토리는 시험용 음원이 등록되지 않아 시험을 진행할 수 없습니다.', 'warning')
+        return redirect(url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester))
     
     # 다음 스토리 인덱스 계산
     next_index = story_index + 1 if story_index < total_stories else 0
@@ -482,13 +495,10 @@ def story_take_exam(chapter_id, story_index):
 def save_story_exam_result():
     """Story 시험 결과 저장 (AJAX)"""
     data = request.get_json(silent=True) or {}
-    chapter_id = data.get('chapter_id')
-    story_id = data.get('story_id')
+    chapter_id = _parse_positive_int(data.get('chapter_id'))
+    story_id = _parse_positive_int(data.get('story_id'))
     english_input = data.get('english_input', '')
     korean_input = data.get('korean_input', '')
-
-    chapter_id = int(chapter_id) if chapter_id is not None else None
-    story_id = int(story_id) if story_id is not None else None
     
     if not chapter_id or not story_id:
         return jsonify({'success': False, 'error': '시험 정보가 올바르지 않습니다.'}), 400
