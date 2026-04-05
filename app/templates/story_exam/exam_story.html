@@ -100,7 +100,7 @@
             <div class="col-lg-6">
                 <div class="exam-panel">
                     <div class="text-muted small mb-2">원본 듣기</div>
-                    <div class="small text-secondary mb-3">등록된 녹음본이나 TTS를 듣고 내용을 기억한 뒤 답하세요.</div>
+                    <div class="small text-secondary mb-3">등록된 녹음본을 듣고 내용을 기억한 뒤 답하세요.</div>
 
                     {% if story.audio_filename %}
                     <audio id="story-audio" controls preload="none">
@@ -111,12 +111,11 @@
                     <div class="alert alert-light border mb-3">등록된 녹음 파일이 없습니다. TTS로 들으세요.</div>
                     {% endif %}
 
+                    {% if story.audio_filename %}
                     <div class="d-flex flex-wrap gap-2 mt-3">
-                        <button type="button" id="btn-tts-listen" class="btn btn-outline-primary">TTS로 듣기</button>
-                        {% if story.audio_filename %}
                         <button type="button" id="btn-replay-audio" class="btn btn-outline-secondary">원본 다시 재생</button>
-                        {% endif %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -202,8 +201,6 @@
 
 {% block scripts %}
 <script>
-const storyEnglishText = {{ story.english_text|tojson }};
-const storyKoreanText = {{ story.korean_text|tojson }};
 const chapterId = {{ chapter.id }};
 const storyId = {{ story.id }};
 const nextUrl = {{ (url_for('story.story_exam_result', chapter_id=chapter.id) if is_last_story else url_for('story.story_take_exam', chapter_id=chapter.id, story_index=next_index))|tojson }};
@@ -241,22 +238,6 @@ function setRecordingUI(isRecording) {
     document.getElementById("recording-status").innerHTML = isRecording
         ? '<span class="recording-indicator"></span> 녹음 중'
         : "";
-}
-
-function speakText(text) {
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 0.85;
-
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find((voice) => voice.lang === "en-US");
-    if (preferredVoice) {
-        utterance.voice = preferredVoice;
-    }
-
-    window.speechSynthesis.speak(utterance);
 }
 
 function showSpeakingResult(html) {
@@ -331,7 +312,9 @@ function stopRecording() {
 async function sendAudioToServer(audioBlob) {
     const formData = new FormData();
     formData.append("audio", audioBlob, "recording.webm");
-    formData.append("word", storyEnglishText);
+    formData.append("exam_mode", "1");
+    formData.append("chapter_id", String(chapterId));
+    formData.append("story_id", String(storyId));
 
     try {
         const response = await fetch("/story/process_audio", {
@@ -361,61 +344,45 @@ async function sendAudioToServer(audioBlob) {
     }
 }
 
-function calculateSimilarity(a, b) {
-    if (a === b) return 1.0;
-    if (a.length === 0 || b.length === 0) return 0.0;
-
-    const matrix = [];
-
-    for (let i = 0; i <= a.length; i += 1) {
-        matrix[i] = [i];
-    }
-
-    for (let j = 0; j <= b.length; j += 1) {
-        matrix[0][j] = j;
-    }
-
-    for (let i = 1; i <= a.length; i += 1) {
-        for (let j = 1; j <= b.length; j += 1) {
-            if (a.charAt(i - 1) === b.charAt(j - 1)) {
-                matrix[i][j] = matrix[i - 1][j - 1];
-            } else {
-                matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1,
-                    matrix[i][j - 1] + 1,
-                    matrix[i - 1][j] + 1
-                );
-            }
-        }
-    }
-
-    const distance = matrix[a.length][b.length];
-    const maxLength = Math.max(a.length, b.length);
-    return maxLength ? 1 - (distance / maxLength) : 0;
-}
-
 function evaluateWriting() {
-    const englishInput = document.getElementById("english-input").value.trim().toLowerCase();
+    const englishInput = document.getElementById("english-input").value.trim();
     const koreanInput = document.getElementById("korean-input").value.trim();
-    const englishScore = Math.round(calculateSimilarity(englishInput, storyEnglishText.toLowerCase()) * 100);
-    const koreanScore = Math.round(calculateSimilarity(koreanInput, storyKoreanText) * 100);
 
-    examState.scores.englishWriting = englishScore;
-    examState.scores.koreanWriting = koreanScore;
-    updateScoreDisplays();
+    return fetch("/story/exam/evaluate_writing", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            chapter_id: chapterId,
+            story_id: storyId,
+            english_input: englishInput,
+            korean_input: koreanInput,
+        }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data.success) {
+                throw new Error(data.error || "쓰기 평가 실패");
+            }
 
-    const feedback = document.getElementById("writing-feedback");
-    feedback.classList.remove("d-none");
-    feedback.innerHTML = `
-        <div class="fw-semibold mb-2">쓰기 평가 결과</div>
-        <div class="mb-1"><strong>영어 쓰기:</strong> ${englishScore}점</div>
-        <div><strong>한글 쓰기:</strong> ${koreanScore}점</div>
-    `;
+            examState.scores.englishWriting = data.english_writing_score;
+            examState.scores.koreanWriting = data.korean_writing_score;
+            updateScoreDisplays();
+
+            const feedback = document.getElementById("writing-feedback");
+            feedback.classList.remove("d-none");
+            feedback.innerHTML = `
+                <div class="fw-semibold mb-2">쓰기 평가 결과</div>
+                <div class="mb-1"><strong>영어 쓰기:</strong> ${data.english_writing_score}점</div>
+                <div><strong>한글 쓰기:</strong> ${data.korean_writing_score}점</div>
+            `;
+
+            return data;
+        });
 }
 
 async function submitExamResult() {
-    evaluateWriting();
-
     const submitButton = document.getElementById("btn-submit-exam");
     const feedback = document.getElementById("submit-feedback");
 
@@ -424,6 +391,10 @@ async function submitExamResult() {
     feedback.textContent = "현재 스토리 시험 결과를 저장하는 중입니다...";
 
     try {
+        await evaluateWriting();
+
+        const englishInput = document.getElementById("english-input").value.trim();
+        const koreanInput = document.getElementById("korean-input").value.trim();
         const response = await fetch("/story/save_story_exam_result", {
             method: "POST",
             headers: {
@@ -432,9 +403,8 @@ async function submitExamResult() {
             body: JSON.stringify({
                 chapter_id: chapterId,
                 story_id: storyId,
-                speaking_score: examState.scores.speaking,
-                english_writing_score: examState.scores.englishWriting,
-                korean_writing_score: examState.scores.koreanWriting,
+                english_input: englishInput,
+                korean_input: koreanInput,
             }),
         });
 
@@ -442,6 +412,11 @@ async function submitExamResult() {
         if (!data.success) {
             throw new Error(data.error || "제출 실패");
         }
+
+        examState.scores.speaking = data.speaking_score;
+        examState.scores.englishWriting = data.english_writing_score;
+        examState.scores.koreanWriting = data.korean_writing_score;
+        updateScoreDisplays();
 
         feedback.className = "alert alert-success border mb-0";
         feedback.textContent = "저장되었습니다. 다음 단계로 이동합니다...";
@@ -459,9 +434,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btn-record").addEventListener("click", startRecording);
     document.getElementById("btn-stop-record").addEventListener("click", stopRecording);
-    document.getElementById("btn-check-writing").addEventListener("click", evaluateWriting);
+    document.getElementById("btn-check-writing").addEventListener("click", () => {
+        evaluateWriting().catch((error) => {
+            console.error(error);
+            const feedback = document.getElementById("writing-feedback");
+            feedback.classList.remove("d-none");
+            feedback.className = "alert alert-danger border mt-3 mb-0";
+            feedback.textContent = "쓰기 평가 중 오류가 발생했습니다.";
+        });
+    });
     document.getElementById("btn-submit-exam").addEventListener("click", submitExamResult);
-    document.getElementById("btn-tts-listen").addEventListener("click", () => speakText(storyEnglishText));
 
     document.getElementById("btn-play-recording").addEventListener("click", () => {
         if (!examState.recordingUrl) {
@@ -479,10 +461,6 @@ document.addEventListener("DOMContentLoaded", () => {
             storyAudio.currentTime = 0;
             storyAudio.play();
         });
-    }
-
-    if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.addEventListener("voiceschanged", () => {});
     }
 });
 </script>

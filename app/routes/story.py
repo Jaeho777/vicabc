@@ -11,11 +11,69 @@ import os
 import tempfile
 from flask import request, jsonify
 import pytz
+from difflib import SequenceMatcher
 
 from app.models.story_progress import StoryProgress
 from app.models.story_certification import StoryCertification
 
 story_bp = Blueprint('story', __name__, url_prefix='/story')
+
+
+def _normalize_score(value):
+    try:
+        score = int(round(float(value)))
+    except (TypeError, ValueError):
+        return 0
+    return max(0, min(score, 100))
+
+
+def _normalize_text_for_similarity(text):
+    return " ".join((text or "").strip().lower().split())
+
+
+def _calculate_text_similarity_score(submitted_text, reference_text):
+    submitted = _normalize_text_for_similarity(submitted_text)
+    reference = _normalize_text_for_similarity(reference_text)
+
+    if not submitted or not reference:
+        return 0
+
+    return _normalize_score(SequenceMatcher(None, submitted, reference).ratio() * 100)
+
+
+def _story_exam_session_key(chapter_id):
+    return f'story_exam_chapter_{chapter_id}'
+
+
+def _story_exam_results_key(chapter_id):
+    return f'story_exam_results_{chapter_id}'
+
+
+def _story_exam_speaking_key(chapter_id):
+    return f'story_exam_speaking_scores_{chapter_id}'
+
+
+def _get_story_exam_story_ids(chapter_id):
+    return session.get(_story_exam_session_key(chapter_id), [])
+
+
+def _get_story_exam_story(chapter_id, story_id):
+    if not chapter_id or not story_id:
+        return None
+
+    story_ids = _get_story_exam_story_ids(chapter_id)
+    if story_id not in story_ids:
+        return None
+
+    return Story.query.filter_by(id=story_id, chapter_id=chapter_id).first()
+
+
+def _store_story_exam_speaking_score(chapter_id, story_id, score):
+    scores = session.get(_story_exam_speaking_key(chapter_id), {})
+    current_score = _normalize_score(scores.get(str(story_id), 0))
+    scores[str(story_id)] = max(current_score, _normalize_score(score))
+    session[_story_exam_speaking_key(chapter_id)] = scores
+    session.modified = True
 
 @story_bp.route('/')
 @login_required
@@ -168,7 +226,14 @@ def process_audio():
         return jsonify({'error': 'No audio file provided'}), 400
     
     audio_file = request.files['audio']
-    text_to_compare = request.form.get('word', '')
+    exam_mode = request.form.get('exam_mode') == '1'
+    chapter_id = request.form.get('chapter_id', type=int)
+    story_id = request.form.get('story_id', type=int)
+    story = _get_story_exam_story(chapter_id, story_id) if exam_mode else None
+    text_to_compare = story.english_text if story else request.form.get('word', '')
+
+    if exam_mode and not story:
+        return jsonify({'error': 'Invalid exam context'}), 400
     
     # 임시 파일로 오디오 저장
     with tempfile.NamedTemporaryFile(delete=False, suffix='.webm') as temp_audio:
@@ -189,6 +254,13 @@ def process_audio():
         # 정확도 계산 (긴 텍스트용)
         accuracy, details = calculate_pronunciation_accuracy(transcribed_text, text_to_compare)
         feedback = build_pronunciation_feedback(transcribed_text, text_to_compare)
+
+        if exam_mode:
+            _store_story_exam_speaking_score(chapter_id, story_id, accuracy)
+            feedback = {
+                'summary': feedback.get('summary', '말하기 결과를 확인했습니다.')
+            }
+            details = f"텍스트 유사도 기반 말하기 점수: {accuracy:.1f}점"
         
         # 파일 삭제
         os.unlink(temp_filename)
@@ -196,7 +268,7 @@ def process_audio():
         return jsonify({
             'success': True,
             'transcribed_text': transcribed_text,
-            'original_text': text_to_compare,
+            'original_text': None if exam_mode else text_to_compare,
             'accuracy': accuracy,
             'details': details,
             'feedback': feedback,
@@ -209,6 +281,31 @@ def process_audio():
             os.unlink(temp_filename)
         print(f"Story 음성 처리 에러: {str(e)}")
         return jsonify({'error': str(e)}), 500
+
+
+@story_bp.route('/exam/evaluate_writing', methods=['POST'])
+@login_required
+def evaluate_exam_writing():
+    data = request.get_json(silent=True) or {}
+    chapter_id = data.get('chapter_id')
+    story_id = data.get('story_id')
+    english_input = data.get('english_input', '')
+    korean_input = data.get('korean_input', '')
+
+    chapter_id = int(chapter_id) if chapter_id is not None else None
+    story_id = int(story_id) if story_id is not None else None
+    story = _get_story_exam_story(chapter_id, story_id)
+    if not story:
+        return jsonify({'success': False, 'error': 'Invalid exam context'}), 400
+
+    english_score = _calculate_text_similarity_score(english_input, story.english_text)
+    korean_score = _calculate_text_similarity_score(korean_input, story.korean_text)
+
+    return jsonify({
+        'success': True,
+        'english_writing_score': english_score,
+        'korean_writing_score': korean_score,
+    })
 
 @story_bp.route('/save_progress', methods=['POST'])
 @login_required
@@ -326,13 +423,15 @@ def story_start_exam(chapter_id):
         return redirect(url_for('story.story_exam_index'))
     
     # 세션에 시험 정보 저장
-    session_key = f'story_exam_chapter_{chapter_id}'
-    results_key = f'story_exam_results_{chapter_id}'
+    session_key = _story_exam_session_key(chapter_id)
+    results_key = _story_exam_results_key(chapter_id)
+    speaking_key = _story_exam_speaking_key(chapter_id)
     
     # 스토리 ID 목록을 순서대로 세션에 저장 (랜덤 없음)
     story_ids = [s.id for s in stories]
     session[session_key] = story_ids
     session[results_key] = {}
+    session[speaking_key] = {}
     
     # 첫 번째 스토리로 리다이렉트
     return redirect(url_for('story.story_take_exam', chapter_id=chapter_id, story_index=1))
@@ -344,7 +443,7 @@ def story_take_exam(chapter_id, story_index):
     chapter = Chapter.query.get_or_404(chapter_id)
     
     # 세션에서 스토리 ID 목록 가져오기
-    session_key = f'story_exam_chapter_{chapter_id}'
+    session_key = _story_exam_session_key(chapter_id)
     if session_key not in session:
         return redirect(url_for('story.story_start_exam', chapter_id=chapter_id))
     
@@ -358,12 +457,15 @@ def story_take_exam(chapter_id, story_index):
     
     story_id = story_ids[array_index]
     story = Story.query.get(story_id)
+    if not story or story.chapter_id != chapter_id:
+        flash('시험 스토리를 불러오지 못했습니다.', 'danger')
+        return redirect(url_for('story.story_start_exam', chapter_id=chapter_id))
     
     # 다음 스토리 인덱스 계산
     next_index = story_index + 1 if story_index < total_stories else 0
     
     # 결과 저장 키 생성
-    results_key = f'story_exam_results_{chapter_id}'
+    results_key = _story_exam_results_key(chapter_id)
     if results_key not in session:
         session[results_key] = {}
     
@@ -379,21 +481,32 @@ def story_take_exam(chapter_id, story_index):
 @login_required
 def save_story_exam_result():
     """Story 시험 결과 저장 (AJAX)"""
-    data = request.json
+    data = request.get_json(silent=True) or {}
     chapter_id = data.get('chapter_id')
     story_id = data.get('story_id')
-    speaking_score = data.get('speaking_score', 0)
-    english_writing_score = data.get('english_writing_score', 0)
-    korean_writing_score = data.get('korean_writing_score', 0)
+    english_input = data.get('english_input', '')
+    korean_input = data.get('korean_input', '')
+
+    chapter_id = int(chapter_id) if chapter_id is not None else None
+    story_id = int(story_id) if story_id is not None else None
     
     if not chapter_id or not story_id:
         return jsonify({'success': False, 'error': '시험 정보가 올바르지 않습니다.'}), 400
+
+    story = _get_story_exam_story(chapter_id, story_id)
+    if not story:
+        return jsonify({'success': False, 'error': '유효하지 않은 시험 요청입니다.'}), 400
+
+    speaking_scores = session.get(_story_exam_speaking_key(chapter_id), {})
+    speaking_score = _normalize_score(speaking_scores.get(str(story_id), 0))
+    english_writing_score = _calculate_text_similarity_score(english_input, story.english_text)
+    korean_writing_score = _calculate_text_similarity_score(korean_input, story.korean_text)
 
     # 총점 계산 (말하기 40%, 영어 쓰기 30%, 한글 쓰기 30%)
     total_score = round(speaking_score * 0.4 + english_writing_score * 0.3 + korean_writing_score * 0.3)
     
     # 결과를 세션에 저장
-    results_key = f'story_exam_results_{chapter_id}'
+    results_key = _story_exam_results_key(chapter_id)
     if results_key not in session:
         session[results_key] = {}
     
@@ -408,7 +521,13 @@ def save_story_exam_result():
     # session 변경사항을 저장
     session.modified = True
     
-    return jsonify({'success': True})
+    return jsonify({
+        'success': True,
+        'speaking_score': speaking_score,
+        'english_writing_score': english_writing_score,
+        'korean_writing_score': korean_writing_score,
+        'total_score': total_score,
+    })
 
 @story_bp.route('/exam/chapter/<int:chapter_id>/result')
 @login_required
@@ -417,18 +536,27 @@ def story_exam_result(chapter_id):
     chapter = Chapter.query.get_or_404(chapter_id)
     
     # 세션에서 결과 가져오기
-    results_key = f'story_exam_results_{chapter_id}'
-    if results_key not in session:
+    session_key = _story_exam_session_key(chapter_id)
+    results_key = _story_exam_results_key(chapter_id)
+    if results_key not in session or session_key not in session:
         flash('시험 결과를 찾을 수 없습니다.', 'danger')
         return redirect(url_for('story.story_exam_index'))
     
     results = session[results_key]
+    story_ids = session[session_key]
     
     # 총점 및 합격 여부 계산
-    total_stories = len(results)
+    total_stories = len(story_ids)
     if total_stories == 0:
         flash('시험 결과를 찾을 수 없습니다.', 'danger')
         return redirect(url_for('story.story_exam_index'))
+
+    missing_story_ids = [story_id for story_id in story_ids if str(story_id) not in results]
+    if missing_story_ids:
+        first_missing_story_id = missing_story_ids[0]
+        first_missing_index = story_ids.index(first_missing_story_id) + 1
+        flash('모든 스토리를 제출한 뒤 결과를 볼 수 있습니다.', 'warning')
+        return redirect(url_for('story.story_take_exam', chapter_id=chapter_id, story_index=first_missing_index))
     
     passed_stories = sum(1 for r in results.values() if r.get('passed', False))
     overall_score = sum(r.get('total_score', 0) for r in results.values()) // total_stories
@@ -439,7 +567,6 @@ def story_exam_result(chapter_id):
     korea_tz = pytz.timezone('Asia/Seoul')
     korea_time = datetime.now(korea_tz)
     
-    story_ids = [int(story_id_str) for story_id_str in results.keys()]
     stories = Story.query.filter(Story.id.in_(story_ids)).order_by(Story.order).all()
     stories_by_id = {story.id: story for story in stories}
 
@@ -478,9 +605,11 @@ def story_exam_result(chapter_id):
     if results_key in session:
         del session[results_key]
     
-    session_key = f'story_exam_chapter_{chapter_id}'
     if session_key in session:
         del session[session_key]
+    speaking_key = _story_exam_speaking_key(chapter_id)
+    if speaking_key in session:
+        del session[speaking_key]
     
     return render_template('story_exam/exam_result.html',
                           chapter=chapter,
