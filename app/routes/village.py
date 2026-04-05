@@ -113,7 +113,7 @@ def practice_audio():
         if os.path.exists(temp_filename):
             os.unlink(temp_filename)
         print(f"Village 학습 음성 처리 오류: {exc}")
-        return jsonify({"error": str(exc)}), 500
+        return jsonify({"error": "음성 처리 중 오류가 발생했습니다. 다시 시도해 주세요."}), 500
 
     if os.path.exists(temp_filename):
         os.unlink(temp_filename)
@@ -155,7 +155,7 @@ def process_audio():
         if os.path.exists(temp_filename):
             os.unlink(temp_filename)
         print(f"Village 음성 처리 오류: {exc}")
-        return jsonify({"error": str(exc)}), 500
+        return jsonify({"error": "음성 처리 중 오류가 발생했습니다. 다시 시도해 주세요."}), 500
 
     if os.path.exists(temp_filename):
         os.unlink(temp_filename)

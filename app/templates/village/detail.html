@@ -6,18 +6,96 @@
 <style>
     .village-summary,
     .lesson-card {
-        border-radius: 18px;
+        border-radius: 22px;
         border: 0;
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+    .lesson-card {
+        overflow: hidden;
+    }
+    .lesson-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: start;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .lesson-subtitle {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+    .dialogue-panel,
+    .support-panel,
+    .practice-panel {
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+    }
+    .dialogue-panel,
+    .support-panel {
+        padding: 20px;
+        height: 100%;
+    }
+    .practice-panel {
+        padding: 22px;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
     }
     .dialogue-box {
-        border-radius: 14px;
-        background: #f8f9fa;
-        padding: 14px 16px;
-        height: 100%;
+        border-radius: 16px;
+        background: #f8fafc;
+        padding: 16px;
     }
     .sentence-line {
         font-size: 1.05rem;
+        line-height: 1.6;
+    }
+    .workflow-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .workflow-step {
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        padding: 16px;
+    }
+    .workflow-step-header {
+        display: flex;
+        align-items: start;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .step-badge {
+        flex: 0 0 auto;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f1ff;
+        color: #0d6efd;
+        font-weight: 700;
+    }
+    .step-title {
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    .step-description {
+        color: #6b7280;
+        font-size: 0.92rem;
+    }
+    .flow-chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 6px 12px;
+        background: #fff6db;
+        color: #8a6100;
+        font-size: 0.86rem;
+        font-weight: 700;
     }
     .keyword-chip {
         display: inline-flex;
@@ -29,15 +107,17 @@
         font-size: 0.9rem;
         font-weight: 600;
     }
-    audio {
-        width: 100%;
-    }
-    .practice-panel {
+    .feedback-box,
+    .writing-box {
         border-radius: 14px;
-        border: 1px solid #e9ecef;
-        background: #fff;
-        padding: 16px;
-        height: 100%;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+        padding: 14px 16px;
+        min-height: 88px;
+    }
+    .feedback-box.is-placeholder,
+    .writing-box.is-placeholder {
+        color: #64748b;
     }
     .recording-indicator {
         display: inline-block;
@@ -47,10 +127,29 @@
         border-radius: 50%;
         animation: pulse 1s infinite;
     }
+    .writing-input {
+        min-height: 110px;
+        border-radius: 14px;
+        resize: vertical;
+    }
+    .support-note {
+        border-radius: 14px;
+        background: #f8fafc;
+        padding: 14px 16px;
+        color: #64748b;
+        font-size: 0.92rem;
+    }
     @keyframes pulse {
         0% { opacity: 1; }
         50% { opacity: 0.4; }
         100% { opacity: 1; }
+    }
+    @media (max-width: 991px) {
+        .practice-panel,
+        .dialogue-panel,
+        .support-panel {
+            padding: 18px;
+        }
     }
 </style>
 {% endblock %}
@@ -89,80 +188,138 @@
     {% for lesson in village.lessons %}
     <div class="col-12">
         <div class="card lesson-card">
-            <div class="card-body p-4">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div class="card-body p-4 p-lg-5">
+                <div class="lesson-header">
                     <div>
-                        <div class="text-muted small">Lesson {{ lesson.number }}</div>
-                        <h4 class="mb-0">{{ lesson.title }}</h4>
+                        <div class="text-muted small mb-2">Lesson {{ lesson.number }}</div>
+                        <h4 class="mb-2">{{ lesson.title }}</h4>
+                        <div class="lesson-subtitle">듣기, 말하기, 내 말 다시 듣기, 평가, 써보기 순서로 학습하세요.</div>
                     </div>
-                    <span class="badge bg-primary">기본 대화 + 응용 음원</span>
+                    <span class="flow-chip">듣기 -> 말하기 -> 내 말 듣기 -> 평가 -> 써보기</span>
                 </div>
 
-                <div class="dialogue-box mb-3">
-                    <div class="text-muted small mb-3">기본 문장</div>
-                    {% for item in lesson.dialogue_lines %}
-                    <div class="sentence-line {% if not loop.last %}mb-2{% endif %}">
-                        <strong>{{ item.label }}.</strong> {{ item.text }}
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-lg-6">
-                        <div class="practice-panel"
-                             data-reference-text="{{ lesson.base_reference_text }}"
-                             data-panel-label="Lesson {{ lesson.number }} 기본 대화">
-                            <div class="text-muted small mb-2">기본 대화 음원</div>
-                            <div class="small text-secondary mb-3">첫 번째 파일입니다. Sentence A와 Sentence B를 이어서 따라 말하세요.</div>
-                            <audio controls preload="none">
-                                <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
-                            </audio>
-
-                            <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
-                                <button type="button" class="btn btn-danger js-record-start">따라 말하기 시작</button>
-                                <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
-                                <button type="button" class="btn btn-outline-success js-play-recording d-none">내 녹음 듣기</button>
-                                <span class="js-recording-status"></span>
+                <div class="row g-4">
+                    <div class="col-xl-4">
+                        <div class="dialogue-panel mb-3">
+                            <div class="text-muted small mb-3">기본 문장</div>
+                            <div class="dialogue-box mb-3">
+                                {% for item in lesson.dialogue_lines %}
+                                <div class="sentence-line {% if not loop.last %}mb-2{% endif %}">
+                                    <strong>{{ item.label }}.</strong> {{ item.text }}
+                                </div>
+                                {% endfor %}
                             </div>
 
-                            <div class="alert alert-info mt-3 mb-0 d-none js-result-box"></div>
+                            <div class="fw-semibold mb-2">응용 키워드</div>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for keyword in lesson.practice_keywords %}
+                                <span class="keyword-chip">{{ keyword }}</span>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="practice-panel"
-                             {% if lesson.practice_reference_text %}
-                             data-reference-text="{{ lesson.practice_reference_text }}"
-                             data-panel-label="Lesson {{ lesson.number }} 응용 대화"
-                             {% endif %}>
-                            <div class="text-muted small mb-2">응용 대화 음원</div>
-                            <div class="small text-secondary mb-3">두 번째 파일입니다. 응용 키워드가 적용된 녹음본을 먼저 들어보세요.</div>
-                            <audio controls preload="none">
+
+                        <div class="support-panel">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <div class="text-muted small mb-1">응용 음원</div>
+                                    <div class="fw-semibold">확장해서 들어보기</div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary js-play-reference" data-default-label="응용 듣기">응용 듣기</button>
+                            </div>
+                            <audio preload="none" class="d-none js-reference-audio">
                                 <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
                             </audio>
-
+                            <div class="support-note">
+                                두 번째 파일은 응용 키워드가 들어간 음원입니다. 지금은 먼저 여러 번 듣고 표현에 익숙해지도록 구성했습니다.
+                            </div>
                             {% if lesson.practice_reference_text %}
-                            <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
-                                <button type="button" class="btn btn-danger js-record-start">응용 문장 따라 말하기</button>
-                                <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
-                                <button type="button" class="btn btn-outline-success js-play-recording d-none">내 녹음 듣기</button>
-                                <span class="js-recording-status"></span>
-                            </div>
-                            <div class="alert alert-info mt-3 mb-0 d-none js-result-box"></div>
+                            <div class="small text-secondary mt-3">응용 문장 스크립트가 등록돼 있어 추후 말하기 비교도 가능합니다.</div>
                             {% else %}
-                            <div class="alert alert-light border mt-3 mb-0">
-                                현재는 응용 음원 재생만 가능합니다. 이 파일까지 자동 비교하려면 실제 응용 문장 스크립트가 필요합니다.
-                            </div>
+                            <div class="small text-secondary mt-3">응용 문장 스크립트가 들어오면 이 영역도 말하기 평가까지 확장할 수 있습니다.</div>
                             {% endif %}
                         </div>
                     </div>
-                </div>
 
-                <div>
-                    <div class="fw-semibold mb-2">응용 키워드</div>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for keyword in lesson.practice_keywords %}
-                        <span class="keyword-chip">{{ keyword }}</span>
-                        {% endfor %}
+                    <div class="col-xl-8">
+                        <div class="practice-panel"
+                             data-reference-text="{{ lesson.base_reference_text }}"
+                             data-panel-label="Lesson {{ lesson.number }} 기본 대화">
+                            <div class="workflow-stack">
+                                <div class="workflow-step">
+                                    <div class="workflow-step-header">
+                                        <span class="step-badge">1</span>
+                                        <div>
+                                            <div class="step-title">듣기</div>
+                                            <div class="step-description">먼저 기본 대화를 듣고 리듬과 발음을 익히세요.</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-wrap align-items-center gap-2">
+                                        <button type="button" class="btn btn-primary js-play-reference" data-default-label="듣기">듣기</button>
+                                        <span class="small text-secondary">Sentence A와 Sentence B가 이어서 재생됩니다.</span>
+                                    </div>
+                                    <audio preload="none" class="d-none js-reference-audio">
+                                        <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
+                                    </audio>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <div class="workflow-step-header">
+                                        <span class="step-badge">2</span>
+                                        <div>
+                                            <div class="step-title">말하기</div>
+                                            <div class="step-description">듣고 나서 바로 따라 말해 보세요.</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-wrap align-items-center gap-2">
+                                        <button type="button" class="btn btn-danger js-record-start">말하기 시작</button>
+                                        <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
+                                        <span class="js-recording-status small text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <div class="workflow-step-header">
+                                        <span class="step-badge">3</span>
+                                        <div>
+                                            <div class="step-title">내 말 다시 듣기</div>
+                                            <div class="step-description">녹음이 끝나면 내 발음을 다시 확인하세요.</div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-success js-play-recording" data-default-label="내 말 듣기" disabled>내 말 듣기</button>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <div class="workflow-step-header">
+                                        <span class="step-badge">4</span>
+                                        <div>
+                                            <div class="step-title">평가</div>
+                                            <div class="step-description">인식 결과와 빠진 단어, 추가된 단어를 확인하세요.</div>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-box is-placeholder js-result-box">
+                                        녹음 후 평가가 여기에 표시됩니다.
+                                    </div>
+                                </div>
+
+                                <div class="workflow-step">
+                                    <div class="workflow-step-header">
+                                        <span class="step-badge">5</span>
+                                        <div>
+                                            <div class="step-title">써보기</div>
+                                            <div class="step-description">방금 들은 영어 문장을 직접 적어보세요.</div>
+                                        </div>
+                                    </div>
+                                    <textarea class="form-control writing-input js-writing-input" placeholder="들린 영어 문장을 적어보세요"></textarea>
+                                    <div class="d-flex flex-wrap gap-2 mt-3">
+                                        <button type="button" class="btn btn-outline-primary js-check-writing">쓰기 확인</button>
+                                        <button type="button" class="btn btn-light js-clear-writing">지우기</button>
+                                    </div>
+                                    <div class="writing-box is-placeholder mt-3 js-writing-result">
+                                        문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,6 +338,82 @@ const practiceState = {
     panel: null,
 };
 
+const playbackState = {
+    audio: null,
+    button: null,
+};
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function normalizeEnglishText(text) {
+    return String(text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9'\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function tokenizeEnglishText(text) {
+    const normalized = normalizeEnglishText(text);
+    return normalized ? normalized.split(' ') : [];
+}
+
+function buildWordComparison(referenceText, submittedText) {
+    const referenceWords = tokenizeEnglishText(referenceText);
+    const submittedWords = tokenizeEnglishText(submittedText);
+    const remainingWords = [...submittedWords];
+    const matchedWords = [];
+    const missingWords = [];
+
+    referenceWords.forEach((word) => {
+        const matchIndex = remainingWords.indexOf(word);
+        if (matchIndex >= 0) {
+            matchedWords.push(word);
+            remainingWords.splice(matchIndex, 1);
+        } else {
+            missingWords.push(word);
+        }
+    });
+
+    const extraWords = remainingWords;
+    const precision = submittedWords.length ? matchedWords.length / submittedWords.length : 0;
+    const recall = referenceWords.length ? matchedWords.length / referenceWords.length : 0;
+    const score = precision + recall === 0 ? 0 : Math.round((2 * precision * recall / (precision + recall)) * 100);
+
+    return {
+        matchedWords,
+        missingWords,
+        extraWords,
+        score,
+    };
+}
+
+function renderWordList(words) {
+    if (!words || words.length === 0) {
+        return '없음';
+    }
+    return escapeHtml(words.join(', '));
+}
+
+function showResult(panel, html) {
+    const resultBox = panel.querySelector('.js-result-box');
+    resultBox.classList.remove('is-placeholder');
+    resultBox.innerHTML = html;
+}
+
+function showWritingResult(panel, html) {
+    const resultBox = panel.querySelector('.js-writing-result');
+    resultBox.classList.remove('is-placeholder');
+    resultBox.innerHTML = html;
+}
+
 function setRecordingUI(panel, isRecording) {
     const startButton = panel.querySelector('.js-record-start');
     const stopButton = panel.querySelector('.js-record-stop');
@@ -191,10 +424,52 @@ function setRecordingUI(panel, isRecording) {
     status.innerHTML = isRecording ? '<span class="recording-indicator"></span> 녹음 중' : '';
 }
 
-function showResult(panel, html) {
-    const resultBox = panel.querySelector('.js-result-box');
-    resultBox.classList.remove('d-none');
-    resultBox.innerHTML = html;
+function resetPlaybackButton(button) {
+    if (!button) {
+        return;
+    }
+    button.textContent = button.dataset.defaultLabel || '듣기';
+}
+
+function stopCurrentPlayback() {
+    if (!playbackState.audio) {
+        return;
+    }
+
+    playbackState.audio.pause();
+    if (playbackState.audio.currentTime) {
+        playbackState.audio.currentTime = 0;
+    }
+    resetPlaybackButton(playbackState.button);
+    playbackState.audio = null;
+    playbackState.button = null;
+}
+
+function startPlayback(audio, button) {
+    if (!audio) {
+        return;
+    }
+
+    if (playbackState.audio && playbackState.audio !== audio) {
+        stopCurrentPlayback();
+    }
+
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    playbackState.audio = audio;
+    playbackState.button = button;
+    button.textContent = '듣는 중...';
+
+    if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch((error) => {
+            console.error(error);
+            resetPlaybackButton(button);
+            if (playbackState.audio === audio) {
+                playbackState.audio = null;
+                playbackState.button = null;
+            }
+        });
+    }
 }
 
 async function startPracticeRecording(panel) {
@@ -232,7 +507,7 @@ async function startPracticeRecording(panel) {
 
         recorder.start();
         setRecordingUI(panel, true);
-        showResult(panel, '음성 녹음 중입니다...');
+        showResult(panel, '음성을 받고 있습니다. 문장을 끝까지 말한 뒤 중지를 눌러주세요.');
     } catch (error) {
         console.error(error);
         alert('마이크 접근에 실패했습니다. 브라우저 권한을 확인해주세요.');
@@ -245,7 +520,7 @@ function stopPracticeRecording(panel) {
     }
 
     setRecordingUI(panel, false);
-    showResult(panel, '음성 처리 중...');
+    showResult(panel, '녹음한 내용을 분석하고 있습니다...');
     practiceState.recorder.stop();
 }
 
@@ -260,14 +535,23 @@ function bindRecordingPlayback(panel, audioBlob) {
     }
 
     panel.dataset.recordingUrl = URL.createObjectURL(audioBlob);
-    button.classList.remove('d-none');
+    button.disabled = false;
 }
 
-function renderWordList(words) {
-    if (!words || words.length === 0) {
-        return '없음';
+function playRecordedAudio(panel) {
+    if (!panel.dataset.recordingUrl) {
+        return;
     }
-    return words.join(', ');
+
+    const audio = new Audio(panel.dataset.recordingUrl);
+    audio.addEventListener('ended', () => {
+        if (playbackState.audio === audio) {
+            resetPlaybackButton(playbackState.button);
+            playbackState.audio = null;
+            playbackState.button = null;
+        }
+    }, { once: true });
+    startPlayback(audio, panel.querySelector('.js-play-recording'));
 }
 
 function sendPracticeAudio(panel, audioBlob) {
@@ -289,11 +573,11 @@ function sendPracticeAudio(panel, audioBlob) {
 
         const scoreClass = data.accuracy >= 85 ? 'text-success' : (data.accuracy >= 65 ? 'text-primary' : 'text-danger');
         showResult(panel, `
-            <div class="fw-semibold mb-2">${panel.dataset.panelLabel || '따라 말하기'} 결과</div>
-            <div class="mb-2"><strong>인식된 문장:</strong> ${data.transcribed_text || '(없음)'}</div>
-            <div class="mb-2"><strong>정확도:</strong> <span class="${scoreClass}">${data.accuracy}점</span></div>
-            <div class="mb-2"><strong>평가:</strong> ${data.feedback_summary}</div>
-            <div class="small text-muted mb-2">${data.details.replace(/\n/g, '<br>')}</div>
+            <div class="fw-semibold mb-2">${escapeHtml(panel.dataset.panelLabel || '따라 말하기')} 평가 결과</div>
+            <div class="mb-2"><strong>인식된 문장:</strong> ${escapeHtml(data.transcribed_text || '(없음)')}</div>
+            <div class="mb-2"><strong>정확도:</strong> <span class="${scoreClass}">${escapeHtml(data.accuracy)}점</span></div>
+            <div class="mb-2"><strong>평가:</strong> ${escapeHtml(data.feedback_summary)}</div>
+            <div class="small text-muted mb-2">${escapeHtml((data.details || '').replace(/\n/g, ' | '))}</div>
             <div class="small"><strong>잘한 단어:</strong> ${renderWordList(data.matched_words)}</div>
             <div class="small"><strong>빠진 단어:</strong> ${renderWordList(data.missing_words)}</div>
             <div class="small"><strong>추가된 단어:</strong> ${renderWordList(data.extra_words)}</div>
@@ -301,15 +585,73 @@ function sendPracticeAudio(panel, audioBlob) {
     })
     .catch((error) => {
         console.error(error);
-        showResult(panel, `오디오 처리 중 오류가 발생했습니다: ${error.message}`);
+        showResult(panel, `오디오 처리 중 오류가 발생했습니다. ${escapeHtml(error.message)}`);
     });
 }
 
+function checkWriting(panel) {
+    const writingInput = panel.querySelector('.js-writing-input');
+    const referenceText = panel.dataset.referenceText || '';
+    const submittedText = writingInput.value || '';
+
+    if (!submittedText.trim()) {
+        showWritingResult(panel, '문장을 먼저 입력해 주세요.');
+        return;
+    }
+
+    const comparison = buildWordComparison(referenceText, submittedText);
+    const scoreClass = comparison.score >= 85 ? 'text-success' : (comparison.score >= 65 ? 'text-primary' : 'text-danger');
+    const summary = comparison.score >= 85
+        ? '문장을 거의 정확하게 적었습니다.'
+        : (comparison.score >= 65 ? '조금만 더 다듬으면 됩니다.' : '빠진 표현과 추가된 표현을 다시 확인해 보세요.');
+
+    showWritingResult(panel, `
+        <div class="fw-semibold mb-2">쓰기 결과</div>
+        <div class="mb-2"><strong>입력 문장:</strong> ${escapeHtml(submittedText)}</div>
+        <div class="mb-2"><strong>점수:</strong> <span class="${scoreClass}">${comparison.score}점</span></div>
+        <div class="mb-2"><strong>평가:</strong> ${escapeHtml(summary)}</div>
+        <div class="small"><strong>맞춘 단어:</strong> ${renderWordList(comparison.matchedWords)}</div>
+        <div class="small"><strong>빠진 단어:</strong> ${renderWordList(comparison.missingWords)}</div>
+        <div class="small"><strong>추가된 단어:</strong> ${renderWordList(comparison.extraWords)}</div>
+    `);
+}
+
+function clearWriting(panel) {
+    const writingInput = panel.querySelector('.js-writing-input');
+    writingInput.value = '';
+    const resultBox = panel.querySelector('.js-writing-result');
+    resultBox.classList.add('is-placeholder');
+    resultBox.textContent = '문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.js-reference-audio').forEach((audio) => {
+        audio.addEventListener('ended', () => {
+            if (playbackState.audio === audio) {
+                resetPlaybackButton(playbackState.button);
+                playbackState.audio = null;
+                playbackState.button = null;
+            }
+        });
+    });
+
+    document.querySelectorAll('.js-play-reference').forEach((button) => {
+        button.addEventListener('click', () => {
+            const container = button.closest('.practice-panel, .support-panel');
+            const audio = container ? container.querySelector('.js-reference-audio') : null;
+            if (!audio) {
+                return;
+            }
+            startPlayback(audio, button);
+        });
+    });
+
     document.querySelectorAll('.practice-panel').forEach((panel) => {
         const startButton = panel.querySelector('.js-record-start');
         const stopButton = panel.querySelector('.js-record-stop');
         const playButton = panel.querySelector('.js-play-recording');
+        const checkWritingButton = panel.querySelector('.js-check-writing');
+        const clearWritingButton = panel.querySelector('.js-clear-writing');
 
         if (startButton) {
             startButton.addEventListener('click', () => startPracticeRecording(panel));
@@ -320,14 +662,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (playButton) {
-            playButton.addEventListener('click', () => {
-                if (!panel.dataset.recordingUrl) {
-                    return;
-                }
+            playButton.addEventListener('click', () => playRecordedAudio(panel));
+        }
 
-                const audio = new Audio(panel.dataset.recordingUrl);
-                audio.play();
-            });
+        if (checkWritingButton) {
+            checkWritingButton.addEventListener('click', () => checkWriting(panel));
+        }
+
+        if (clearWritingButton) {
+            clearWritingButton.addEventListener('click', () => clearWriting(panel));
         }
     });
 });
