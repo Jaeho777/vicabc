@@ -395,6 +395,51 @@ function buildWordComparison(referenceText, submittedText) {
     };
 }
 
+function levenshteinDistance(source, target) {
+    const sourceTokens = tokenizeEnglishText(source);
+    const targetTokens = tokenizeEnglishText(target);
+    const rows = sourceTokens.length + 1;
+    const cols = targetTokens.length + 1;
+    const matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+    for (let row = 0; row < rows; row += 1) {
+        matrix[row][0] = row;
+    }
+
+    for (let col = 0; col < cols; col += 1) {
+        matrix[0][col] = col;
+    }
+
+    for (let row = 1; row < rows; row += 1) {
+        for (let col = 1; col < cols; col += 1) {
+            const cost = sourceTokens[row - 1] === targetTokens[col - 1] ? 0 : 1;
+            matrix[row][col] = Math.min(
+                matrix[row - 1][col] + 1,
+                matrix[row][col - 1] + 1,
+                matrix[row - 1][col - 1] + cost
+            );
+        }
+    }
+
+    return {
+        distance: matrix[rows - 1][cols - 1],
+        maxLength: Math.max(sourceTokens.length, targetTokens.length),
+    };
+}
+
+function calculateWritingScore(referenceText, submittedText) {
+    const comparison = buildWordComparison(referenceText, submittedText);
+    const { distance, maxLength } = levenshteinDistance(referenceText, submittedText);
+    const orderScore = maxLength === 0 ? 0 : Math.round((1 - (distance / maxLength)) * 100);
+    const score = Math.max(0, Math.round((comparison.score * 0.35) + (orderScore * 0.65)));
+
+    return {
+        ...comparison,
+        orderScore,
+        score,
+    };
+}
+
 function renderWordList(words) {
     if (!words || words.length === 0) {
         return '없음';
@@ -478,6 +523,8 @@ async function startPracticeRecording(panel) {
         return;
     }
 
+    stopCurrentPlayback();
+
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const recorder = new MediaRecorder(stream);
@@ -502,6 +549,7 @@ async function startPracticeRecording(panel) {
             practiceState.stream = null;
             practiceState.chunks = [];
 
+            bindRecordingPlayback(panel, audioBlob);
             sendPracticeAudio(panel, audioBlob);
         });
 
@@ -569,8 +617,6 @@ function sendPracticeAudio(panel, audioBlob) {
             throw new Error(data.error || '오류가 발생했습니다.');
         }
 
-        bindRecordingPlayback(panel, audioBlob);
-
         const scoreClass = data.accuracy >= 85 ? 'text-success' : (data.accuracy >= 65 ? 'text-primary' : 'text-danger');
         showResult(panel, `
             <div class="fw-semibold mb-2">${escapeHtml(panel.dataset.panelLabel || '따라 말하기')} 평가 결과</div>
@@ -599,16 +645,17 @@ function checkWriting(panel) {
         return;
     }
 
-    const comparison = buildWordComparison(referenceText, submittedText);
+    const comparison = calculateWritingScore(referenceText, submittedText);
     const scoreClass = comparison.score >= 85 ? 'text-success' : (comparison.score >= 65 ? 'text-primary' : 'text-danger');
     const summary = comparison.score >= 85
         ? '문장을 거의 정확하게 적었습니다.'
-        : (comparison.score >= 65 ? '조금만 더 다듬으면 됩니다.' : '빠진 표현과 추가된 표현을 다시 확인해 보세요.');
+        : (comparison.score >= 65 ? '단어 순서와 빠진 표현을 조금만 더 다듬으면 됩니다.' : '단어 순서와 빠진 표현을 다시 확인해 보세요.');
 
     showWritingResult(panel, `
         <div class="fw-semibold mb-2">쓰기 결과</div>
         <div class="mb-2"><strong>입력 문장:</strong> ${escapeHtml(submittedText)}</div>
         <div class="mb-2"><strong>점수:</strong> <span class="${scoreClass}">${comparison.score}점</span></div>
+        <div class="mb-2"><strong>문장 순서 정확도:</strong> ${comparison.orderScore}점</div>
         <div class="mb-2"><strong>평가:</strong> ${escapeHtml(summary)}</div>
         <div class="small"><strong>맞춘 단어:</strong> ${renderWordList(comparison.matchedWords)}</div>
         <div class="small"><strong>빠진 단어:</strong> ${renderWordList(comparison.missingWords)}</div>
