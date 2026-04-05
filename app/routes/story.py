@@ -145,6 +145,10 @@ def chapter_practice(chapter_id, story_index=None):
         story_index = 1
     
     story = stories[array_index]
+    existing_progress = StoryProgress.query.filter_by(
+        user_id=current_user.id,
+        story_id=story.id
+    ).first()
     
     # 다음 스토리 인덱스 계산
     next_index = story_index + 1 if story_index < total_stories else 1
@@ -154,7 +158,8 @@ def chapter_practice(chapter_id, story_index=None):
                           story=story,
                           story_number=story_index,
                           total_stories=total_stories,
-                          next_index=next_index)
+                          next_index=next_index,
+                          existing_progress=existing_progress)
 
 @story_bp.route('/process_audio', methods=['POST'])
 @login_required
@@ -171,7 +176,11 @@ def process_audio():
         temp_filename = temp_audio.name
     
     try:
-        from app.services.speech_service import transcribe_audio, calculate_pronunciation_accuracy
+        from app.services.speech_service import (
+            build_pronunciation_feedback,
+            calculate_pronunciation_accuracy,
+            transcribe_audio,
+        )
         
         # 오디오 파일 텍스트 변환
         result = transcribe_audio(temp_filename)
@@ -179,6 +188,7 @@ def process_audio():
         
         # 정확도 계산 (긴 텍스트용)
         accuracy, details = calculate_pronunciation_accuracy(transcribed_text, text_to_compare)
+        feedback = build_pronunciation_feedback(transcribed_text, text_to_compare)
         
         # 파일 삭제
         os.unlink(temp_filename)
@@ -189,6 +199,7 @@ def process_audio():
             'original_text': text_to_compare,
             'accuracy': accuracy,
             'details': details,
+            'feedback': feedback,
             'processing_time': result.get("processing_time", 0)
         })
         
