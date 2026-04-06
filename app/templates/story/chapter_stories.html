@@ -63,8 +63,6 @@
                         {% set progress = story_progress[story.id] %}
                         {% if progress.status == 2 %}
                             <span class="badge bg-success">학습 완료 ({{ progress.total_score }}점)</span>
-                        {% elif progress.status == 1 %}
-                            <span class="badge bg-warning">학습 중 ({{ progress.total_score }}점)</span>
                         {% else %}
                             <span class="badge bg-secondary">미학습</span>
                         {% endif %}

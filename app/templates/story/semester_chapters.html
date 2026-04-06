@@ -40,7 +40,6 @@
 
                 <p class="mb-2"><strong>스토리 수:</strong> {{ progress.get('total_stories', 0) }}</p>
                 <p class="mb-2"><strong>완료:</strong> {{ progress.get('completed_stories', 0) }}</p>
-                <p class="text-muted mb-0"><strong>학습 중:</strong> {{ progress.get('in_progress_stories', 0) }}</p>
             </div>
             <div class="card-footer bg-white border-0">
                 <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-success w-100">챕터 열기</a>
