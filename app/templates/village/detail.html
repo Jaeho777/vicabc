@@ -13,6 +13,31 @@
     .lesson-card {
         overflow: hidden;
     }
+    .lesson-overview-card {
+        border-radius: 22px;
+        border: 0;
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+    .lesson-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+    }
+    .lesson-overview-item {
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        padding: 18px;
+    }
+    .lesson-overview-item h5 {
+        font-size: 1rem;
+        line-height: 1.45;
+    }
+    .lesson-overview-line {
+        color: #334155;
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
     .lesson-header {
         display: flex;
         flex-wrap: wrap;
@@ -106,6 +131,17 @@
         font-size: 0.9rem;
         font-weight: 600;
     }
+    .audio-file-chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: #f8fafc;
+        border: 1px solid #dbe3ef;
+        color: #334155;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
     .feedback-box,
     .writing-box {
         border-radius: 14px;
@@ -183,10 +219,43 @@
     </div>
 </div>
 
+<div class="card lesson-overview-card mb-4">
+    <div class="card-body p-4 p-lg-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <div class="text-muted small mb-2">Page Overview</div>
+                <h3 class="mb-2">Lesson 텍스트와 음원 연결 한눈에 보기</h3>
+                <div class="text-secondary">모든 lesson의 Sentence A/B와 `a.m4a`, `b.m4a` 연결을 이 페이지 상단에서 바로 확인할 수 있습니다.</div>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="audio-file-chip">a = 기본 문장</span>
+                <span class="audio-file-chip">b = 응용 음원</span>
+            </div>
+        </div>
+
+        <div class="lesson-overview-grid">
+            {% for lesson in village.lessons %}
+            <a href="#lesson-{{ lesson.number }}" class="text-decoration-none text-reset">
+                <div class="lesson-overview-item">
+                    <div class="text-muted small mb-2">Lesson {{ lesson.number }}</div>
+                    <h5 class="mb-3">{{ lesson.title }}</h5>
+                    <div class="lesson-overview-line mb-2"><strong>A.</strong> {{ lesson.dialogue_lines[0].text }}</div>
+                    <div class="lesson-overview-line mb-3"><strong>B.</strong> {{ lesson.dialogue_lines[1].text }}</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="audio-file-chip">{{ lesson.base_audio_filename }}</span>
+                        <span class="audio-file-chip">{{ lesson.practice_audio_filename }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
 <div class="row g-4">
     {% for lesson in village.lessons %}
     <div class="col-12">
-        <div class="card lesson-card">
+        <div class="card lesson-card" id="lesson-{{ lesson.number }}">
             <div class="card-body p-4 p-lg-5">
                 <div class="lesson-header">
                     <div>
@@ -194,7 +263,11 @@
                         <h4 class="mb-2">{{ lesson.title }}</h4>
                         <div class="lesson-subtitle">듣기, 말하기, 내 말 다시 듣기, 평가, 써보기 순서로 학습하세요.</div>
                     </div>
-                    <span class="flow-chip">듣기 -> 말하기 -> 내 말 듣기 -> 평가 -> 써보기</span>
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <span class="flow-chip">듣기 -> 말하기 -> 내 말 듣기 -> 평가 -> 써보기</span>
+                        <span class="audio-file-chip">기본 {{ lesson.base_audio_filename }}</span>
+                        <span class="audio-file-chip">응용 {{ lesson.practice_audio_filename }}</span>
+                    </div>
                 </div>
 
                 <div class="row g-4">
@@ -222,19 +295,23 @@
                                 <div>
                                     <div class="text-muted small mb-1">응용 음원</div>
                                     <div class="fw-semibold">확장해서 들어보기</div>
+                                    <div class="small text-secondary mt-1">{{ lesson.practice_audio_filename }}</div>
                                 </div>
                                 <button type="button" class="btn btn-outline-secondary js-play-reference" data-default-label="응용 듣기">응용 듣기</button>
                             </div>
                             <audio preload="none" class="d-none js-reference-audio">
                                 <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
                             </audio>
+                            <div class="support-note mb-3">
+                                기본 음원은 <strong>{{ lesson.base_audio_filename }}</strong>, 응용 음원은 <strong>{{ lesson.practice_audio_filename }}</strong>으로 연결돼 있습니다.
+                            </div>
                             <div class="support-note">
                                 두 번째 파일은 응용 키워드가 들어간 음원입니다. 지금은 먼저 여러 번 듣고 표현에 익숙해지도록 구성했습니다.
                             </div>
                             {% if lesson.practice_reference_text %}
-                            <div class="small text-secondary mt-3">응용 문장 스크립트가 등록돼 있어 추후 말하기 비교도 가능합니다.</div>
+                            <div class="small text-secondary mt-3">응용 문장 스크립트도 함께 보면서 확장 표현을 확인할 수 있습니다.</div>
                             {% else %}
-                            <div class="small text-secondary mt-3">응용 문장 스크립트가 들어오면 이 영역도 말하기 평가까지 확장할 수 있습니다.</div>
+                            <div class="small text-secondary mt-3">이 lesson은 응용 키워드와 응용 음원 `{{ lesson.practice_audio_filename }}` 기준으로 확장 학습하도록 정리했습니다.</div>
                             {% endif %}
                         </div>
                     </div>
@@ -255,6 +332,7 @@
                                     <div class="d-flex flex-wrap align-items-center gap-2">
                                         <button type="button" class="btn btn-primary js-play-reference" data-default-label="듣기">듣기</button>
                                         <span class="small text-secondary">Sentence A와 Sentence B가 이어서 재생됩니다.</span>
+                                        <span class="audio-file-chip">{{ lesson.base_audio_filename }}</span>
                                     </div>
                                     <audio preload="none" class="d-none js-reference-audio">
                                         <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">

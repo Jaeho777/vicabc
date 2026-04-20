@@ -30,6 +30,25 @@
         font-size: 0.9rem;
         font-weight: 600;
     }
+    .village-stat {
+        min-width: 120px;
+        border-radius: 16px;
+        padding: 14px 16px;
+        background: #fff8db;
+        border: 1px solid rgba(138, 97, 0, 0.12);
+    }
+    .village-stat-label {
+        color: #7c5a00;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .village-stat-value {
+        color: #1f2937;
+        font-size: 1.35rem;
+        font-weight: 800;
+    }
 </style>
 {% endblock %}
 
@@ -42,8 +61,23 @@
         <div class="card-body">
             <p class="mb-4">
                 Village는 녹음본과 대화 패턴을 따라 들으며 익히고, 이후 인증시험에서 실제 말하기 흐름으로 점검하는 영역입니다.
-                지금은 Village 1, 2 학습이 열려 있고 이후 16개 Village까지 같은 구조로 계속 확장할 수 있게 구성했습니다.
+                현재 Village 1부터 16까지 모두 학습 페이지에서 바로 확인할 수 있고, 각 lesson마다 기본 문장과 a/b 음원 연결이 보이도록 정리했습니다.
             </p>
+
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                <div class="village-stat">
+                    <div class="village-stat-label">Open Villages</div>
+                    <div class="village-stat-value">16</div>
+                </div>
+                <div class="village-stat">
+                    <div class="village-stat-label">Total Lessons</div>
+                    <div class="village-stat-value">192</div>
+                </div>
+                <div class="village-stat">
+                    <div class="village-stat-label">Audio Mapping</div>
+                    <div class="village-stat-value">a / b</div>
+                </div>
+            </div>
 
             {% if latest_result %}
             <div class="alert alert-info">

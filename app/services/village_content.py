@@ -1,3 +1,6 @@
+from app.services.village_content_extra import EXTRA_VILLAGE_BLUEPRINTS
+
+
 VILLAGE_TOTAL_COUNT = 16
 
 
@@ -5,20 +8,45 @@ def _audio_path(village_number, filename):
     return f"audio/village/{village_number}/{filename}"
 
 
-def _lesson(village_number, lesson_number, prompt, response, practice_keywords):
+def _lesson(village_number, lesson_number, prompt, response, practice_keywords, title=None):
     lesson_prefix = f"{village_number}.{lesson_number}"
+    base_audio_filename = f"{lesson_prefix}a.m4a"
+    practice_audio_filename = f"{lesson_prefix}b.m4a"
     return {
         "number": lesson_number,
-        "title": f"Lesson {lesson_number}",
+        "title": title or f"Lesson {lesson_number}",
+        "lesson_prefix": lesson_prefix,
         "dialogue_lines": [
             {"label": "Sentence A", "text": prompt},
             {"label": "Sentence B", "text": response},
         ],
         "base_reference_text": f"{prompt} {response}",
-        "base_audio_path": _audio_path(village_number, f"{lesson_prefix}a.m4a"),
-        "practice_audio_path": _audio_path(village_number, f"{lesson_prefix}b.m4a"),
+        "base_audio_filename": base_audio_filename,
+        "practice_audio_filename": practice_audio_filename,
+        "base_audio_path": _audio_path(village_number, base_audio_filename),
+        "practice_audio_path": _audio_path(village_number, practice_audio_filename),
         "practice_reference_text": None,
         "practice_keywords": practice_keywords,
+    }
+
+
+def _build_village_from_blueprint(village_number, blueprint):
+    return {
+        "number": village_number,
+        "theme_ko": blueprint["theme_ko"],
+        "theme_en": blueprint["theme_en"],
+        "summary": blueprint["summary"],
+        "lessons": [
+            _lesson(
+                village_number,
+                lesson_number,
+                lesson["prompt"],
+                lesson["response"],
+                lesson["practice_keywords"],
+                title=lesson["title"],
+            )
+            for lesson_number, lesson in enumerate(blueprint["lessons"], start=1)
+        ],
     }
 
 
@@ -124,6 +152,9 @@ VILLAGE_CONTENT = {
         ],
     },
 }
+
+for village_number, blueprint in EXTRA_VILLAGE_BLUEPRINTS.items():
+    VILLAGE_CONTENT[village_number] = _build_village_from_blueprint(village_number, blueprint)
 
 
 def get_village(village_number):
