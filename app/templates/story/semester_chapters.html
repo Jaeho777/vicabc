@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Bible Story {{ grade }}학년 {{ semester }}학기{% endblock %}
+{% block title %}Bible Story {{ grade }}학년{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년 {{ semester }}학기</li>
+        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
     </ol>
 </nav>
 
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-success text-white">
-        <h4 class="m-0">{{ grade }}학년 {{ semester }}학기 챕터</h4>
+        <h4 class="m-0">{{ grade }}학년 챕터</h4>
     </div>
     <div class="card-body">
         <p class="text-muted mb-0">학습할 챕터를 선택하면 스토리 목록과 진도를 확인할 수 있습니다.</p>
@@ -48,7 +48,7 @@
     </div>
     {% else %}
     <div class="col-12">
-        <div class="alert alert-info mb-0">이 학기에 등록된 챕터가 없습니다.</div>
+        <div class="alert alert-info mb-0">이 학년에 등록된 챕터가 없습니다.</div>
     </div>
     {% endfor %}
 </div>

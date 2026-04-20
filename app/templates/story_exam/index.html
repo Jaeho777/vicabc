@@ -8,76 +8,27 @@
         <h4 class="m-0">Bible Story 인증시험</h4>
     </div>
     <div class="card-body">
-        <p class="mb-0 text-muted">학년과 학기를 고르면 챕터별 인증시험 목록으로 이동합니다.</p>
+        <p class="mb-0 text-muted">학년을 고르면 해당 학년의 챕터별 인증시험 목록으로 이동합니다.</p>
     </div>
 </div>
 
-<ul class="nav nav-tabs mb-3" id="storyExamCategoryTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="story-exam-elementary-tab" data-bs-toggle="tab" data-bs-target="#story-exam-elementary" type="button" role="tab" aria-controls="story-exam-elementary" aria-selected="true">초등</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="story-exam-middle-tab" data-bs-toggle="tab" data-bs-target="#story-exam-middle" type="button" role="tab" aria-controls="story-exam-middle" aria-selected="false">중등</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="story-exam-high-tab" data-bs-toggle="tab" data-bs-target="#story-exam-high" type="button" role="tab" aria-controls="story-exam-high" aria-selected="false">고등</button>
-    </li>
-</ul>
-
-<div class="tab-content">
-    <div class="tab-pane fade show active" id="story-exam-elementary" role="tabpanel" aria-labelledby="story-exam-elementary-tab">
-        <ul class="nav nav-pills mb-4" id="storyExamGradeTabs" role="tablist">
-            {% for grade in grades_data['초등'] %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link {% if grade == 1 %}active{% endif %}"
-                        id="story-exam-grade{{ grade }}-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#story-exam-grade{{ grade }}"
-                        type="button"
-                        role="tab"
-                        aria-controls="story-exam-grade{{ grade }}"
-                        aria-selected="{% if grade == 1 %}true{% else %}false{% endif %}">
-                    {{ grade }}학년
-                </button>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <div class="tab-content">
-            {% for grade in grades_data['초등'] %}
-            <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}"
-                 id="story-exam-grade{{ grade }}"
-                 role="tabpanel"
-                 aria-labelledby="story-exam-grade{{ grade }}-tab">
-                <div class="row g-4">
-                    {% for semester in [1, 2] %}
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-header bg-light">
-                                <div class="small text-muted mb-1">{{ grade }}학년</div>
-                                <h5 class="m-0">{{ semester }}학기</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="mb-0 text-muted">이 학기의 챕터별 인증시험 목록을 확인하고 시험을 시작할 수 있습니다.</p>
-                            </div>
-                            <div class="card-footer bg-white border-0">
-                                <a href="{{ url_for('story.exam_semester_chapters', grade=grade, semester=semester) }}" class="btn btn-success w-100">챕터 보기</a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+<div class="row g-4">
+    {% for grade in grades %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <div class="small text-muted mb-1">Bible Story Exam</div>
+                <h5 class="m-0">{{ grade }}학년</h5>
             </div>
-            {% endfor %}
+            <div class="card-body">
+                <p class="mb-2"><strong>등록 챕터:</strong> {{ grade_counts.get(grade, 0) }}개</p>
+                <p class="mb-0 text-muted">이 학년의 전체 챕터 시험 목록을 확인하고 바로 시험을 시작할 수 있습니다.</p>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="{{ url_for('story.exam_grade_chapters', grade=grade) }}" class="btn btn-success w-100">챕터 보기</a>
+            </div>
         </div>
     </div>
-
-    <div class="tab-pane fade" id="story-exam-middle" role="tabpanel" aria-labelledby="story-exam-middle-tab">
-        <div class="alert alert-info mb-0">중등 과정 인증시험은 준비 중입니다.</div>
-    </div>
-
-    <div class="tab-pane fade" id="story-exam-high" role="tabpanel" aria-labelledby="story-exam-high-tab">
-        <div class="alert alert-info mb-0">고등 과정 인증시험은 준비 중입니다.</div>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
-        <li class="breadcrumb-item"><a href="{{ url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester) }}">{{ chapter.grade }}학년 {{ chapter.semester }}학기</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('story.exam_grade_chapters', grade=chapter.grade) }}">{{ chapter.grade }}학년</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ chapter.title }} 결과</li>
     </ol>
 </nav>
@@ -57,7 +57,7 @@
 
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ url_for('story.story_start_exam', chapter_id=chapter.id) }}" class="btn btn-success">다시 시험 보기</a>
-            <a href="{{ url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester) }}" class="btn btn-outline-secondary">학기 목록으로</a>
+            <a href="{{ url_for('story.exam_grade_chapters', grade=chapter.grade) }}" class="btn btn-outline-secondary">챕터 목록으로</a>
             <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-outline-primary">학습으로 돌아가기</a>
         </div>
     </div>

@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Bible Story 인증시험 {{ grade }}학년 {{ semester }}학기{% endblock %}
+{% block title %}Bible Story 인증시험 {{ grade }}학년{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년 {{ semester }}학기</li>
+        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
     </ol>
 </nav>
 
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-success text-white">
-        <h4 class="m-0">{{ grade }}학년 {{ semester }}학기 인증시험</h4>
+        <h4 class="m-0">{{ grade }}학년 인증시험</h4>
     </div>
     <div class="card-body">
         <p class="text-muted mb-0">챕터를 선택하면 등록된 스토리 순서대로 시험이 진행됩니다.</p>
@@ -50,7 +50,7 @@
     </div>
     {% else %}
     <div class="col-12">
-        <div class="alert alert-info mb-0">이 학기에 등록된 챕터가 없습니다.</div>
+        <div class="alert alert-info mb-0">이 학년에 등록된 챕터가 없습니다.</div>
     </div>
     {% endfor %}
 </div>

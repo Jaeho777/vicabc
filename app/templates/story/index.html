@@ -9,224 +9,28 @@
            <h4 class="m-0">Bible Story 학습</h4>
         </div>
         <div class="card-body">
-            <!-- 상위 탭: 초등, 중등, 고등 -->
-            <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="elementary-tab" data-bs-toggle="tab" data-bs-target="#elementary" type="button" role="tab" aria-controls="elementary" aria-selected="true">초등</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="middle-tab" data-bs-toggle="tab" data-bs-target="#middle" type="button" role="tab" aria-controls="middle" aria-selected="false">중등</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="high-tab" data-bs-toggle="tab" data-bs-target="#high" type="button" role="tab" aria-controls="high" aria-selected="false">고등</button>
-                </li>
-            </ul>
-            
-            <div class="tab-content p-3" id="categoryTabsContent">
-                <!-- 초등 탭 -->
-                <div class="tab-pane fade show active" id="elementary" role="tabpanel" aria-labelledby="elementary-tab">
-                    <!-- 하위 탭: 초등 학년별 -->
-                    <ul class="nav nav-pills mb-3" id="elementaryGradeTabs" role="tablist">
-                        {% for grade in grades_data['초등'] %}
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link {% if grade == 1 %}active{% endif %}" 
-                                    id="elem-grade{{ grade }}-tab" 
-                                    data-bs-toggle="pill" 
-                                    data-bs-target="#elem-grade{{ grade }}" 
-                                    type="button" role="tab" 
-                                    aria-controls="elem-grade{{ grade }}" 
-                                    aria-selected="{% if grade == 1 %}true{% else %}false{% endif %}">{{ grade }}학년</button>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    
-                    <div class="tab-content" id="elementaryGradeTabsContent">
-                        {% for grade in grades_data['초등'] %}
-                        <div class="tab-pane fade {% if grade == 1 %}show active{% endif %}" 
-                             id="elem-grade{{ grade }}" 
-                             role="tabpanel" 
-                             aria-labelledby="elem-grade{{ grade }}-tab">
-                            
-                            <!-- 학기별 탭 -->
-                            <ul class="nav nav-pills mb-3" id="grade{{ grade }}SemesterTabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" 
-                                            id="grade{{ grade }}-sem1-tab" 
-                                            data-bs-toggle="pill" 
-                                            data-bs-target="#grade{{ grade }}-sem1" 
-                                            type="button" role="tab" 
-                                            aria-controls="grade{{ grade }}-sem1" 
-                                            aria-selected="true">1학기</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" 
-                                            id="grade{{ grade }}-sem2-tab" 
-                                            data-bs-toggle="pill" 
-                                            data-bs-target="#grade{{ grade }}-sem2" 
-                                            type="button" role="tab" 
-                                            aria-controls="grade{{ grade }}-sem2" 
-                                            aria-selected="false">2학기</button>
-                                </li>
-                            </ul>
-                            
-                            <div class="tab-content" id="grade{{ grade }}SemesterTabsContent">
-                                <!-- 1학기 -->
-                                <div class="tab-pane fade show active" 
-                                     id="grade{{ grade }}-sem1" 
-                                     role="tabpanel" 
-                                     aria-labelledby="grade{{ grade }}-sem1-tab">
-                                    
-                                    <div class="row" id="grade{{ grade }}-sem1-chapters">
-                                        <!-- 1학기 챕터 카드들이 AJAX로 로드됩니다 -->
-                                    </div>
-                                </div>
-                                
-                                <!-- 2학기 -->
-                                <div class="tab-pane fade" 
-                                     id="grade{{ grade }}-sem2" 
-                                     role="tabpanel" 
-                                     aria-labelledby="grade{{ grade }}-sem2-tab">
-                                    
-                                    <div class="row" id="grade{{ grade }}-sem2-chapters">
-                                        <!-- 2학기 챕터 카드들이 AJAX로 로드됩니다 -->
-                                    </div>
-                                </div>
-                            </div>
+            <p class="text-muted mb-4">학년을 선택하면 해당 학년의 Bible Story 챕터 목록으로 이동합니다.</p>
+
+            <div class="row g-4">
+                {% for grade in grades %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="small text-muted mb-1">Bible Story</div>
+                            <h5 class="m-0">{{ grade }}학년</h5>
                         </div>
-                        {% endfor %}
+                        <div class="card-body">
+                            <p class="mb-2"><strong>등록 챕터:</strong> {{ grade_counts.get(grade, 0) }}개</p>
+                            <p class="mb-0 text-muted">이 학년의 전체 챕터를 한 번에 보고 순서대로 학습할 수 있습니다.</p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a href="{{ url_for('story.grade_chapters', grade=grade) }}" class="btn btn-success w-100">챕터 보기</a>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- 중등 탭 -->
-                <div class="tab-pane fade" id="middle" role="tabpanel" aria-labelledby="middle-tab">
-                    <div class="alert alert-info">
-                        중등 과정은 준비 중입니다.
-                    </div>
-                </div>
-                
-                <!-- 고등 탭 -->
-                <div class="tab-pane fade" id="high" role="tabpanel" aria-labelledby="high-tab">
-                    <div class="alert alert-info">
-                        고등 과정은 준비 중입니다.
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// 챕터 카드 로드 함수
-function loadChapterCards(grade, semester) {
-    const targetElement = document.getElementById(`grade${grade}-sem${semester}-chapters`);
-    
-    // 이미 로드되었는지 확인
-    if (targetElement.children.length > 0) {
-        return;
-    }
-    
-    // 로딩 표시
-    targetElement.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-success" role="status"></div></div>';
-    
-    // AJAX로 챕터 데이터 가져오기
-    fetch(`/story/api/chapters/${grade}/${semester}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                let cardsHtml = '';
-                
-                if (data.chapters.length === 0) {
-                    cardsHtml = '<div class="col-12"><div class="alert alert-info">이 학기에 등록된 챕터가 없습니다.</div></div>';
-                } else {
-                    data.chapters.forEach(chapter => {
-                        const progress = chapter.progress;
-                        let statusBadge = '';
-                        
-                        if (progress.completed_stories === progress.total_stories && progress.total_stories > 0) {
-                            statusBadge = '<span class="badge bg-success text-white py-2 px-3">완료</span>';
-                        } else if (progress.completed_stories > 0 || progress.in_progress_stories > 0) {
-                            statusBadge = '<span class="badge bg-info text-white py-2 px-3">진행 중</span>';
-                        } else {
-                            statusBadge = '<span class="badge bg-secondary text-white py-2 px-3">미시작</span>';
-                        }
-                        
-                        cardsHtml += `
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-header bg-success text-white text-center py-3">
-                                        <h5 class="m-0">${chapter.title}</h5>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title mb-3">${grade}학년 ${semester}학기 - ${chapter.order}번째</h6>
-                                        
-                                        <div class="progress mb-3" style="height: 20px;">
-                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                style="width: ${progress.progress_percent}%;" 
-                                                aria-valuenow="${progress.progress_percent}" 
-                                                aria-valuemin="0" 
-                                                aria-valuemax="100">${progress.progress_percent}%</div>
-                                        </div>
-
-                                        <p class="mb-3">진도: ${progress.completed_stories}/${progress.total_stories} 스토리 완료</p>
-
-                                        <div class="mb-4">
-                                            ${statusBadge}
-                                        </div>
-                                        
-                                        <a href="/story/chapter/${chapter.id}" class="btn btn-success btn-lg w-100">
-                                            <i class="bi bi-book"></i> 학습하기
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                
-                targetElement.innerHTML = cardsHtml;
-            } else {
-                targetElement.innerHTML = '<div class="col-12"><div class="alert alert-danger">챕터 로드 중 오류가 발생했습니다.</div></div>';
-            }
-        })
-        .catch(error => {
-            console.error('챕터 로드 오류:', error);
-            targetElement.innerHTML = '<div class="col-12"><div class="alert alert-danger">네트워크 오류가 발생했습니다.</div></div>';
-        });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // 초기 로드 (1학년 1학기)
-    loadChapterCards(1, 1);
-    
-    // 학기 탭 클릭 이벤트
-    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(button => {
-        button.addEventListener('shown.bs.tab', function (e) {
-            const targetId = e.target.getAttribute('data-bs-target');
-            
-            // 학기 탭인지 확인
-            const semesterMatch = targetId.match(/grade(\d+)-sem(\d+)/);
-            if (semesterMatch) {
-                const grade = parseInt(semesterMatch[1]);
-                const semester = parseInt(semesterMatch[2]);
-                loadChapterCards(grade, semester);
-            }
-        });
-    });
-    
-    // 학년 탭 클릭 이벤트
-    document.querySelectorAll('#elementaryGradeTabs button').forEach(button => {
-        button.addEventListener('shown.bs.tab', function (e) {
-            const targetId = e.target.getAttribute('data-bs-target');
-            const gradeMatch = targetId.match(/elem-grade(\d+)/);
-            if (gradeMatch) {
-                const grade = parseInt(gradeMatch[1]);
-                // 해당 학년의 1학기를 기본으로 로드
-                loadChapterCards(grade, 1);
-            }
-        });
-    });
-});
-</script>
 {% endblock %}

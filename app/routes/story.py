@@ -17,6 +17,8 @@ from app.models.story_progress import StoryProgress
 from app.models.story_certification import StoryCertification
 
 story_bp = Blueprint('story', __name__, url_prefix='/story')
+ELEMENTARY_CATEGORY = '초등'
+ELEMENTARY_GRADES = list(range(1, 7))
 
 
 def _normalize_score(value):
@@ -88,74 +90,122 @@ def _store_story_exam_speaking_score(chapter_id, story_id, score):
     session[_story_exam_speaking_key(chapter_id)] = scores
     session.modified = True
 
-@story_bp.route('/')
-@login_required
-def index():
-    # 초등, 중등, 고등별로 학년 데이터 구성
-    grades_data = {
-        '초등': list(range(1, 7)),  # 1-6학년
-        '중등': list(range(1, 4)),  # 1-3학년 
-        '고등': list(range(1, 4))   # 1-3학년
-    }
-    
-    return render_template('story/index.html', grades_data=grades_data)
 
-@story_bp.route('/grade/<int:grade>/semester/<int:semester>')
-@login_required
-def semester_chapters(grade, semester):
-    """특정 학년의 특정 학기 챕터들 표시"""
-    # 해당 학년, 학기의 모든 챕터들 가져오기
-    chapters = Chapter.query.filter_by(
-        grade=grade, 
-        semester=semester,
-        category='초등'  # 일단 초등만
-    ).order_by(Chapter.order).all()
-    
-    # 각 챕터별 진도 정보 계산
+def _get_elementary_grade_counts():
+    counts = {grade: 0 for grade in ELEMENTARY_GRADES}
+    rows = (
+        db.session.query(Chapter.grade, func.count(Chapter.id))
+        .filter(
+            Chapter.category == ELEMENTARY_CATEGORY,
+            Chapter.grade.in_(ELEMENTARY_GRADES),
+        )
+        .group_by(Chapter.grade)
+        .all()
+    )
+
+    for grade, count in rows:
+        counts[grade] = count
+
+    return counts
+
+
+def _get_grade_chapters(grade):
+    return (
+        Chapter.query
+        .filter_by(grade=grade, category=ELEMENTARY_CATEGORY)
+        .order_by(Chapter.order)
+        .all()
+    )
+
+
+def _build_chapter_progress(chapters):
     chapter_progress = {}
+
     for chapter in chapters:
-        # 챕터의 총 스토리 수
         total_stories = len(chapter.stories)
-        
+
         if total_stories > 0:
-            # 완료한 스토리 수
             completed_stories = 0
             in_progress_stories = 0
-            
+
             for story in chapter.stories:
                 progress = StoryProgress.query.filter_by(
                     user_id=current_user.id,
                     story_id=story.id
                 ).first()
-                
+
                 if progress:
-                    if progress.status == 2:  # 완료
+                    if progress.status == 2:
                         completed_stories += 1
-                    elif progress.status == 1:  # 진행중
+                    elif progress.status == 1:
                         in_progress_stories += 1
-            
-            # 진도율 계산
+
             progress_percent = (completed_stories / total_stories) * 100
-            
-            chapter_progress[chapter.id] = {
-                'total_stories': total_stories,
-                'completed_stories': completed_stories,
-                'in_progress_stories': in_progress_stories,
-                'progress_percent': round(progress_percent, 1)
-            }
         else:
-            chapter_progress[chapter.id] = {
-                'total_stories': 0,
-                'completed_stories': 0,
-                'in_progress_stories': 0,
-                'progress_percent': 0
+            completed_stories = 0
+            in_progress_stories = 0
+            progress_percent = 0
+
+        chapter_progress[chapter.id] = {
+            'total_stories': total_stories,
+            'completed_stories': completed_stories,
+            'in_progress_stories': in_progress_stories,
+            'progress_percent': round(progress_percent, 1)
+        }
+
+    return chapter_progress
+
+
+def _build_previous_exam_results(chapters):
+    previous_results = {}
+
+    for chapter in chapters:
+        latest_cert = (
+            StoryCertification.query
+            .filter(
+                StoryCertification.user_id == current_user.id,
+                StoryCertification.chapter_id == chapter.id,
+            )
+            .order_by(StoryCertification.exam_date.desc())
+            .first()
+        )
+
+        if latest_cert:
+            previous_results[chapter.id] = {
+                'passed': latest_cert.passed,
+                'score': latest_cert.score,
+                'exam_date': latest_cert.exam_date
             }
-    
-    return render_template('story/semester_chapters.html',
-                          grade=grade,
-                          semester=semester,
-                          chapters=chapters,
-                          chapter_progress=chapter_progress)
+
+    return previous_results
+
+@story_bp.route('/')
+@login_required
+def index():
+    return render_template(
+        'story/index.html',
+        grades=ELEMENTARY_GRADES,
+        grade_counts=_get_elementary_grade_counts(),
+    )
+
+@story_bp.route('/grade/<int:grade>')
+@login_required
+def grade_chapters(grade):
+    chapters = _get_grade_chapters(grade)
+    chapter_progress = _build_chapter_progress(chapters)
+
+    return render_template(
+        'story/semester_chapters.html',
+        grade=grade,
+        chapters=chapters,
+        chapter_progress=chapter_progress,
+    )
+
+
+@story_bp.route('/grade/<int:grade>/semester/<int:semester>')
+@login_required
+def semester_chapters(grade, semester):
+    return redirect(url_for('story.grade_chapters', grade=grade))
 
 @story_bp.route('/chapter/<int:chapter_id>')
 @login_required
@@ -386,51 +436,30 @@ def save_progress():
 @story_bp.route('/exam')
 @login_required
 def story_exam_index():
-    """Story 인증시험 메인 페이지"""
-    # 초등, 중등, 고등별로 학년 데이터 구성
-    grades_data = {
-        '초등': list(range(1, 7)),  # 1-6학년
-        '중등': list(range(1, 4)),  # 1-3학년 
-        '고등': list(range(1, 4))   # 1-3학년
-    }
-    
-    return render_template('story_exam/index.html', grades_data=grades_data)
+    return render_template(
+        'story_exam/index.html',
+        grades=ELEMENTARY_GRADES,
+        grade_counts=_get_elementary_grade_counts(),
+    )
+
+@story_bp.route('/exam/grade/<int:grade>')
+@login_required
+def exam_grade_chapters(grade):
+    chapters = _get_grade_chapters(grade)
+    previous_results = _build_previous_exam_results(chapters)
+
+    return render_template(
+        'story_exam/semester_chapters.html',
+        grade=grade,
+        chapters=chapters,
+        previous_results=previous_results,
+    )
+
 
 @story_bp.route('/exam/grade/<int:grade>/semester/<int:semester>')
 @login_required
 def exam_semester_chapters(grade, semester):
-    """인증시험용 학기별 챕터 목록"""
-    chapters = Chapter.query.filter_by(
-        grade=grade, 
-        semester=semester,
-        category='초등'
-    ).order_by(Chapter.order).all()
-    
-    # 사용자의 이전 인증 시험 결과 가져오기
-    previous_results = {}
-    for chapter in chapters:
-        latest_cert = (
-            StoryCertification.query
-            .filter(
-                StoryCertification.user_id == current_user.id,
-                StoryCertification.chapter_id == chapter.id,
-            )
-            .order_by(StoryCertification.exam_date.desc())
-            .first()
-        )
-        
-        if latest_cert:
-            previous_results[chapter.id] = {
-                'passed': latest_cert.passed,
-                'score': latest_cert.score,
-                'exam_date': latest_cert.exam_date
-            }
-    
-    return render_template('story_exam/semester_chapters.html',
-                          grade=grade,
-                          semester=semester,
-                          chapters=chapters,
-                          previous_results=previous_results)
+    return redirect(url_for('story.exam_grade_chapters', grade=grade))
 
 @story_bp.route('/exam/chapter/<int:chapter_id>/start')
 @login_required
@@ -445,7 +474,7 @@ def story_start_exam(chapter_id):
 
     if any(not story.audio_filename for story in stories):
         flash('이 챕터에는 시험용 음원이 없는 스토리가 있어 시험을 시작할 수 없습니다.', 'warning')
-        return redirect(url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester))
+        return redirect(url_for('story.exam_grade_chapters', grade=chapter.grade))
     
     # 세션에 시험 정보 저장
     session_key = _story_exam_session_key(chapter_id)
@@ -491,7 +520,7 @@ def story_take_exam(chapter_id, story_index):
 
     if not story.audio_filename:
         flash('이 스토리는 시험용 음원이 등록되지 않아 시험을 진행할 수 없습니다.', 'warning')
-        return redirect(url_for('story.exam_semester_chapters', grade=chapter.grade, semester=chapter.semester))
+        return redirect(url_for('story.exam_grade_chapters', grade=chapter.grade))
     
     # 다음 스토리 인덱스 계산
     next_index = story_index + 1 if story_index < total_stories else 0
@@ -648,53 +677,21 @@ def story_exam_result(chapter_id):
                           is_passed=is_passed,
                           story_result_rows=story_result_rows)
 
+@story_bp.route('/api/chapters/<int:grade>')
 @story_bp.route('/api/chapters/<int:grade>/<int:semester>')
 @login_required
-def api_chapters(grade, semester):
+def api_chapters(grade, semester=None):
     """챕터 데이터를 JSON으로 반환하는 API"""
-    chapters = Chapter.query.filter_by(
-        grade=grade, 
-        semester=semester,
-        category='초등'
-    ).order_by(Chapter.order).all()
-    
-    # 각 챕터별 진도 정보 계산
+    chapters = _get_grade_chapters(grade)
+    chapter_progress = _build_chapter_progress(chapters)
+
     chapters_data = []
     for chapter in chapters:
-        total_stories = len(chapter.stories)
-        
-        if total_stories > 0:
-            completed_stories = 0
-            in_progress_stories = 0
-            
-            for story in chapter.stories:
-                progress = StoryProgress.query.filter_by(
-                    user_id=current_user.id,
-                    story_id=story.id
-                ).first()
-                
-                if progress:
-                    if progress.status == 2:
-                        completed_stories += 1
-                    elif progress.status == 1:
-                        in_progress_stories += 1
-            
-            progress_percent = (completed_stories / total_stories) * 100
-        else:
-            completed_stories = 0
-            in_progress_stories = 0
-            progress_percent = 0
-        
         chapters_data.append({
             'id': chapter.id,
             'title': chapter.title,
             'order': chapter.order,
-            'progress': {
-                'total_stories': total_stories,
-                'completed_stories': completed_stories,
-                'in_progress_stories': in_progress_stories,
-                'progress_percent': round(progress_percent, 1)
-            }
+            'progress': chapter_progress[chapter.id],
         })
     
     return jsonify({
