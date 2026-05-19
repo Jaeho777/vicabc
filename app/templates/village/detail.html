@@ -1,152 +1,29 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-village{% endblock %}
 {% block title %}Village {{ village.number }} - {{ village.theme_ko }}{% endblock %}
 
 {% block extra_head %}
 <style>
-    .village-summary,
-    .lesson-card {
-        border-radius: 22px;
-        border: 0;
-        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
-    }
-    .lesson-card {
-        overflow: hidden;
-    }
-    .lesson-overview-card {
-        border-radius: 22px;
-        border: 0;
-        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
-    }
-    .lesson-overview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-    }
-    .lesson-overview-item {
-        border-radius: 18px;
-        border: 1px solid #e5e7eb;
-        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-        padding: 18px;
-    }
-    .lesson-overview-item h5 {
-        font-size: 1rem;
-        line-height: 1.45;
-    }
-    .lesson-overview-line {
-        color: #334155;
-        font-size: 0.95rem;
-        line-height: 1.55;
-    }
-    .lesson-header {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: start;
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-    .lesson-subtitle {
-        color: #64748b;
-        font-size: 0.95rem;
-    }
-    .dialogue-panel,
-    .support-panel,
-    .practice-panel {
-        border-radius: 18px;
-        border: 1px solid #e5e7eb;
-        background: #ffffff;
-    }
-    .dialogue-panel,
-    .support-panel {
-        padding: 20px;
-    }
-    .practice-panel {
-        padding: 22px;
-        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-    }
-    .dialogue-box {
-        border-radius: 16px;
-        background: #f8fafc;
-        padding: 16px;
-    }
     .sentence-line {
         font-size: 1.05rem;
         line-height: 1.6;
-    }
-    .workflow-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    .workflow-step {
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        background: #ffffff;
-        padding: 16px;
-    }
-    .workflow-step-header {
-        display: flex;
-        align-items: start;
-        gap: 12px;
-        margin-bottom: 14px;
-    }
-    .step-badge {
-        flex: 0 0 auto;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: #e8f1ff;
-        color: #0d6efd;
-        font-weight: 700;
-    }
-    .step-title {
-        font-weight: 700;
-        margin-bottom: 2px;
-    }
-    .step-description {
-        color: #6b7280;
-        font-size: 0.92rem;
-    }
-    .flow-chip {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        padding: 6px 12px;
-        background: #fff6db;
-        color: #8a6100;
-        font-size: 0.86rem;
-        font-weight: 700;
     }
     .keyword-chip {
         display: inline-flex;
         align-items: center;
         border-radius: 999px;
         padding: 6px 12px;
-        background: #eef5ff;
-        color: #0d6efd;
+        background: var(--page-accent-soft);
+        color: var(--page-accent-dark);
         font-size: 0.9rem;
-        font-weight: 600;
-    }
-    .audio-file-chip {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        padding: 6px 10px;
-        background: #f8fafc;
-        border: 1px solid #dbe3ef;
-        color: #334155;
-        font-size: 0.82rem;
-        font-weight: 600;
+        font-weight: 700;
     }
     .feedback-box,
     .writing-box {
         border-radius: 14px;
-        border: 1px solid #e5e7eb;
-        background: #f8fafc;
+        border: 1px solid var(--app-border);
+        background: var(--app-surface-soft);
         padding: 14px 16px;
         min-height: 88px;
     }
@@ -167,122 +44,105 @@
         border-radius: 14px;
         resize: vertical;
     }
-    .support-note {
-        border-radius: 14px;
-        background: #f8fafc;
-        padding: 14px 16px;
-        color: #64748b;
-        font-size: 0.92rem;
+    .dialogue-line-label {
+        color: var(--page-accent-dark);
+        font-weight: 850;
+        margin-right: 6px;
     }
     @keyframes pulse {
         0% { opacity: 1; }
         50% { opacity: 0.4; }
         100% { opacity: 1; }
     }
-    @media (max-width: 991px) {
-        .practice-panel,
-        .dialogue-panel,
-        .support-panel {
-            padding: 18px;
-        }
-    }
 </style>
 {% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ url_for('village.index') }}">Village</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Village {{ village.number }}</li>
-    </ol>
-</nav>
+{% set is_current_village = latest_progress and latest_progress.village_number == village.number %}
+<div class="learning-shell" data-village-number="{{ village.number }}">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('village.index') }}">Village</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Village {{ village.number }}</li>
+        </ol>
+    </nav>
 
-<div class="card village-summary mb-4">
-    <div class="card-body p-4">
+    <section class="learning-hero">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
             <div>
-                <div class="text-muted small mb-2">Village {{ village.number }}</div>
-                <h2 class="mb-1">{{ village.theme_ko }}</h2>
-                <div class="text-secondary fs-5 mb-3">{{ village.theme_en }}</div>
-                <p class="mb-0">{{ village.summary }}</p>
+                <div class="learning-eyebrow mb-2">Village {{ village.number }}</div>
+                <h1 class="learning-hero-title mb-2">{{ village.theme_ko }}</h1>
+                <div class="learning-meta fs-6 mb-3">{{ village.theme_en }}</div>
+                <p class="learning-hero-text mb-0">{{ village.summary }}</p>
             </div>
-            <div class="text-md-end">
-                <div class="badge bg-warning text-dark mb-2">{{ village.lesson_count }} lessons</div>
-                {% if latest_result %}
-                <div class="small text-muted mb-3">
-                    최근 인증 결과: {{ latest_result.level_label }} / {{ latest_result.score }}점
-                </div>
+            <div class="learning-actions">
+                {% if is_current_village %}
+                <a href="#lesson-{{ latest_progress.lesson_number }}" class="btn btn-primary">이어하기</a>
                 {% endif %}
-                <a href="{{ url_for('village.exam') }}" class="btn btn-warning text-dark">인증시험 바로가기</a>
+                <a href="{{ url_for('village.index') }}" class="btn btn-outline-primary">목록</a>
+                <a href="{{ url_for('village.exam') }}" class="btn btn-outline-primary">인증시험</a>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
-<div class="card lesson-overview-card mb-4">
-    <div class="card-body p-4 p-lg-5">
-        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-            <div>
-                <div class="text-muted small mb-2">Page Overview</div>
-                <h3 class="mb-2">Lesson 텍스트와 음원 연결 한눈에 보기</h3>
-                <div class="text-secondary">모든 lesson의 Sentence A/B와 `a.m4a`, `b.m4a` 연결을 이 페이지 상단에서 바로 확인할 수 있습니다.</div>
-            </div>
-            <div class="d-flex flex-wrap gap-2">
-                <span class="audio-file-chip">a = 기본 문장</span>
-                <span class="audio-file-chip">b = 응용 음원</span>
-            </div>
-        </div>
-
-        <div class="lesson-overview-grid">
-            {% for lesson in village.lessons %}
-            <a href="#lesson-{{ lesson.number }}" class="text-decoration-none text-reset">
-                <div class="lesson-overview-item">
-                    <div class="text-muted small mb-2">Lesson {{ lesson.number }}</div>
-                    <h5 class="mb-3">{{ lesson.title }}</h5>
-                    <div class="lesson-overview-line mb-2"><strong>A.</strong> {{ lesson.dialogue_lines[0].text }}</div>
-                    <div class="lesson-overview-line mb-3"><strong>B.</strong> {{ lesson.dialogue_lines[1].text }}</div>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="audio-file-chip">{{ lesson.base_audio_filename }}</span>
-                        <span class="audio-file-chip">{{ lesson.practice_audio_filename }}</span>
-                    </div>
+    <div class="learning-card mb-3">
+        <div class="learning-card-pad">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <div class="learning-eyebrow mb-1">Lessons</div>
+                    <h2 class="fs-5 fw-bold">바로 이동</h2>
                 </div>
-            </a>
-            {% endfor %}
+                <span class="learning-chip">{{ village.lesson_count }}개</span>
+            </div>
+            <div class="learning-jump-strip">
+                {% for lesson in village.lessons %}
+                <a href="#lesson-{{ lesson.number }}" data-lesson-jump="{{ lesson.number }}">Lesson {{ lesson.number }}</a>
+                {% endfor %}
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row g-4">
-    {% for lesson in village.lessons %}
-    <div class="col-12">
-        <div class="card lesson-card" id="lesson-{{ lesson.number }}">
-            <div class="card-body p-4 p-lg-5">
-                <div class="lesson-header">
+    <div class="learning-grid mb-4">
+        {% for lesson in village.lessons %}
+        <a href="#lesson-{{ lesson.number }}" class="learning-card learning-card-link" data-lesson-jump="{{ lesson.number }}">
+            <div class="learning-card-pad">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <span class="learning-number">{{ lesson.number }}</span>
+                    <span class="learning-chip learning-chip-muted">듣기 · 말하기 · 쓰기</span>
+                </div>
+                <h3 class="fs-6 fw-bold mb-2">{{ lesson.title }}</h3>
+                <div class="learning-meta">{{ lesson.dialogue_lines[0].text }} / {{ lesson.dialogue_lines[1].text }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+        {% for lesson in village.lessons %}
+        <section class="learning-card lesson-card" id="lesson-{{ lesson.number }}" data-lesson-number="{{ lesson.number }}">
+            <div class="learning-card-pad">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
                     <div>
-                        <div class="text-muted small mb-2">Lesson {{ lesson.number }}</div>
-                        <h4 class="mb-2">{{ lesson.title }}</h4>
-                        <div class="lesson-subtitle">듣기, 말하기, 내 말 다시 듣기, 평가, 써보기 순서로 학습하세요.</div>
+                        <div class="learning-eyebrow mb-2">Lesson {{ lesson.number }}</div>
+                        <h2 class="fs-4 fw-bold mb-2">{{ lesson.title }}</h2>
+                        <div class="learning-meta">듣고, 따라 말하고, 직접 써보는 순서로 진행합니다.</div>
                     </div>
-                    <div class="d-flex flex-wrap gap-2 justify-content-end">
-                        <span class="flow-chip">듣기 -> 말하기 -> 내 말 듣기 -> 평가 -> 써보기</span>
-                        <span class="audio-file-chip">기본 {{ lesson.base_audio_filename }}</span>
-                        <span class="audio-file-chip">응용 {{ lesson.practice_audio_filename }}</span>
-                    </div>
+                    <span class="learning-chip">5단계 학습</span>
                 </div>
 
-                <div class="row g-4">
+                <div class="row g-3">
                     <div class="col-xl-4">
-                        <div class="dialogue-panel mb-3">
-                            <div class="text-muted small mb-3">기본 문장</div>
-                            <div class="dialogue-box mb-3">
+                        <div class="learning-panel mb-3">
+                            <div class="learning-eyebrow mb-2">Dialogue</div>
+                            <div class="learning-soft-box mb-3">
                                 {% for item in lesson.dialogue_lines %}
                                 <div class="sentence-line {% if not loop.last %}mb-2{% endif %}">
-                                    <strong>{{ item.label }}.</strong> {{ item.text }}
+                                    <span class="dialogue-line-label">{{ loop.index }}</span>{{ item.text }}
                                 </div>
                                 {% endfor %}
                             </div>
 
-                            <div class="fw-semibold mb-2">응용 키워드</div>
+                            <div class="fw-semibold mb-2">바꿔 말하기</div>
                             <div class="d-flex flex-wrap gap-2">
                                 {% for keyword in lesson.practice_keywords %}
                                 <span class="keyword-chip">{{ keyword }}</span>
@@ -290,119 +150,105 @@
                             </div>
                         </div>
 
-                        <div class="support-panel">
+                        <div class="learning-panel support-panel">
                             <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
                                 <div>
-                                    <div class="text-muted small mb-1">응용 음원</div>
-                                    <div class="fw-semibold">확장해서 들어보기</div>
-                                    <div class="small text-secondary mt-1">{{ lesson.practice_audio_filename }}</div>
+                                    <div class="learning-eyebrow mb-1">Variation</div>
+                                    <div class="fw-semibold">다른 표현으로 들어보기</div>
+                                    <div class="learning-meta mt-1">키워드를 바꿔 말하는 예시를 들어보세요.</div>
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary js-play-reference" data-default-label="응용 듣기">응용 듣기</button>
+                                <button type="button" class="btn btn-outline-primary js-play-reference" data-default-label="바꿔 듣기">바꿔 듣기</button>
                             </div>
                             <audio preload="none" class="d-none js-reference-audio">
                                 <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
                             </audio>
-                            <div class="support-note mb-3">
-                                기본 음원은 <strong>{{ lesson.base_audio_filename }}</strong>, 응용 음원은 <strong>{{ lesson.practice_audio_filename }}</strong>으로 연결돼 있습니다.
-                            </div>
-                            <div class="support-note">
-                                두 번째 파일은 응용 키워드가 들어간 음원입니다. 지금은 먼저 여러 번 듣고 표현에 익숙해지도록 구성했습니다.
-                            </div>
-                            {% if lesson.practice_reference_text %}
-                            <div class="small text-secondary mt-3">응용 문장 스크립트도 함께 보면서 확장 표현을 확인할 수 있습니다.</div>
-                            {% else %}
-                            <div class="small text-secondary mt-3">이 lesson은 응용 키워드와 응용 음원 `{{ lesson.practice_audio_filename }}` 기준으로 확장 학습하도록 정리했습니다.</div>
-                            {% endif %}
                         </div>
                     </div>
 
                     <div class="col-xl-8">
                         <div class="practice-panel"
                              data-reference-text="{{ lesson.base_reference_text }}"
-                             data-panel-label="Lesson {{ lesson.number }} 기본 대화">
-                            <div class="workflow-stack">
-                                <div class="workflow-step">
-                                    <div class="workflow-step-header">
-                                        <span class="step-badge">1</span>
-                                        <div>
-                                            <div class="step-title">듣기</div>
-                                            <div class="step-description">먼저 기본 대화를 듣고 리듬과 발음을 익히세요.</div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-wrap align-items-center gap-2">
-                                        <button type="button" class="btn btn-primary js-play-reference" data-default-label="듣기">듣기</button>
-                                        <span class="small text-secondary">Sentence A와 Sentence B가 이어서 재생됩니다.</span>
-                                        <span class="audio-file-chip">{{ lesson.base_audio_filename }}</span>
-                                    </div>
-                                    <audio preload="none" class="d-none js-reference-audio">
-                                        <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
-                                    </audio>
-                                </div>
-
-                                <div class="workflow-step">
-                                    <div class="workflow-step-header">
-                                        <span class="step-badge">2</span>
-                                        <div>
-                                            <div class="step-title">말하기</div>
-                                            <div class="step-description">듣고 나서 바로 따라 말해 보세요.</div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-wrap align-items-center gap-2">
-                                        <button type="button" class="btn btn-danger js-record-start">말하기 시작</button>
-                                        <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
-                                        <span class="js-recording-status small text-danger"></span>
+                             data-panel-label="Lesson {{ lesson.number }} 대화">
+                            <div class="learning-step">
+                                <div class="learning-step-head">
+                                    <span class="learning-step-mark">1</span>
+                                    <div>
+                                        <div class="fw-bold">듣기</div>
+                                        <div class="learning-meta">대화를 먼저 듣고 리듬과 발음을 익히세요.</div>
                                     </div>
                                 </div>
-
-                                <div class="workflow-step">
-                                    <div class="workflow-step-header">
-                                        <span class="step-badge">3</span>
-                                        <div>
-                                            <div class="step-title">내 말 다시 듣기</div>
-                                            <div class="step-description">녹음이 끝나면 내 발음을 다시 확인하세요.</div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-outline-success js-play-recording" data-default-label="내 말 듣기" disabled>내 말 듣기</button>
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <button type="button" class="btn btn-primary js-play-reference" data-default-label="대화 듣기">대화 듣기</button>
+                                    <span class="learning-meta">두 문장이 이어서 재생됩니다.</span>
                                 </div>
+                                <audio preload="none" class="d-none js-reference-audio">
+                                    <source src="{{ url_for('static', filename=lesson.base_audio_path) }}" type="audio/mp4">
+                                </audio>
+                            </div>
 
-                                <div class="workflow-step">
-                                    <div class="workflow-step-header">
-                                        <span class="step-badge">4</span>
-                                        <div>
-                                            <div class="step-title">평가</div>
-                                            <div class="step-description">인식 결과와 빠진 단어, 추가된 단어를 확인하세요.</div>
-                                        </div>
-                                    </div>
-                                    <div class="feedback-box is-placeholder js-result-box">
-                                        녹음 후 평가가 여기에 표시됩니다.
+                            <div class="learning-step">
+                                <div class="learning-step-head">
+                                    <span class="learning-step-mark">2</span>
+                                    <div>
+                                        <div class="fw-bold">따라 말하기</div>
+                                        <div class="learning-meta">듣고 나서 바로 같은 흐름으로 말해 보세요.</div>
                                     </div>
                                 </div>
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <button type="button" class="btn btn-danger js-record-start">말하기 시작</button>
+                                    <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
+                                    <span class="js-recording-status small text-danger"></span>
+                                </div>
+                            </div>
 
-                                <div class="workflow-step">
-                                    <div class="workflow-step-header">
-                                        <span class="step-badge">5</span>
-                                        <div>
-                                            <div class="step-title">써보기</div>
-                                            <div class="step-description">방금 들은 영어 문장을 직접 적어보세요.</div>
-                                        </div>
+                            <div class="learning-step">
+                                <div class="learning-step-head">
+                                    <span class="learning-step-mark">3</span>
+                                    <div>
+                                        <div class="fw-bold">내 말 듣기</div>
+                                        <div class="learning-meta">녹음한 발음을 다시 확인하세요.</div>
                                     </div>
-                                    <textarea class="form-control writing-input js-writing-input" placeholder="들린 영어 문장을 적어보세요"></textarea>
-                                    <div class="d-flex flex-wrap gap-2 mt-3">
-                                        <button type="button" class="btn btn-outline-primary js-check-writing">쓰기 확인</button>
-                                        <button type="button" class="btn btn-light js-clear-writing">지우기</button>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary js-play-recording" data-default-label="내 말 듣기" disabled>내 말 듣기</button>
+                            </div>
+
+                            <div class="learning-step">
+                                <div class="learning-step-head">
+                                    <span class="learning-step-mark">4</span>
+                                    <div>
+                                        <div class="fw-bold">확인</div>
+                                        <div class="learning-meta">인식 결과와 빠진 단어를 확인합니다.</div>
                                     </div>
-                                    <div class="writing-box is-placeholder mt-3 js-writing-result">
-                                        문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.
+                                </div>
+                                <div class="feedback-box is-placeholder js-result-box">
+                                    녹음 후 결과가 여기에 표시됩니다.
+                                </div>
+                            </div>
+
+                            <div class="learning-step">
+                                <div class="learning-step-head">
+                                    <span class="learning-step-mark">5</span>
+                                    <div>
+                                        <div class="fw-bold">써보기</div>
+                                        <div class="learning-meta">방금 들은 영어 문장을 직접 적어보세요.</div>
                                     </div>
+                                </div>
+                                <textarea class="form-control writing-input js-writing-input" placeholder="영어 문장을 입력하세요"></textarea>
+                                <div class="d-flex flex-wrap gap-2 mt-3">
+                                    <button type="button" class="btn btn-outline-primary js-check-writing">쓰기 확인</button>
+                                    <button type="button" class="btn btn-light js-clear-writing">지우기</button>
+                                </div>
+                                <div class="writing-box is-placeholder mt-3 js-writing-result">
+                                    문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
 
@@ -419,6 +265,43 @@ const playbackState = {
     audio: null,
     button: null,
 };
+
+const villageNumber = Number(document.querySelector('.learning-shell')?.dataset.villageNumber || 0);
+let lastSavedProgressKey = '';
+let progressSaveTimer = null;
+
+function saveVillageProgress(lessonNumber) {
+    if (!villageNumber || !lessonNumber) {
+        return;
+    }
+
+    const progressKey = `${villageNumber}:${lessonNumber}`;
+    if (progressKey === lastSavedProgressKey) {
+        return;
+    }
+    lastSavedProgressKey = progressKey;
+
+    window.clearTimeout(progressSaveTimer);
+    progressSaveTimer = window.setTimeout(() => {
+        fetch('{{ url_for("village.save_progress") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                village_number: villageNumber,
+                lesson_number: lessonNumber,
+            }),
+        }).catch((error) => {
+            console.error(error);
+            lastSavedProgressKey = '';
+        });
+    }, 250);
+}
+
+function saveProgressFromElement(element) {
+    const lessonCard = element ? element.closest('.lesson-card') : null;
+    const lessonNumber = Number(lessonCard?.dataset.lessonNumber || 0);
+    saveVillageProgress(lessonNumber);
+}
 
 function escapeHtml(value) {
     return String(value || '')
@@ -749,6 +632,33 @@ function clearWriting(panel) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-lesson-jump]').forEach((link) => {
+        link.addEventListener('click', () => {
+            saveVillageProgress(Number(link.dataset.lessonJump || 0));
+        });
+    });
+
+    const visibleLessonObserver = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    saveVillageProgress(Number(entry.target.dataset.lessonNumber || 0));
+                }
+            });
+        }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 })
+        : null;
+
+    document.querySelectorAll('.lesson-card').forEach((lessonCard) => {
+        if (visibleLessonObserver) {
+            visibleLessonObserver.observe(lessonCard);
+        }
+    });
+
+    const hashLesson = Number(String(window.location.hash || '').replace('#lesson-', ''));
+    if (hashLesson) {
+        saveVillageProgress(hashLesson);
+    }
+
     document.querySelectorAll('.js-reference-audio').forEach((audio) => {
         audio.addEventListener('ended', () => {
             if (playbackState.audio === audio) {
@@ -761,6 +671,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.js-play-reference').forEach((button) => {
         button.addEventListener('click', () => {
+            saveProgressFromElement(button);
             const container = button.closest('.practice-panel, .support-panel');
             const audio = container ? container.querySelector('.js-reference-audio') : null;
             if (!audio) {
@@ -778,7 +689,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const clearWritingButton = panel.querySelector('.js-clear-writing');
 
         if (startButton) {
-            startButton.addEventListener('click', () => startPracticeRecording(panel));
+            startButton.addEventListener('click', () => {
+                saveProgressFromElement(panel);
+                startPracticeRecording(panel);
+            });
         }
 
         if (stopButton) {
@@ -786,11 +700,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (playButton) {
-            playButton.addEventListener('click', () => playRecordedAudio(panel));
+            playButton.addEventListener('click', () => {
+                saveProgressFromElement(panel);
+                playRecordedAudio(panel);
+            });
         }
 
         if (checkWritingButton) {
-            checkWritingButton.addEventListener('click', () => checkWriting(panel));
+            checkWritingButton.addEventListener('click', () => {
+                saveProgressFromElement(panel);
+                checkWriting(panel);
+            });
         }
 
         if (clearWritingButton) {

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-story{% endblock %}
 {% block title %}Bible Story 인증시험 결과 - {{ chapter.title }}{% endblock %}
 
 {% block content %}
+<div class="learning-shell">
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
@@ -11,8 +13,8 @@
     </ol>
 </nav>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-header {% if is_passed %}bg-success{% else %}bg-danger{% endif %} text-white">
+<div class="learning-card mb-4">
+    <div class="card-header bg-primary text-white">
         <h4 class="m-0">{{ chapter.title }} 인증시험 결과</h4>
     </div>
     <div class="card-body">
@@ -56,10 +58,11 @@
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ url_for('story.story_start_exam', chapter_id=chapter.id) }}" class="btn btn-success">다시 시험 보기</a>
-            <a href="{{ url_for('story.exam_grade_chapters', grade=chapter.grade) }}" class="btn btn-outline-secondary">챕터 목록으로</a>
+            <a href="{{ url_for('story.story_start_exam', chapter_id=chapter.id) }}" class="btn btn-primary">다시 시험 보기</a>
+            <a href="{{ url_for('story.exam_grade_chapters', grade=chapter.grade) }}" class="btn btn-outline-primary">챕터 목록으로</a>
             <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-outline-primary">학습으로 돌아가기</a>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

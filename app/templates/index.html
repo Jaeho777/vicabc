@@ -54,7 +54,11 @@
                         <td class="text-center" style="vertical-align: middle;">2</td>
                         <td class="text-center" style="vertical-align: middle;">2023-03-20</td>
                         <td class="text-center">
-                             <a href="{{ url_for('story.index') }}" class="btn btn-primary">시작</a>
+                            {% if story_latest_learning %}
+                            <a href="{{ url_for('story.chapter_practice', chapter_id=story_latest_learning.chapter.id, story_index=story_latest_learning.story.order) }}" class="btn btn-primary">이어하기</a>
+                            {% else %}
+                            <a href="{{ url_for('story.index') }}" class="btn btn-primary">시작</a>
+                            {% endif %}
                         </td>
                         <td class="text-center">
                             <a href="#" class="btn btn-primary">시작</a>
@@ -79,7 +83,11 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
+                            {% if village_latest_learning %}
+                            <a href="{{ url_for('village.detail', village_number=village_latest_learning.village_number) }}#lesson-{{ village_latest_learning.lesson_number }}" class="btn btn-primary">이어하기</a>
+                            {% else %}
                             <a href="{{ url_for('village.index') }}" class="btn btn-primary">시작</a>
+                            {% endif %}
                         </td>
                         <td class="text-center">
                             <a href="{{ url_for('village.exam') }}" class="btn btn-primary">시작</a>

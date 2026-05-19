@@ -15,5 +15,6 @@ with app.app_context():
     from app.models.story_progress import StoryProgress
     from app.models.story_certification import StoryCertification
     from app.models.village_certification import VillageCertification
+    from app.models.village_progress import VillageProgress
     db.create_all()
     print("데이터베이스 테이블이 성공적으로 생성되었습니다.")

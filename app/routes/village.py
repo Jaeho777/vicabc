@@ -9,6 +9,7 @@ from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.models.village_certification import VillageCertification
+from app.models.village_progress import VillageProgress
 from app.services.village_content import get_village, get_village_catalog
 from app.services.speech_service import (
     build_pronunciation_feedback,
@@ -31,6 +32,10 @@ def ensure_village_certification_table():
     VillageCertification.__table__.create(bind=db.engine, checkfirst=True)
 
 
+def ensure_village_progress_table():
+    VillageProgress.__table__.create(bind=db.engine, checkfirst=True)
+
+
 def get_latest_village_result(user_id):
     try:
         return (
@@ -43,13 +48,28 @@ def get_latest_village_result(user_id):
         return None
 
 
+def get_latest_village_progress(user_id):
+    try:
+        ensure_village_progress_table()
+        return (
+            VillageProgress.query.filter_by(user_id=user_id)
+            .order_by(VillageProgress.last_studied_at.desc())
+            .first()
+        )
+    except Exception as exc:
+        print(f"Village 진도 조회 오류: {exc}")
+        return None
+
+
 @village_bp.route("/")
 @login_required
 def index():
     latest_result = get_latest_village_result(current_user.id)
+    latest_progress = get_latest_village_progress(current_user.id)
     return render_template(
         "village/index.html",
         latest_result=latest_result,
+        latest_progress=latest_progress,
         village_catalog=get_village_catalog(),
     )
 
@@ -62,10 +82,66 @@ def detail(village_number):
         abort(404)
 
     latest_result = get_latest_village_result(current_user.id)
+    latest_progress = get_latest_village_progress(current_user.id)
     return render_template(
         "village/detail.html",
         village=village,
         latest_result=latest_result,
+        latest_progress=latest_progress,
+    )
+
+
+@village_bp.route("/save_progress", methods=["POST"])
+@login_required
+def save_progress():
+    data = request.get_json(silent=True) or {}
+
+    try:
+        village_number = int(data.get("village_number", 0))
+        lesson_number = int(data.get("lesson_number", 0))
+    except (TypeError, ValueError):
+        return jsonify({"success": False, "error": "학습 위치가 올바르지 않습니다."}), 400
+
+    village = get_village(village_number)
+    if not village:
+        return jsonify({"success": False, "error": "존재하지 않는 Village입니다."}), 404
+
+    max_lesson = len(village["lessons"])
+    if lesson_number < 1 or lesson_number > max_lesson:
+        return jsonify({"success": False, "error": "Lesson 번호가 올바르지 않습니다."}), 400
+
+    try:
+        ensure_village_progress_table()
+        progress = VillageProgress.query.filter_by(
+            user_id=current_user.id,
+            village_number=village_number,
+        ).first()
+
+        if progress:
+            progress.lesson_number = lesson_number
+            progress.last_studied_at = datetime.utcnow()
+            progress.study_count += 1
+        else:
+            progress = VillageProgress(
+                user_id=current_user.id,
+                village_number=village_number,
+                lesson_number=lesson_number,
+                study_count=1,
+            )
+            db.session.add(progress)
+
+        db.session.commit()
+    except Exception as exc:
+        db.session.rollback()
+        print(f"Village 진도 저장 오류: {exc}")
+        return jsonify({"success": False, "error": "학습 위치 저장 중 오류가 발생했습니다."}), 500
+
+    return jsonify(
+        {
+            "success": True,
+            "village_number": progress.village_number,
+            "lesson_number": progress.lesson_number,
+        }
     )
 
 

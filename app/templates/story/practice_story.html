@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-story{% endblock %}
 {% block title %}Bible Story 학습 - {{ chapter.title }}{% endblock %}
 
 {% block extra_head %}
@@ -15,13 +16,13 @@
     .writing-panel,
     .result-panel {
         border-radius: 14px;
-        border: 1px solid #e9ecef;
+        border: 1px solid var(--app-border);
         background: #fff;
         padding: 18px;
         height: 100%;
     }
     .reference-box {
-        background: #f8f9fa;
+        background: var(--app-surface-soft);
     }
     .english-line {
         font-size: 1.2rem;
@@ -41,7 +42,7 @@
     }
     .score-tile {
         border-radius: 14px;
-        background: #f8fafc;
+        background: var(--app-surface-soft);
         padding: 18px;
         text-align: center;
         height: 100%;
@@ -74,8 +75,8 @@
         align-items: center;
         border-radius: 999px;
         padding: 6px 12px;
-        background: #eef5ff;
-        color: #0d6efd;
+        background: var(--page-accent-soft);
+        color: var(--page-accent-dark);
         font-size: 0.9rem;
         font-weight: 600;
         overflow-wrap: anywhere;
@@ -114,6 +115,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="learning-shell">
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
@@ -122,36 +124,42 @@
     </ol>
 </nav>
 
-<div class="card story-summary mb-4">
-    <div class="card-body p-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-            <div>
-                <div class="text-muted small mb-2">Bible Story {{ story_number }} / {{ total_stories }}</div>
-                <h2 class="mb-1">{{ chapter.title }}</h2>
-                <div class="text-secondary fs-5 mb-3">Story {{ story_number }}</div>
-                <p class="mb-0">원본 녹음 듣기, 따라 말하기, 쓰기 평가를 한 화면에서 바로 진행할 수 있게 Village 방식으로 정리했습니다.</p>
-            </div>
-            <div class="text-md-end">
-                <div class="badge bg-success mb-2">Bible Story Practice</div>
-                <div class="small text-muted mb-2">현재 상태</div>
-                <div id="learning-status-badge" class="badge bg-secondary">미학습</div>
-            </div>
+<section class="learning-hero">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <div class="learning-eyebrow mb-2">Story {{ story_number }} / {{ total_stories }}</div>
+            <h1 class="learning-hero-title mb-2">{{ chapter.title }}</h1>
+            <div class="learning-meta fs-6 mb-3">{{ chapter.grade }}학년 · Chapter {{ chapter.order }}</div>
+            <p class="learning-hero-text mb-0">듣기, 따라 말하기, 쓰기 평가를 한 화면에서 이어서 진행합니다.</p>
+        </div>
+        <div class="learning-actions">
+            <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-outline-primary">스토리 목록</a>
+            <a href="{{ url_for('story.chapter_practice', chapter_id=chapter.id, story_index=next_index) }}" class="btn btn-primary">다음 스토리</a>
         </div>
     </div>
-</div>
+    <div class="learning-card mt-4">
+        <div class="learning-card-pad d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <div class="learning-eyebrow mb-1">Status</div>
+                <div class="fw-bold">현재 학습 상태</div>
+            </div>
+            <div id="learning-status-badge" class="badge bg-secondary">미학습</div>
+        </div>
+    </div>
+</section>
 
-<div class="card story-card">
+<div class="learning-card story-card">
     <div class="card-body p-4">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
             <div>
-                <div class="text-muted small">기준 스토리</div>
+                <div class="learning-eyebrow mb-1">Practice</div>
                 <h4 class="mb-0">Story {{ story_number }}</h4>
             </div>
-            <span class="badge bg-primary">원본 녹음 + 따라 말하기 + 쓰기</span>
+            <span class="learning-chip">듣기 · 말하기 · 쓰기</span>
         </div>
 
         <div class="reference-box mb-4">
-            <div class="text-muted small mb-2">기준 문장</div>
+            <div class="learning-eyebrow mb-2">Text</div>
             <div class="english-line">{{ story.english_text }}</div>
             <div class="korean-line">{{ story.korean_text }}</div>
         </div>
@@ -159,7 +167,7 @@
         <div class="row g-3 mb-4">
             <div class="col-lg-6">
                 <div class="practice-panel">
-                    <div class="text-muted small mb-2">원본 녹음 듣기</div>
+                    <div class="learning-eyebrow mb-2">Listen</div>
                     <div class="small text-secondary mb-3">녹음본을 먼저 듣고 문장 흐름과 억양을 익히세요.</div>
 
                     {% if story.audio_filename %}
@@ -182,7 +190,7 @@
 
             <div class="col-lg-6">
                 <div class="practice-panel">
-                    <div class="text-muted small mb-2">따라 말하기</div>
+                    <div class="learning-eyebrow mb-2">Speak</div>
                     <div class="small text-secondary mb-3">원본을 들은 뒤 영어 문장을 이어서 그대로 따라 말해보세요.</div>
 
                     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -200,7 +208,7 @@
         <div class="writing-panel mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <div>
-                    <div class="text-muted small">쓰기 평가</div>
+                    <div class="learning-eyebrow mb-1">Write</div>
                     <h5 class="mb-0">영어와 한글을 직접 입력해 보세요</h5>
                 </div>
                 <button type="button" id="btn-check-writing" class="btn btn-primary">쓰기 점수 계산</button>
@@ -223,7 +231,7 @@
         <div class="result-panel">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <div>
-                    <div class="text-muted small">학습 결과</div>
+                    <div class="learning-eyebrow mb-1">Result</div>
                     <h5 class="mb-0">현재 점수와 저장 상태</h5>
                 </div>
                 <button type="button" id="btn-save-progress" class="btn btn-success">학습 결과 저장</button>
@@ -256,10 +264,11 @@
         </div>
 
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-4">
-            <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-outline-secondary">스토리 목록으로</a>
-            <a href="{{ url_for('story.chapter_practice', chapter_id=chapter.id, story_index=next_index) }}" class="btn btn-success">다음 스토리</a>
+            <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-outline-primary">스토리 목록으로</a>
+            <a href="{{ url_for('story.chapter_practice', chapter_id=chapter.id, story_index=next_index) }}" class="btn btn-primary">다음 스토리</a>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 

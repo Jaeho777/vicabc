@@ -1,55 +1,90 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-story{% endblock %}
 {% block title %}Bible Story {{ grade }}학년{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
-    </ol>
-</nav>
+<div class="learning-shell">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
+        </ol>
+    </nav>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-success text-white">
-        <h4 class="m-0">{{ grade }}학년 챕터</h4>
-    </div>
-    <div class="card-body">
-        <p class="text-muted mb-0">학습할 챕터를 선택하면 스토리 목록과 진도를 확인할 수 있습니다.</p>
-    </div>
-</div>
-
-<div class="row g-4">
-    {% for chapter in chapters %}
-    {% set progress = chapter_progress.get(chapter.id, {}) %}
-    <div class="col-md-6 col-xl-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-header bg-light">
-                <div class="small text-muted mb-1">Chapter {{ chapter.order }}</div>
-                <h5 class="m-0">{{ chapter.title }}</h5>
+    <section class="learning-hero">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div>
+                <div class="learning-eyebrow mb-2">Grade {{ grade }}</div>
+                <h1 class="learning-hero-title mb-3">{{ grade }}학년 챕터</h1>
+                <p class="learning-hero-text mb-0">
+                    챕터 카드를 누르면 스토리 목록으로 바로 이동합니다. 진행률이 높은 챕터와 아직 시작하지 않은 챕터를
+                    한 화면에서 비교할 수 있습니다.
+                </p>
             </div>
-            <div class="card-body">
-                <div class="progress mb-3" style="height: 18px;">
-                    <div class="progress-bar bg-success" role="progressbar"
-                         style="width: {{ progress.get('progress_percent', 0) }}%;"
-                         aria-valuenow="{{ progress.get('progress_percent', 0) }}"
-                         aria-valuemin="0" aria-valuemax="100">
-                        {{ progress.get('progress_percent', 0) }}%
-                    </div>
-                </div>
-
-                <p class="mb-2"><strong>스토리 수:</strong> {{ progress.get('total_stories', 0) }}</p>
-                <p class="mb-2"><strong>완료:</strong> {{ progress.get('completed_stories', 0) }}</p>
-            </div>
-            <div class="card-footer bg-white border-0">
-                <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="btn btn-success w-100">챕터 열기</a>
+            <div class="learning-actions">
+                {% if latest_learning and latest_learning.chapter.grade == grade %}
+                <a href="{{ latest_learning.url }}" class="btn btn-primary">이어하기</a>
+                {% endif %}
+                <a href="{{ url_for('story.index') }}" class="btn btn-outline-primary">학년 선택</a>
             </div>
         </div>
+    </section>
+
+    <div class="learning-card mb-3">
+        <div class="learning-card-pad">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <div class="learning-eyebrow mb-1">Quick Jump</div>
+                    <h2 class="fs-5 fw-bold">챕터 번호로 바로 이동</h2>
+                </div>
+                <span class="learning-chip learning-chip-muted">{{ grade }}학년</span>
+            </div>
+            <form class="learning-form-inline" action="{{ url_for('story.go_to_chapter') }}" method="get">
+                <input type="hidden" name="grade" value="{{ grade }}">
+                <div>
+                    <label class="form-label" for="story-grade-fixed">학년</label>
+                    <input class="form-control" id="story-grade-fixed" value="{{ grade }}학년" disabled>
+                </div>
+                <div>
+                    <label class="form-label" for="story-chapter">챕터</label>
+                    <input class="form-control" id="story-chapter" name="chapter" type="number" min="1" placeholder="10">
+                </div>
+                <button type="submit" class="btn btn-primary">찾아가기</button>
+            </form>
+        </div>
     </div>
-    {% else %}
-    <div class="col-12">
-        <div class="alert alert-info mb-0">이 학년에 등록된 챕터가 없습니다.</div>
+
+    <div class="learning-section-title">
+        <div>
+            <div class="learning-eyebrow mb-1">Chapters</div>
+            <h3>챕터 목록</h3>
+        </div>
+        <span class="learning-chip">{{ chapters|length }}개</span>
     </div>
-    {% endfor %}
+
+    <div class="learning-grid">
+        {% for chapter in chapters %}
+        {% set progress = chapter_progress.get(chapter.id, {}) %}
+        {% set percent = progress.get('progress_percent', 0) %}
+        <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="learning-card learning-card-link">
+            <div class="learning-card-pad">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <span class="learning-number">{{ chapter.order }}</span>
+                    <span class="learning-chip">{{ percent }}%</span>
+                </div>
+                <h4 class="fs-6 fw-bold mb-2">{{ chapter.title }}</h4>
+                <div class="learning-progress mb-3" aria-label="학습 진행률">
+                    <div class="learning-progress-bar" style="width: {{ percent }}%;"></div>
+                </div>
+                <div class="learning-meta">
+                    {{ progress.get('completed_stories', 0) }} / {{ progress.get('total_stories', 0) }} 완료
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <div class="learning-empty">이 학년에 등록된 챕터가 없습니다.</div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

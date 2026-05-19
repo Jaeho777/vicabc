@@ -179,6 +179,54 @@ def _build_previous_exam_results(chapters):
 
     return previous_results
 
+
+def _get_latest_story_learning():
+    progress = (
+        StoryProgress.query
+        .filter_by(user_id=current_user.id)
+        .order_by(StoryProgress.last_studied_at.desc())
+        .first()
+    )
+    if not progress:
+        return None
+
+    story = Story.query.get(progress.story_id)
+    if not story:
+        return None
+
+    chapter = Chapter.query.get(story.chapter_id)
+    if not chapter:
+        return None
+
+    return {
+        'progress': progress,
+        'story': story,
+        'chapter': chapter,
+        'url': url_for('story.chapter_practice', chapter_id=chapter.id, story_index=story.order),
+    }
+
+
+def _touch_story_progress(story_id):
+    progress = StoryProgress.query.filter_by(
+        user_id=current_user.id,
+        story_id=story_id,
+    ).first()
+
+    if progress:
+        progress.last_studied_at = datetime.utcnow()
+        db.session.commit()
+        return progress
+
+    progress = StoryProgress(
+        user_id=current_user.id,
+        story_id=story_id,
+        status=1,
+        last_studied_at=datetime.utcnow(),
+    )
+    db.session.add(progress)
+    db.session.commit()
+    return progress
+
 @story_bp.route('/')
 @login_required
 def index():
@@ -186,7 +234,31 @@ def index():
         'story/index.html',
         grades=ELEMENTARY_GRADES,
         grade_counts=_get_elementary_grade_counts(),
+        latest_learning=_get_latest_story_learning(),
     )
+
+
+@story_bp.route('/go')
+@login_required
+def go_to_chapter():
+    grade = _parse_positive_int(request.args.get('grade'))
+    chapter_order = _parse_positive_int(request.args.get('chapter'))
+
+    if not grade or not chapter_order:
+        flash('학년과 챕터 번호를 선택해 주세요.', 'warning')
+        return redirect(url_for('story.index'))
+
+    chapter = (
+        Chapter.query
+        .filter_by(grade=grade, order=chapter_order, category=ELEMENTARY_CATEGORY)
+        .first()
+    )
+
+    if not chapter:
+        flash(f'{grade}학년 Chapter {chapter_order}를 찾지 못했습니다.', 'warning')
+        return redirect(url_for('story.index'))
+
+    return redirect(url_for('story.chapter_stories', chapter_id=chapter.id))
 
 @story_bp.route('/grade/<int:grade>')
 @login_required
@@ -199,6 +271,7 @@ def grade_chapters(grade):
         grade=grade,
         chapters=chapters,
         chapter_progress=chapter_progress,
+        latest_learning=_get_latest_story_learning(),
     )
 
 
@@ -232,13 +305,30 @@ def chapter_stories(chapter_id):
     # 완료된 스토리 수 계산
     completed_stories = sum(1 for progress in story_progress.values() if progress['status'] == 2)
     total_stories = len(stories)
+    resume_story_order = 1
+    story_ids = [story.id for story in stories]
+    if story_ids:
+        latest_chapter_progress = (
+            StoryProgress.query
+            .filter(
+                StoryProgress.user_id == current_user.id,
+                StoryProgress.story_id.in_(story_ids),
+            )
+            .order_by(StoryProgress.last_studied_at.desc())
+            .first()
+        )
+        if latest_chapter_progress:
+            latest_story = next((story for story in stories if story.id == latest_chapter_progress.story_id), None)
+            if latest_story:
+                resume_story_order = latest_story.order
     
     return render_template('story/chapter_stories.html',
                           chapter=chapter,
                           stories=stories,
                           story_progress=story_progress,
                           total_stories=total_stories,
-                          completed_stories=completed_stories)
+                          completed_stories=completed_stories,
+                          resume_story_order=resume_story_order)
 
 @story_bp.route('/chapter/<int:chapter_id>/practice')
 @story_bp.route('/chapter/<int:chapter_id>/practice/<int:story_index>')
@@ -266,10 +356,7 @@ def chapter_practice(chapter_id, story_index=None):
         story_index = 1
     
     story = stories[array_index]
-    existing_progress = StoryProgress.query.filter_by(
-        user_id=current_user.id,
-        story_id=story.id
-    ).first()
+    existing_progress = _touch_story_progress(story.id)
     
     # 다음 스토리 인덱스 계산
     next_index = story_index + 1 if story_index < total_stories else 1

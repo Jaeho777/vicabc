@@ -9,3 +9,4 @@ from app.models.story import Story
 from app.models.story_progress import StoryProgress
 from app.models.story_certification import StoryCertification
 from app.models.village_certification import VillageCertification
+from app.models.village_progress import VillageProgress

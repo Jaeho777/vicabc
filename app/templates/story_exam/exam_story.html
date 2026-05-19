@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-story{% endblock %}
 {% block title %}Bible Story 인증시험 - {{ chapter.title }}{% endblock %}
 
 {% block extra_head %}
@@ -12,7 +13,7 @@
     }
     .exam-panel {
         border-radius: 14px;
-        border: 1px solid #e9ecef;
+        border: 1px solid var(--app-border);
         background: #fff;
         padding: 18px;
         height: 100%;
@@ -27,7 +28,7 @@
     }
     .score-tile {
         border-radius: 14px;
-        background: #f8fafc;
+        background: var(--app-surface-soft);
         padding: 18px;
         text-align: center;
         height: 100%;
@@ -69,6 +70,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="learning-shell">
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
@@ -87,7 +89,7 @@
                 <p class="mb-0">원본 오디오를 듣고 말하기와 쓰기로 현재 스토리를 제출하세요. 시험 중에는 정답 문장이 화면에 표시되지 않습니다.</p>
             </div>
             <div class="text-md-end">
-                <div class="badge bg-success mb-2">Chapter Exam</div>
+                <div class="learning-chip mb-2">Chapter Exam</div>
                 <div class="small text-muted">다음 스토리로 넘어가기 전 현재 답안을 저장합니다.</div>
             </div>
         </div>
@@ -127,7 +129,7 @@
                     <div class="d-flex flex-wrap align-items-center gap-2">
                         <button type="button" id="btn-record" class="btn btn-danger">말하기 시작</button>
                         <button type="button" id="btn-stop-record" class="btn btn-secondary" disabled>중지</button>
-                        <button type="button" id="btn-play-recording" class="btn btn-outline-success d-none">내 녹음 듣기</button>
+                        <button type="button" id="btn-play-recording" class="btn btn-outline-primary d-none">내 녹음 듣기</button>
                         <span id="recording-status"></span>
                     </div>
 
@@ -165,7 +167,7 @@
                     <div class="text-muted small">현재 제출 점수</div>
                     <h5 class="mb-0">말하기와 쓰기 점수를 확인한 뒤 제출하세요</h5>
                 </div>
-                <button type="button" id="btn-submit-exam" class="btn btn-success">
+                <button type="button" id="btn-submit-exam" class="btn btn-primary">
                     {% if is_last_story %}제출하고 결과 보기{% else %}제출하고 다음 스토리{% endif %}
                 </button>
             </div>
@@ -196,6 +198,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 

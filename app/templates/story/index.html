@@ -1,36 +1,93 @@
 {% extends "base.html" %}
 
+{% block body_class %}theme-learning theme-story{% endblock %}
 {% block title %}Bible Story 학습{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="card shadow mb-4">
-        <div class="card-header bg-success text-white">
-           <h4 class="m-0">Bible Story 학습</h4>
-        </div>
-        <div class="card-body">
-            <p class="text-muted mb-4">학년을 선택하면 해당 학년의 Bible Story 챕터 목록으로 이동합니다.</p>
-
-            <div class="row g-4">
-                {% for grade in grades %}
-                <div class="col-md-6 col-xl-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-header bg-light">
-                            <div class="small text-muted mb-1">Bible Story</div>
-                            <h5 class="m-0">{{ grade }}학년</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-2"><strong>등록 챕터:</strong> {{ grade_counts.get(grade, 0) }}개</p>
-                            <p class="mb-0 text-muted">이 학년의 전체 챕터를 한 번에 보고 순서대로 학습할 수 있습니다.</p>
-                        </div>
-                        <div class="card-footer bg-white border-0">
-                            <a href="{{ url_for('story.grade_chapters', grade=grade) }}" class="btn btn-success w-100">챕터 보기</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+<div class="learning-shell">
+    <section class="learning-hero">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div>
+                <div class="learning-eyebrow mb-2">Bible Story</div>
+                <h1 class="learning-hero-title mb-3">스토리 학습을 바로 시작하세요</h1>
+                <p class="learning-hero-text mb-0">
+                    학년을 고르거나 챕터 번호를 입력해서 바로 이동할 수 있습니다. 최근에 열었던 스토리는
+                    이어하기에서 바로 다시 시작합니다.
+                </p>
+            </div>
+            <div class="learning-actions">
+                {% if latest_learning %}
+                <a href="{{ latest_learning.url }}" class="btn btn-primary">이어하기</a>
+                {% endif %}
+                <a href="{{ url_for('story.story_exam_index') }}" class="btn btn-outline-primary">인증시험</a>
             </div>
         </div>
+
+        {% if latest_learning %}
+        <div class="learning-card mt-4">
+            <div class="learning-card-pad d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <div class="learning-eyebrow mb-1">Last Study</div>
+                    <h2 class="fs-5 fw-bold">
+                        {{ latest_learning.chapter.grade }}학년 · Chapter {{ latest_learning.chapter.order }} · Story {{ latest_learning.story.order }}
+                    </h2>
+                    <div class="learning-meta mt-1">{{ latest_learning.chapter.title }}</div>
+                </div>
+                <a href="{{ latest_learning.url }}" class="btn btn-primary">바로 이동</a>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <div class="learning-card mb-3">
+        <div class="learning-card-pad">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                    <div class="learning-eyebrow mb-1">Quick Jump</div>
+                    <h2 class="fs-5 fw-bold">학년과 챕터로 찾기</h2>
+                </div>
+                <span class="learning-chip learning-chip-muted">예: 3학년 Chapter 10</span>
+            </div>
+
+            <form class="learning-form-inline" action="{{ url_for('story.go_to_chapter') }}" method="get">
+                <div>
+                    <label class="form-label" for="story-grade">학년</label>
+                    <select class="form-select" id="story-grade" name="grade">
+                        {% for grade in grades %}
+                        <option value="{{ grade }}">{{ grade }}학년</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label" for="story-chapter">챕터</label>
+                    <input class="form-control" id="story-chapter" name="chapter" type="number" min="1" placeholder="10">
+                </div>
+                <button type="submit" class="btn btn-primary">찾아가기</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="learning-section-title">
+        <div>
+            <div class="learning-eyebrow mb-1">Grades</div>
+            <h3>학년 선택</h3>
+        </div>
+        <span class="learning-chip learning-chip-muted">초등 1-6</span>
+    </div>
+
+    <div class="learning-grid-compact">
+        {% for grade in grades %}
+        <a href="{{ url_for('story.grade_chapters', grade=grade) }}" class="learning-card learning-card-link">
+            <div class="learning-card-pad">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <span class="learning-number">{{ grade }}</span>
+                    <span class="learning-chip">{{ grade_counts.get(grade, 0) }}개</span>
+                </div>
+                <h4 class="fs-6 fw-bold mb-1">{{ grade }}학년</h4>
+                <div class="learning-meta">챕터 목록 보기</div>
+            </div>
+        </a>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -1,132 +1,94 @@
 {% extends "base.html" %}
 
-{% block title %}Village - VOCA 애플리케이션{% endblock %}
-
-{% block extra_head %}
-<style>
-    .village-hero,
-    .village-card {
-        border-radius: 18px;
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-    }
-    .village-card {
-        border: 0;
-        height: 100%;
-    }
-    .village-card.available {
-        background: linear-gradient(180deg, #fff8db 0%, #ffffff 100%);
-    }
-    .village-card.pending {
-        background: #f8f9fa;
-    }
-    .village-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 999px;
-        padding: 6px 12px;
-        background: rgba(13, 110, 253, 0.08);
-        color: #0d6efd;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    .village-stat {
-        min-width: 120px;
-        border-radius: 16px;
-        padding: 14px 16px;
-        background: #fff8db;
-        border: 1px solid rgba(138, 97, 0, 0.12);
-    }
-    .village-stat-label {
-        color: #7c5a00;
-        font-size: 0.82rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-    .village-stat-value {
-        color: #1f2937;
-        font-size: 1.35rem;
-        font-weight: 800;
-    }
-</style>
-{% endblock %}
+{% block body_class %}theme-learning theme-village{% endblock %}
+{% block title %}Village 학습 - VOCA 애플리케이션{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="card village-hero mb-4 border-0">
-        <div class="card-header bg-warning text-dark border-0">
-            <h4 class="m-0">Village 대화 학습</h4>
+<div class="learning-shell">
+    <section class="learning-hero">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div>
+                <div class="learning-eyebrow mb-2">Village</div>
+                <h1 class="learning-hero-title mb-3">대화 연습을 바로 시작하세요</h1>
+                <p class="learning-hero-text mb-0">
+                    필요한 Village를 고르면 학습 화면으로 바로 이동합니다. 모바일에서도 아래로 길게 찾지 않도록
+                    최근 학습 위치와 전체 Village를 먼저 배치했습니다.
+                </p>
+            </div>
+            <div class="learning-actions">
+                {% if latest_progress %}
+                <a href="{{ url_for('village.detail', village_number=latest_progress.village_number) }}#lesson-{{ latest_progress.lesson_number }}"
+                   class="btn btn-primary">
+                    이어하기
+                </a>
+                {% endif %}
+                <a href="{{ url_for('village.exam') }}" class="btn btn-outline-primary">인증시험</a>
+            </div>
         </div>
-        <div class="card-body">
-            <p class="mb-4">
-                Village는 녹음본과 대화 패턴을 따라 들으며 익히고, 이후 인증시험에서 실제 말하기 흐름으로 점검하는 영역입니다.
-                현재 Village 1부터 16까지 모두 학습 페이지에서 바로 확인할 수 있고, 각 lesson마다 기본 문장과 a/b 음원 연결이 보이도록 정리했습니다.
-            </p>
 
-            <div class="d-flex flex-wrap gap-3 mb-4">
-                <div class="village-stat">
-                    <div class="village-stat-label">Open Villages</div>
-                    <div class="village-stat-value">16</div>
+        {% if latest_progress %}
+        <div class="learning-card mt-4">
+            <div class="learning-card-pad d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <div class="learning-eyebrow mb-1">Last Study</div>
+                    <h2 class="fs-5 fw-bold">Village {{ latest_progress.village_number }} · Lesson {{ latest_progress.lesson_number }}</h2>
+                    <div class="learning-meta mt-1">마지막으로 보던 위치에서 이어서 학습할 수 있습니다.</div>
                 </div>
-                <div class="village-stat">
-                    <div class="village-stat-label">Total Lessons</div>
-                    <div class="village-stat-value">192</div>
-                </div>
-                <div class="village-stat">
-                    <div class="village-stat-label">Audio Mapping</div>
-                    <div class="village-stat-value">a / b</div>
-                </div>
+                <a href="{{ url_for('village.detail', village_number=latest_progress.village_number) }}#lesson-{{ latest_progress.lesson_number }}"
+                   class="btn btn-primary">
+                    바로 이동
+                </a>
             </div>
+        </div>
+        {% endif %}
+    </section>
 
-            {% if latest_result %}
-            <div class="alert alert-info">
-                <strong>최근 결과:</strong> {{ latest_result.level_label }} /
-                {{ latest_result.score }}점 /
-                {{ latest_result.exam_date.strftime('%Y-%m-%d') }}
+    {% if latest_result %}
+    <div class="learning-card mb-3">
+        <div class="learning-card-pad d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <div class="learning-eyebrow mb-1">Recent Result</div>
+                <div class="fw-bold">{{ latest_result.level_label }} · {{ latest_result.score }}점</div>
             </div>
-            {% endif %}
-
-            <div class="d-flex flex-wrap gap-2">
-                <a href="{{ url_for('village.exam') }}" class="btn btn-warning btn-lg text-dark">Village 인증시험 시작</a>
-                <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary btn-lg">대시보드로</a>
-            </div>
+            <div class="learning-meta">{{ latest_result.exam_date.strftime('%Y-%m-%d') }}</div>
         </div>
     </div>
+    {% endif %}
 
-    <div class="row g-4">
+    <div class="learning-section-title">
+        <div>
+            <div class="learning-eyebrow mb-1">Choose</div>
+            <h3>Village 바로가기</h3>
+        </div>
+        <span class="learning-chip learning-chip-muted">1-16</span>
+    </div>
+
+    <div class="learning-grid-compact">
         {% for village in village_catalog %}
-        <div class="col-md-6 col-xl-4">
-            <div class="card village-card {% if village.available %}available{% else %}pending{% endif %}">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <div class="text-muted small mb-1">Village {{ village.number }}</div>
-                            <h5 class="card-title mb-1">{{ village.theme_ko }}</h5>
-                            <div class="text-secondary">{{ village.theme_en }}</div>
-                        </div>
-                        {% if village.available %}
-                        <span class="badge bg-success">OPEN</span>
-                        {% else %}
-                        <span class="badge bg-secondary">READY</span>
-                        {% endif %}
+            {% if village.available %}
+            <a href="{{ url_for('village.detail', village_number=village.number) }}"
+               class="learning-card learning-card-link {% if latest_progress and latest_progress.village_number == village.number %}is-current{% endif %}">
+                <div class="learning-card-pad">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                        <span class="learning-number">{{ village.number }}</span>
+                        <span class="learning-chip">{{ village.lesson_count }}개</span>
                     </div>
-
-                    <p class="card-text flex-grow-1">{{ village.summary }}</p>
-
-                    {% if village.available %}
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <span class="village-chip">{{ village.lesson_count }} lessons</span>
+                    <h4 class="fs-6 fw-bold mb-1">{{ village.theme_ko }}</h4>
+                    <div class="learning-meta">{{ village.theme_en }}</div>
+                </div>
+            </a>
+            {% else %}
+            <div class="learning-card">
+                <div class="learning-card-pad">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                        <span class="learning-number">{{ village.number }}</span>
+                        <span class="learning-chip learning-chip-muted">준비중</span>
                     </div>
-                    <a href="{{ url_for('village.detail', village_number=village.number) }}" class="btn btn-outline-dark">
-                        학습하러 가기
-                    </a>
-                    {% else %}
-                    <div class="text-muted small">텍스트 정리 후 바로 이어서 추가 가능합니다.</div>
-                    {% endif %}
+                    <h4 class="fs-6 fw-bold mb-1">{{ village.theme_ko }}</h4>
+                    <div class="learning-meta">{{ village.summary }}</div>
                 </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
