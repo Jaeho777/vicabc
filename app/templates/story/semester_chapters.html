@@ -4,6 +4,7 @@
 {% block title %}Bible Story {{ grade }}학년{% if semester %} {{ semester }}학기{% endif %}{% endblock %}
 
 {% block content %}
+{% set display_chapters = chapters[:2] if semester else chapters %}
 <div class="learning-shell">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
@@ -63,11 +64,11 @@
             <div class="learning-eyebrow mb-1">Chapters</div>
             <h3>챕터 목록</h3>
         </div>
-        <span class="learning-chip">{{ chapters|length }}개</span>
+        <span class="learning-chip">{{ display_chapters|length }}개</span>
     </div>
 
     <div class="learning-grid">
-        {% for chapter in chapters %}
+        {% for chapter in display_chapters %}
         {% set progress = chapter_progress.get(chapter.id, {}) %}
         {% set percent = progress.get('progress_percent', 0) %}
         <a href="{{ url_for('story.chapter_stories', chapter_id=chapter.id) }}" class="learning-card learning-card-link">

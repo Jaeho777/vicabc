@@ -4,6 +4,7 @@
 {% block title %}Bible Story 인증시험 {{ grade }}학년{% if semester %} {{ semester }}학기{% endif %}{% endblock %}
 
 {% block content %}
+{% set display_chapters = chapters[:2] if semester else chapters %}
 <div class="learning-shell">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
@@ -29,7 +30,7 @@
     </section>
 
     <div class="learning-grid">
-        {% for chapter in chapters %}
+        {% for chapter in display_chapters %}
         {% set result = previous_results.get(chapter.id) %}
         <a href="{{ url_for('story.story_start_exam', chapter_id=chapter.id) }}" class="learning-card learning-card-link">
             <div class="learning-card-pad">
