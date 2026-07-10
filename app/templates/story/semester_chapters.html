@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 
 {% block body_class %}theme-learning theme-story{% endblock %}
-{% block title %}Bible Story {{ grade }}학년{% endblock %}
+{% block title %}Bible Story {{ grade }}학년{% if semester %} {{ semester }}학기{% endif %}{% endblock %}
 
 {% block content %}
 <div class="learning-shell">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('story.index') }}">Bible Story</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
+            <li class="breadcrumb-item {% if semester %}{% else %}active{% endif %}" {% if not semester %}aria-current="page"{% endif %}>{{ grade }}학년</li>
+            {% if semester %}
+            <li class="breadcrumb-item active" aria-current="page">{{ semester }}학기</li>
+            {% endif %}
         </ol>
     </nav>
 
     <section class="learning-hero">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
             <div>
-                <div class="learning-eyebrow mb-2">Grade {{ grade }}</div>
-                <h1 class="learning-hero-title mb-3">{{ grade }}학년 챕터</h1>
+                <div class="learning-eyebrow mb-2">Grade {{ grade }}{% if semester %} · Semester {{ semester }}{% endif %}</div>
+                <h1 class="learning-hero-title mb-3">{{ grade }}학년{% if semester %} {{ semester }}학기{% endif %} 챕터</h1>
                 <p class="learning-hero-text mb-0">
                     챕터 카드를 누르면 스토리 목록으로 바로 이동합니다. 진행률이 높은 챕터와 아직 시작하지 않은 챕터를
                     한 화면에서 비교할 수 있습니다.
@@ -38,7 +41,7 @@
                     <div class="learning-eyebrow mb-1">Quick Jump</div>
                     <h2 class="fs-5 fw-bold">챕터 번호로 바로 이동</h2>
                 </div>
-                <span class="learning-chip learning-chip-muted">{{ grade }}학년</span>
+                <span class="learning-chip learning-chip-muted">{{ grade }}학년{% if semester %} {{ semester }}학기{% endif %}</span>
             </div>
             <form class="learning-form-inline" action="{{ url_for('story.go_to_chapter') }}" method="get">
                 <input type="hidden" name="grade" value="{{ grade }}">
@@ -83,7 +86,7 @@
             </div>
         </a>
         {% else %}
-        <div class="learning-empty">이 학년에 등록된 챕터가 없습니다.</div>
+        <div class="learning-empty">이 {% if semester %}학기{% else %}학년{% endif %}에 등록된 챕터가 없습니다.</div>
         {% endfor %}
     </div>
 </div>

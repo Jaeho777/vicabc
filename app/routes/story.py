@@ -1,4 +1,3 @@
-from sqlalchemy import func
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app.extensions import db
@@ -19,6 +18,8 @@ from app.models.story_certification import StoryCertification
 story_bp = Blueprint('story', __name__, url_prefix='/story')
 ELEMENTARY_CATEGORY = '초등'
 ELEMENTARY_GRADES = list(range(1, 7))
+STORY_SEMESTERS = (1, 2)
+CHAPTERS_PER_SEMESTER = 2
 
 
 def _normalize_score(value):
@@ -91,24 +92,6 @@ def _store_story_exam_speaking_score(chapter_id, story_id, score):
     session.modified = True
 
 
-def _get_elementary_grade_counts():
-    counts = {grade: 0 for grade in ELEMENTARY_GRADES}
-    rows = (
-        db.session.query(Chapter.grade, func.count(Chapter.id))
-        .filter(
-            Chapter.category == ELEMENTARY_CATEGORY,
-            Chapter.grade.in_(ELEMENTARY_GRADES),
-        )
-        .group_by(Chapter.grade)
-        .all()
-    )
-
-    for grade, count in rows:
-        counts[grade] = count
-
-    return counts
-
-
 def _get_grade_chapters(grade):
     return (
         Chapter.query
@@ -116,6 +99,66 @@ def _get_grade_chapters(grade):
         .order_by(Chapter.order)
         .all()
     )
+
+
+def _chapter_semester_from_order(chapter_order):
+    if not chapter_order or chapter_order < 1:
+        return None
+
+    return ((chapter_order - 1) // CHAPTERS_PER_SEMESTER) + 1
+
+
+def _get_semester_chapters(grade, semester):
+    if semester not in STORY_SEMESTERS:
+        return []
+
+    chapters = _get_grade_chapters(grade)
+    explicit_semester_chapters = [
+        chapter for chapter in chapters if chapter.semester == semester
+    ]
+
+    if explicit_semester_chapters:
+        if len(explicit_semester_chapters) <= CHAPTERS_PER_SEMESTER:
+            return explicit_semester_chapters
+
+        order_matched_chapters = [
+            chapter
+            for chapter in explicit_semester_chapters
+            if _chapter_semester_from_order(chapter.order) == semester
+        ]
+        if order_matched_chapters:
+            return order_matched_chapters[:CHAPTERS_PER_SEMESTER]
+
+        return explicit_semester_chapters[:CHAPTERS_PER_SEMESTER]
+
+    start_order = ((semester - 1) * CHAPTERS_PER_SEMESTER) + 1
+    end_order = start_order + CHAPTERS_PER_SEMESTER
+    return [
+        chapter
+        for chapter in chapters
+        if start_order <= chapter.order < end_order
+    ][:CHAPTERS_PER_SEMESTER]
+
+
+def _get_visible_grade_chapters(grade):
+    visible_chapters = []
+    seen_chapter_ids = set()
+
+    for semester in STORY_SEMESTERS:
+        for chapter in _get_semester_chapters(grade, semester):
+            if chapter.id in seen_chapter_ids:
+                continue
+            visible_chapters.append(chapter)
+            seen_chapter_ids.add(chapter.id)
+
+    return sorted(visible_chapters, key=lambda chapter: chapter.order)
+
+
+def _get_elementary_grade_counts():
+    return {
+        grade: len(_get_visible_grade_chapters(grade))
+        for grade in ELEMENTARY_GRADES
+    }
 
 
 def _build_chapter_progress(chapters):
@@ -263,12 +306,13 @@ def go_to_chapter():
 @story_bp.route('/grade/<int:grade>')
 @login_required
 def grade_chapters(grade):
-    chapters = _get_grade_chapters(grade)
+    chapters = _get_visible_grade_chapters(grade)
     chapter_progress = _build_chapter_progress(chapters)
 
     return render_template(
         'story/semester_chapters.html',
         grade=grade,
+        semester=None,
         chapters=chapters,
         chapter_progress=chapter_progress,
         latest_learning=_get_latest_story_learning(),
@@ -278,7 +322,17 @@ def grade_chapters(grade):
 @story_bp.route('/grade/<int:grade>/semester/<int:semester>')
 @login_required
 def semester_chapters(grade, semester):
-    return redirect(url_for('story.grade_chapters', grade=grade))
+    chapters = _get_semester_chapters(grade, semester)
+    chapter_progress = _build_chapter_progress(chapters)
+
+    return render_template(
+        'story/semester_chapters.html',
+        grade=grade,
+        semester=semester,
+        chapters=chapters,
+        chapter_progress=chapter_progress,
+        latest_learning=_get_latest_story_learning(),
+    )
 
 @story_bp.route('/chapter/<int:chapter_id>')
 @login_required
@@ -532,12 +586,13 @@ def story_exam_index():
 @story_bp.route('/exam/grade/<int:grade>')
 @login_required
 def exam_grade_chapters(grade):
-    chapters = _get_grade_chapters(grade)
+    chapters = _get_visible_grade_chapters(grade)
     previous_results = _build_previous_exam_results(chapters)
 
     return render_template(
         'story_exam/semester_chapters.html',
         grade=grade,
+        semester=None,
         chapters=chapters,
         previous_results=previous_results,
     )
@@ -546,7 +601,16 @@ def exam_grade_chapters(grade):
 @story_bp.route('/exam/grade/<int:grade>/semester/<int:semester>')
 @login_required
 def exam_semester_chapters(grade, semester):
-    return redirect(url_for('story.exam_grade_chapters', grade=grade))
+    chapters = _get_semester_chapters(grade, semester)
+    previous_results = _build_previous_exam_results(chapters)
+
+    return render_template(
+        'story_exam/semester_chapters.html',
+        grade=grade,
+        semester=semester,
+        chapters=chapters,
+        previous_results=previous_results,
+    )
 
 @story_bp.route('/exam/chapter/<int:chapter_id>/start')
 @login_required
@@ -769,7 +833,11 @@ def story_exam_result(chapter_id):
 @login_required
 def api_chapters(grade, semester=None):
     """챕터 데이터를 JSON으로 반환하는 API"""
-    chapters = _get_grade_chapters(grade)
+    chapters = (
+        _get_semester_chapters(grade, semester)
+        if semester
+        else _get_visible_grade_chapters(grade)
+    )
     chapter_progress = _build_chapter_progress(chapters)
 
     chapters_data = []

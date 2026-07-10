@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 
 {% block body_class %}theme-learning theme-story{% endblock %}
-{% block title %}Bible Story 인증시험 {{ grade }}학년{% endblock %}
+{% block title %}Bible Story 인증시험 {{ grade }}학년{% if semester %} {{ semester }}학기{% endif %}{% endblock %}
 
 {% block content %}
 <div class="learning-shell">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('story.story_exam_index') }}">Bible Story 인증시험</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ grade }}학년</li>
+            <li class="breadcrumb-item {% if semester %}{% else %}active{% endif %}" {% if not semester %}aria-current="page"{% endif %}>{{ grade }}학년</li>
+            {% if semester %}
+            <li class="breadcrumb-item active" aria-current="page">{{ semester }}학기</li>
+            {% endif %}
         </ol>
     </nav>
 
     <section class="learning-hero">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
             <div>
-                <div class="learning-eyebrow mb-2">Grade {{ grade }} Exam</div>
-                <h1 class="learning-hero-title mb-3">{{ grade }}학년 인증시험</h1>
+                <div class="learning-eyebrow mb-2">Grade {{ grade }}{% if semester %} · Semester {{ semester }}{% endif %} Exam</div>
+                <h1 class="learning-hero-title mb-3">{{ grade }}학년{% if semester %} {{ semester }}학기{% endif %} 인증시험</h1>
                 <p class="learning-hero-text mb-0">챕터를 선택하면 등록된 스토리 순서대로 시험이 진행됩니다.</p>
             </div>
             <div class="learning-actions">
@@ -51,7 +54,7 @@
             </div>
         </a>
         {% else %}
-        <div class="learning-empty">이 학년에 등록된 챕터가 없습니다.</div>
+        <div class="learning-empty">이 {% if semester %}학기{% else %}학년{% endif %}에 등록된 챕터가 없습니다.</div>
         {% endfor %}
     </div>
 </div>

@@ -11,6 +11,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_AUDIO_ROOT = REPO_ROOT / "app" / "static" / "audio" / "stories"
+CHAPTERS_PER_SEMESTER = 2
 
 GRADE_RE = re.compile(r"^Grade\s+(\d+)$")
 TITLE_RE = re.compile(r"^\d+\.\s+(.+)$")
@@ -87,6 +88,10 @@ def relative_audio_filename(audio_root: Path, grade: int, chapter_order: int, st
     return relative_path.as_posix() if (audio_root / relative_path).exists() else None
 
 
+def semester_for_chapter_order(chapter_order: int) -> int:
+    return 1 if chapter_order <= CHAPTERS_PER_SEMESTER else 2
+
+
 def print_summary(parsed: dict[int, dict[int, ChapterContent]], audio_root: Path) -> list[str]:
     warnings: list[str] = []
 
@@ -138,7 +143,7 @@ def import_content(markdown_path: Path, audio_root: Path) -> None:
                 if chapter is None:
                     chapter = Chapter(
                         grade=grade,
-                        semester=1,
+                        semester=semester_for_chapter_order(chapter_order),
                         order=chapter_order,
                         title=chapter_content.title,
                         category='초등',
@@ -147,7 +152,7 @@ def import_content(markdown_path: Path, audio_root: Path) -> None:
                     db.session.flush()
                     created_chapters += 1
                 else:
-                    chapter.semester = 1
+                    chapter.semester = semester_for_chapter_order(chapter_order)
                     chapter.title = chapter_content.title
                     chapter.category = '초등'
 
