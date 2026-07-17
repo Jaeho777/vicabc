@@ -9,6 +9,48 @@
            <h4 class="m-0">인증시험</h4>
         </div>
         <div class="card-body">
+            {% if village_levels %}
+            <section class="mb-4" aria-labelledby="village-voca-exam-heading">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <h5 class="mb-1" id="village-voca-exam-heading">Village VOCA 인증시험</h5>
+                        <p class="text-muted mb-0">최종 VOCA DB의 Village별 단어 시험</p>
+                    </div>
+                    <span class="badge bg-primary">16개 Village</span>
+                </div>
+                <div class="row g-3">
+                    {% for level in village_levels %}
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="border rounded h-100 p-3 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <div>
+                                    <h6 class="mb-1">{{ level.name }}</h6>
+                                    <small class="text-muted">{{ level.vocabularies|length }}단어</small>
+                                </div>
+                                {% if level.id in previous_results %}
+                                    {% set result = previous_results[level.id] %}
+                                    <span class="badge {% if result.passed %}bg-success{% else %}bg-danger{% endif %}">{{ result.score }}점</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">미응시</span>
+                                {% endif %}
+                            </div>
+                            {% if level.id in previous_results %}
+                                {% set result = previous_results[level.id] %}
+                                <p class="small text-muted mb-3">최근 응시 {{ result.exam_date.strftime('%Y-%m-%d') }}</p>
+                            {% else %}
+                                <p class="small text-muted mb-3">아직 시험을 치르지 않았습니다.</p>
+                            {% endif %}
+                            <a href="{{ url_for('exam.voca_start_exam', level_id=level.id) }}" class="btn btn-primary mt-auto w-100">
+                                <i class="bi bi-award"></i> 시험 보기
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <hr class="my-4">
+            {% endif %}
+
             <!-- 상위 탭: 초등, 중등, 고등 -->
             <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
                 <li class="nav-item" role="presentation">

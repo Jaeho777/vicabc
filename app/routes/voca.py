@@ -17,6 +17,7 @@ voca_bp = Blueprint('voca', __name__, url_prefix='/voca')
 @login_required
 def index():
     # 초등, 중등, 고등 카테고리의 레벨들을 가져옴
+    village_levels = Level.query.filter_by(category='VOCA').all()
     elementary_levels = Level.query.filter_by(category='초등').all()
     middle_levels = Level.query.filter_by(category='중등').all()
     high_levels = Level.query.filter_by(category='고등').all()
@@ -39,6 +40,7 @@ def index():
     elementary_levels.sort(key=sort_by_group)
     middle_levels.sort(key=sort_by_group)
     high_levels.sort(key=sort_by_group)
+    village_levels.sort(key=lambda level: int(''.join(filter(str.isdigit, level.name.split()[1])) or 0))
     
     # 사용자의 모든 레벨 진도 정보 가져오기
     from app.models.user_progress import UserProgress
@@ -48,7 +50,7 @@ def index():
     level_progress = {}
     
     # 현재 사용자의 모든 레벨에 대한 진도 정보 계산
-    for level in elementary_levels + middle_levels + high_levels:
+    for level in village_levels + elementary_levels + middle_levels + high_levels:
         # 레벨의 총 단어 수
         total_words = Vocabulary.query.filter_by(level_id=level.id).count()
         
@@ -89,6 +91,7 @@ def index():
             }
     
     return render_template('voca/index.html', 
+                           village_levels=village_levels,
                            elementary_levels=elementary_levels,
                            middle_levels=middle_levels,
                            high_levels=high_levels,
@@ -99,7 +102,12 @@ def index():
 @login_required
 def voca_level_words(level_id):
     level = Level.query.get_or_404(level_id)
-    vocabularies = Vocabulary.query.filter_by(level_id=level_id).all()
+    vocabularies = (
+        Vocabulary.query
+        .filter_by(level_id=level_id)
+        .order_by(Vocabulary.id.asc())
+        .all()
+    )
     
     # 사용자의 단어 학습 상태 가져오기
     from app.models.user_progress import UserProgress

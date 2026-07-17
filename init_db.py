@@ -17,4 +17,8 @@ with app.app_context():
     from app.models.village_certification import VillageCertification
     from app.models.village_progress import VillageProgress
     db.create_all()
+    from app.services.vocabulary_seed import sync_packaged_vocabulary
+
+    sync_result = sync_packaged_vocabulary()
     print("데이터베이스 테이블이 성공적으로 생성되었습니다.")
+    print(f"VOCA 데이터가 동기화되었습니다: {sync_result}")

@@ -1,5 +1,6 @@
 # app/__init__.py
 from flask import Flask
+from sqlalchemy import inspect
 from app.config import Config
 from app.extensions import db, migrate, login_manager
 
@@ -38,5 +39,13 @@ def create_app():
 
     from app.routes.village import village_bp
     app.register_blueprint(village_bp)
+
+    with app.app_context():
+        table_names = set(inspect(db.engine).get_table_names())
+        if {'levels', 'vocabularies'}.issubset(table_names):
+            from app.services.vocabulary_seed import sync_packaged_vocabulary
+
+            sync_result = sync_packaged_vocabulary()
+            app.logger.info('Packaged VOCA sync complete: %s', sync_result)
 
     return app

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block body_class %}theme-learning{% endblock %}
+{% block title %}{{ exam.title }} 결과 - 수학시험{% endblock %}
+
+{% block extra_head %}
+<script>
+window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+    .math-result-shell {
+        max-width: 1040px;
+        margin: 0 auto 56px;
+    }
+    .math-score-panel {
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        background: #fff;
+        padding: 24px;
+        margin-bottom: 18px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+    .math-score-number {
+        font-size: clamp(2.2rem, 8vw, 4rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0;
+    }
+    .math-review-card {
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    .math-review-card.correct {
+        border-left: 5px solid #198754;
+    }
+    .math-review-card.incorrect {
+        border-left: 5px solid #dc3545;
+    }
+    .math-review-card h2 {
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1.45;
+        letter-spacing: 0;
+    }
+    .math-review-meta {
+        color: var(--app-muted);
+        font-size: 0.82rem;
+        margin-bottom: 8px;
+    }
+    .math-answer-row {
+        display: grid;
+        grid-template-columns: minmax(96px, 140px) 1fr;
+        gap: 8px;
+        align-items: start;
+        border-top: 1px solid var(--app-border);
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+    .math-body-lines {
+        border-left: 3px solid var(--page-accent);
+        background: var(--app-surface-soft);
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin: 10px 0;
+        white-space: pre-line;
+    }
+    .math-latex {
+        background: var(--app-surface-soft);
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        padding: 12px;
+        margin: 10px 0;
+        overflow-x: auto;
+    }
+    @media (max-width: 576px) {
+        .math-answer-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="math-result-shell">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.math_index') }}">수학시험</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}">{{ exam.title }}</a></li>
+            <li class="breadcrumb-item active">결과</li>
+        </ol>
+    </nav>
+
+    <div class="math-score-panel">
+        <div class="row g-4 align-items-center">
+            <div class="col-md-4">
+                <div class="math-score-number">{{ score }}점</div>
+                <div class="mt-2">
+                    {% if passed %}
+                    <span class="badge bg-success fs-6">통과</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark fs-6">재응시 권장</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="learning-eyebrow">{{ exam.grade }}</div>
+                <h1 class="h3 mb-2">{{ exam.title }} 결과</h1>
+                <p class="mb-2"><strong>{{ total_questions }}</strong>문항 중 <strong>{{ correct_count }}</strong>문항 정답</p>
+                <div class="progress" role="progressbar" aria-valuenow="{{ score }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: {{ score }}%">{{ score }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-end mb-3">
+        <a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}" class="btn btn-outline-primary">다시 시험 보기</a>
+        <a href="{{ url_for('exam.math_index') }}" class="btn btn-primary">수학시험 목록</a>
+    </div>
+
+    {% for question in questions %}
+    <section class="card math-review-card {% if question.is_correct %}correct{% else %}incorrect{% endif %}">
+        <div class="card-body">
+            <div class="d-flex justify-content-between gap-3 align-items-start">
+                <div>
+                    <div class="math-review-meta">{{ question.source }} · {{ question.section }}</div>
+                    <h2>{{ loop.index }}. {{ question.prompt }}</h2>
+                </div>
+                {% if question.is_correct %}
+                <span class="badge bg-success">정답</span>
+                {% else %}
+                <span class="badge bg-danger">오답</span>
+                {% endif %}
+            </div>
+
+            {% if question.latex %}
+            <div class="math-latex">\( {{ question.latex }} \)</div>
+            {% endif %}
+
+            {% if question.body %}
+            <div class="math-body-lines">
+                {% for line in question.body %}{{ line }}{% if not loop.last %}
+{% endif %}{% endfor %}
+            </div>
+            {% endif %}
+
+            {% if question.choices %}
+            <div class="mb-2">
+                {% for choice in question.choices %}
+                <div><strong>{{ choice.label }}</strong> {{ choice.text }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="math-answer-row">
+                <strong>제출 답</strong>
+                <div>{{ question.submitted_answer_display or '-' }}</div>
+            </div>
+            <div class="math-answer-row">
+                <strong>정답</strong>
+                <div>{{ question.answer_display|safe }}</div>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,3990 @@
+{
+  "version": "2026-07-17",
+  "source_file": "최종 VOCA DB.xlsx",
+  "source_sheet": "최종 단어 리스트",
+  "expected_level_count": 16,
+  "expected_word_count": 642,
+  "comparison_entry_count": 648,
+  "levels": [
+    {
+      "number": 1,
+      "name": "Village 1 학교",
+      "korean_name": "학교",
+      "english_name": "school",
+      "words": [
+        {
+          "source_order": 1,
+          "word": "school",
+          "part_of_speech": "명",
+          "meaning": "학교"
+        },
+        {
+          "source_order": 2,
+          "word": "class",
+          "part_of_speech": "명",
+          "meaning": "학급"
+        },
+        {
+          "source_order": 3,
+          "word": "college",
+          "part_of_speech": "명",
+          "meaning": "대학"
+        },
+        {
+          "source_order": 4,
+          "word": "club",
+          "part_of_speech": "명",
+          "meaning": "동아리"
+        },
+        {
+          "source_order": 5,
+          "word": "course",
+          "part_of_speech": "명",
+          "meaning": "과정"
+        },
+        {
+          "source_order": 6,
+          "word": "lesson",
+          "part_of_speech": "명",
+          "meaning": "수업"
+        },
+        {
+          "source_order": 7,
+          "word": "teach",
+          "part_of_speech": "동",
+          "meaning": "가르치다"
+        },
+        {
+          "source_order": 8,
+          "word": "learn",
+          "part_of_speech": "동",
+          "meaning": "배우다"
+        },
+        {
+          "source_order": 9,
+          "word": "study",
+          "part_of_speech": "동",
+          "meaning": "공부하다"
+        },
+        {
+          "source_order": 10,
+          "word": "read",
+          "part_of_speech": "동",
+          "meaning": "읽다"
+        },
+        {
+          "source_order": 11,
+          "word": "listen",
+          "part_of_speech": "동",
+          "meaning": "듣다"
+        },
+        {
+          "source_order": 12,
+          "word": "focus",
+          "part_of_speech": "동",
+          "meaning": "집중하다"
+        },
+        {
+          "source_order": 13,
+          "word": "homework",
+          "part_of_speech": "명",
+          "meaning": "숙제"
+        },
+        {
+          "source_order": 14,
+          "word": "project",
+          "part_of_speech": "명",
+          "meaning": "프로젝트"
+        },
+        {
+          "source_order": 15,
+          "word": "mathematics",
+          "part_of_speech": "명",
+          "meaning": "수학"
+        },
+        {
+          "source_order": 16,
+          "word": "write",
+          "part_of_speech": "동",
+          "meaning": "쓰다"
+        },
+        {
+          "source_order": 17,
+          "word": "fail",
+          "part_of_speech": "동",
+          "meaning": "실패하다"
+        },
+        {
+          "source_order": 18,
+          "word": "history",
+          "part_of_speech": "명",
+          "meaning": "역사"
+        },
+        {
+          "source_order": 19,
+          "word": "page",
+          "part_of_speech": "명",
+          "meaning": "페이지"
+        },
+        {
+          "source_order": 20,
+          "word": "textbook",
+          "part_of_speech": "명",
+          "meaning": "교과서"
+        },
+        {
+          "source_order": 21,
+          "word": "type",
+          "part_of_speech": "동",
+          "meaning": "타이핑하다"
+        },
+        {
+          "source_order": 22,
+          "word": "form",
+          "part_of_speech": "명",
+          "meaning": "양식"
+        },
+        {
+          "source_order": 23,
+          "word": "question",
+          "part_of_speech": "명",
+          "meaning": "질문"
+        },
+        {
+          "source_order": 24,
+          "word": "quiz",
+          "part_of_speech": "명",
+          "meaning": "퀴즈"
+        },
+        {
+          "source_order": 25,
+          "word": "test",
+          "part_of_speech": "명",
+          "meaning": "시험"
+        },
+        {
+          "source_order": 26,
+          "word": "book",
+          "part_of_speech": "명",
+          "meaning": "책"
+        },
+        {
+          "source_order": 27,
+          "word": "score",
+          "part_of_speech": "명",
+          "meaning": "점수"
+        },
+        {
+          "source_order": 28,
+          "word": "problem",
+          "part_of_speech": "명",
+          "meaning": "문제"
+        },
+        {
+          "source_order": 29,
+          "word": "wall",
+          "part_of_speech": "명",
+          "meaning": "벽"
+        },
+        {
+          "source_order": 30,
+          "word": "enter",
+          "part_of_speech": "동",
+          "meaning": "들어가다"
+        },
+        {
+          "source_order": 31,
+          "word": "example",
+          "part_of_speech": "명",
+          "meaning": "예시"
+        },
+        {
+          "source_order": 32,
+          "word": "fact",
+          "part_of_speech": "명",
+          "meaning": "사실"
+        },
+        {
+          "source_order": 33,
+          "word": "borrow",
+          "part_of_speech": "동",
+          "meaning": "빌리다"
+        },
+        {
+          "source_order": 34,
+          "word": "case",
+          "part_of_speech": "명",
+          "meaning": "경우"
+        },
+        {
+          "source_order": 35,
+          "word": "hard",
+          "part_of_speech": "형",
+          "meaning": "딱딱한"
+        },
+        {
+          "source_order": 36,
+          "word": "discuss",
+          "part_of_speech": "동",
+          "meaning": "토론하다"
+        },
+        {
+          "source_order": 37,
+          "word": "guess",
+          "part_of_speech": "동",
+          "meaning": "추측하다"
+        },
+        {
+          "source_order": 38,
+          "word": "introduce",
+          "part_of_speech": "동",
+          "meaning": "소개하다"
+        },
+        {
+          "source_order": 39,
+          "word": "know",
+          "part_of_speech": "동",
+          "meaning": "알다"
+        },
+        {
+          "source_order": 40,
+          "word": "tell",
+          "part_of_speech": "동",
+          "meaning": "말하다"
+        },
+        {
+          "source_order": 41,
+          "word": "chance",
+          "part_of_speech": "명",
+          "meaning": "기회"
+        },
+        {
+          "source_order": 42,
+          "word": "science",
+          "part_of_speech": "명",
+          "meaning": "과학"
+        },
+        {
+          "source_order": 43,
+          "word": "library",
+          "part_of_speech": "명",
+          "meaning": "도서관"
+        },
+        {
+          "source_order": 44,
+          "word": "number",
+          "part_of_speech": "명",
+          "meaning": "숫자"
+        },
+        {
+          "source_order": 45,
+          "word": "add",
+          "part_of_speech": "동",
+          "meaning": "더하다"
+        },
+        {
+          "source_order": 46,
+          "word": "idea",
+          "part_of_speech": "명",
+          "meaning": "생각"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Village 2 문구점",
+      "korean_name": "문구점",
+      "english_name": "stationery",
+      "words": [
+        {
+          "source_order": 47,
+          "word": "notebook",
+          "part_of_speech": "명",
+          "meaning": "공책"
+        },
+        {
+          "source_order": 48,
+          "word": "letter",
+          "part_of_speech": "명",
+          "meaning": "편지"
+        },
+        {
+          "source_order": 49,
+          "word": "key",
+          "part_of_speech": "명",
+          "meaning": "열쇠"
+        },
+        {
+          "source_order": 50,
+          "word": "crayon",
+          "part_of_speech": "명",
+          "meaning": "크레용"
+        },
+        {
+          "source_order": 51,
+          "word": "bring",
+          "part_of_speech": "동",
+          "meaning": "가져오다"
+        },
+        {
+          "source_order": 52,
+          "word": "pen",
+          "part_of_speech": "명",
+          "meaning": "펜"
+        },
+        {
+          "source_order": 53,
+          "word": "pencil",
+          "part_of_speech": "명",
+          "meaning": "연필"
+        },
+        {
+          "source_order": 54,
+          "word": "scissors",
+          "part_of_speech": "명",
+          "meaning": "가위"
+        },
+        {
+          "source_order": 55,
+          "word": "tape",
+          "part_of_speech": "명",
+          "meaning": "테이프"
+        },
+        {
+          "source_order": 56,
+          "word": "chair",
+          "part_of_speech": "명",
+          "meaning": "의자"
+        },
+        {
+          "source_order": 57,
+          "word": "desk",
+          "part_of_speech": "명",
+          "meaning": "책상"
+        },
+        {
+          "source_order": 58,
+          "word": "doll",
+          "part_of_speech": "명",
+          "meaning": "인형"
+        },
+        {
+          "source_order": 59,
+          "word": "bell",
+          "part_of_speech": "명",
+          "meaning": "벨"
+        },
+        {
+          "source_order": 60,
+          "word": "ribbon",
+          "part_of_speech": "명",
+          "meaning": "리본"
+        },
+        {
+          "source_order": 61,
+          "word": "under",
+          "part_of_speech": "전",
+          "meaning": "아래에"
+        },
+        {
+          "source_order": 62,
+          "word": "next",
+          "part_of_speech": "형",
+          "meaning": "다음의"
+        },
+        {
+          "source_order": 63,
+          "word": "stay",
+          "part_of_speech": "동",
+          "meaning": "머무르다"
+        },
+        {
+          "source_order": 64,
+          "word": "bag",
+          "part_of_speech": "명",
+          "meaning": "가방"
+        },
+        {
+          "source_order": 65,
+          "word": "compute",
+          "part_of_speech": "동",
+          "meaning": "계산하다"
+        },
+        {
+          "source_order": 66,
+          "word": "laser",
+          "part_of_speech": "명",
+          "meaning": "레이저"
+        },
+        {
+          "source_order": 67,
+          "word": "robot",
+          "part_of_speech": "명",
+          "meaning": "로봇"
+        },
+        {
+          "source_order": 68,
+          "word": "software",
+          "part_of_speech": "명",
+          "meaning": "소프트웨어"
+        },
+        {
+          "source_order": 69,
+          "word": "website",
+          "part_of_speech": "명",
+          "meaning": "웹사이트"
+        },
+        {
+          "source_order": 70,
+          "word": "note",
+          "part_of_speech": "명",
+          "meaning": "메모"
+        },
+        {
+          "source_order": 71,
+          "word": "mail",
+          "part_of_speech": "명",
+          "meaning": "우편"
+        },
+        {
+          "source_order": 72,
+          "word": "use",
+          "part_of_speech": "동",
+          "meaning": "사용하다"
+        },
+        {
+          "source_order": 73,
+          "word": "toy",
+          "part_of_speech": "명",
+          "meaning": "장난감"
+        },
+        {
+          "source_order": 74,
+          "word": "address",
+          "part_of_speech": "명",
+          "meaning": "주소"
+        },
+        {
+          "source_order": 75,
+          "word": "board",
+          "part_of_speech": "명",
+          "meaning": "판자"
+        },
+        {
+          "source_order": 76,
+          "word": "glass",
+          "part_of_speech": "명",
+          "meaning": "유리"
+        },
+        {
+          "source_order": 77,
+          "word": "gray",
+          "part_of_speech": "형",
+          "meaning": "회색의"
+        },
+        {
+          "source_order": 78,
+          "word": "green",
+          "part_of_speech": "형",
+          "meaning": "초록의"
+        },
+        {
+          "source_order": 79,
+          "word": "red",
+          "part_of_speech": "형",
+          "meaning": "빨간"
+        },
+        {
+          "source_order": 80,
+          "word": "yellow",
+          "part_of_speech": "형",
+          "meaning": "노란색"
+        },
+        {
+          "source_order": 81,
+          "word": "pink",
+          "part_of_speech": "형",
+          "meaning": "분홍색의"
+        },
+        {
+          "source_order": 82,
+          "word": "set",
+          "part_of_speech": "동",
+          "meaning": "설정하다"
+        },
+        {
+          "source_order": 83,
+          "word": "save",
+          "part_of_speech": "동",
+          "meaning": "저장하다"
+        },
+        {
+          "source_order": 84,
+          "word": "send",
+          "part_of_speech": "동",
+          "meaning": "보내다"
+        },
+        {
+          "source_order": 85,
+          "word": "print",
+          "part_of_speech": "동",
+          "meaning": "인쇄하다"
+        },
+        {
+          "source_order": 86,
+          "word": "card",
+          "part_of_speech": "명",
+          "meaning": "카드"
+        },
+        {
+          "source_order": 87,
+          "word": "file",
+          "part_of_speech": "명",
+          "meaning": "파일"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Village 3 병원",
+      "korean_name": "병원",
+      "english_name": "hospital",
+      "words": [
+        {
+          "source_order": 88,
+          "word": "hospital",
+          "part_of_speech": "명",
+          "meaning": "병원"
+        },
+        {
+          "source_order": 89,
+          "word": "office",
+          "part_of_speech": "명",
+          "meaning": "사무실"
+        },
+        {
+          "source_order": 91,
+          "word": "doctor",
+          "part_of_speech": "명",
+          "meaning": "의사"
+        },
+        {
+          "source_order": 92,
+          "word": "nurse",
+          "part_of_speech": "명",
+          "meaning": "간호사"
+        },
+        {
+          "source_order": 93,
+          "word": "blood",
+          "part_of_speech": "명",
+          "meaning": "피"
+        },
+        {
+          "source_order": 94,
+          "word": "sick",
+          "part_of_speech": "형",
+          "meaning": "아픈"
+        },
+        {
+          "source_order": 95,
+          "word": "condition",
+          "part_of_speech": "명",
+          "meaning": "상태"
+        },
+        {
+          "source_order": 96,
+          "word": "body",
+          "part_of_speech": "명",
+          "meaning": "몸"
+        },
+        {
+          "source_order": 97,
+          "word": "thirst",
+          "part_of_speech": "명",
+          "meaning": "갈증"
+        },
+        {
+          "source_order": 98,
+          "word": "eye",
+          "part_of_speech": "명",
+          "meaning": "눈"
+        },
+        {
+          "source_order": 99,
+          "word": "face",
+          "part_of_speech": "명",
+          "meaning": "얼굴"
+        },
+        {
+          "source_order": 100,
+          "word": "mouth",
+          "part_of_speech": "명",
+          "meaning": "입"
+        },
+        {
+          "source_order": 101,
+          "word": "neck",
+          "part_of_speech": "명",
+          "meaning": "목"
+        },
+        {
+          "source_order": 102,
+          "word": "hand",
+          "part_of_speech": "명",
+          "meaning": "손"
+        },
+        {
+          "source_order": 103,
+          "word": "foot",
+          "part_of_speech": "명",
+          "meaning": "발"
+        },
+        {
+          "source_order": 104,
+          "word": "wash",
+          "part_of_speech": "동",
+          "meaning": "씻다"
+        },
+        {
+          "source_order": 105,
+          "word": "fix",
+          "part_of_speech": "동",
+          "meaning": "고치다"
+        },
+        {
+          "source_order": 106,
+          "word": "tire",
+          "part_of_speech": "동",
+          "meaning": "피곤하다"
+        },
+        {
+          "source_order": 107,
+          "word": "head",
+          "part_of_speech": "명",
+          "meaning": "머리"
+        },
+        {
+          "source_order": 108,
+          "word": "hair",
+          "part_of_speech": "명",
+          "meaning": "머리카락"
+        },
+        {
+          "source_order": 109,
+          "word": "ear",
+          "part_of_speech": "명",
+          "meaning": "귀"
+        },
+        {
+          "source_order": 110,
+          "word": "nose",
+          "part_of_speech": "명",
+          "meaning": "코"
+        },
+        {
+          "source_order": 111,
+          "word": "lip",
+          "part_of_speech": "명",
+          "meaning": "입술"
+        },
+        {
+          "source_order": 112,
+          "word": "tooth",
+          "part_of_speech": "명",
+          "meaning": "이"
+        },
+        {
+          "source_order": 113,
+          "word": "skin",
+          "part_of_speech": "명",
+          "meaning": "피부"
+        },
+        {
+          "source_order": 114,
+          "word": "arm",
+          "part_of_speech": "명",
+          "meaning": "팔"
+        },
+        {
+          "source_order": 115,
+          "word": "leg",
+          "part_of_speech": "명",
+          "meaning": "다리"
+        },
+        {
+          "source_order": 116,
+          "word": "finger",
+          "part_of_speech": "명",
+          "meaning": "손가락"
+        },
+        {
+          "source_order": 117,
+          "word": "bone",
+          "part_of_speech": "명",
+          "meaning": "뼈"
+        },
+        {
+          "source_order": 118,
+          "word": "heart",
+          "part_of_speech": "명",
+          "meaning": "심장"
+        },
+        {
+          "source_order": 119,
+          "word": "touch",
+          "part_of_speech": "동",
+          "meaning": "만지다"
+        },
+        {
+          "source_order": 120,
+          "word": "wake",
+          "part_of_speech": "동",
+          "meaning": "깨다"
+        },
+        {
+          "source_order": 121,
+          "word": "fat",
+          "part_of_speech": "형",
+          "meaning": "살찐"
+        },
+        {
+          "source_order": 122,
+          "word": "burn",
+          "part_of_speech": "동",
+          "meaning": "태우다"
+        },
+        {
+          "source_order": 123,
+          "word": "floor",
+          "part_of_speech": "명",
+          "meaning": "바닥"
+        },
+        {
+          "source_order": 124,
+          "word": "age",
+          "part_of_speech": "명",
+          "meaning": "나이"
+        },
+        {
+          "source_order": 125,
+          "word": "birth",
+          "part_of_speech": "명",
+          "meaning": "출생"
+        },
+        {
+          "source_order": 126,
+          "word": "die",
+          "part_of_speech": "동",
+          "meaning": "죽다"
+        },
+        {
+          "source_order": 127,
+          "word": "death",
+          "part_of_speech": "명",
+          "meaning": "죽음"
+        },
+        {
+          "source_order": 128,
+          "word": "dead",
+          "part_of_speech": "형",
+          "meaning": "죽은"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Village 4 가족",
+      "korean_name": "가족",
+      "english_name": "family",
+      "words": [
+        {
+          "source_order": 129,
+          "word": "family",
+          "part_of_speech": "명",
+          "meaning": "가족"
+        },
+        {
+          "source_order": 130,
+          "word": "parent",
+          "part_of_speech": "명",
+          "meaning": "부모"
+        },
+        {
+          "source_order": 131,
+          "word": "father",
+          "part_of_speech": "명",
+          "meaning": "아버지"
+        },
+        {
+          "source_order": 132,
+          "word": "mother",
+          "part_of_speech": "명",
+          "meaning": "어머니"
+        },
+        {
+          "source_order": 133,
+          "word": "husband",
+          "part_of_speech": "명",
+          "meaning": "남편"
+        },
+        {
+          "source_order": 134,
+          "word": "wife",
+          "part_of_speech": "명",
+          "meaning": "아내"
+        },
+        {
+          "source_order": 135,
+          "word": "son",
+          "part_of_speech": "명",
+          "meaning": "아들"
+        },
+        {
+          "source_order": 136,
+          "word": "daughter",
+          "part_of_speech": "명",
+          "meaning": "딸"
+        },
+        {
+          "source_order": 137,
+          "word": "sister",
+          "part_of_speech": "명",
+          "meaning": "자매"
+        },
+        {
+          "source_order": 138,
+          "word": "grandfather",
+          "part_of_speech": "명",
+          "meaning": "할아버지"
+        },
+        {
+          "source_order": 139,
+          "word": "uncle",
+          "part_of_speech": "명",
+          "meaning": "삼촌"
+        },
+        {
+          "source_order": 140,
+          "word": "kid",
+          "part_of_speech": "명",
+          "meaning": "아이"
+        },
+        {
+          "source_order": 141,
+          "word": "partner",
+          "part_of_speech": "명",
+          "meaning": "배우자"
+        },
+        {
+          "source_order": 142,
+          "word": "name",
+          "part_of_speech": "명",
+          "meaning": "이름"
+        },
+        {
+          "source_order": 143,
+          "word": "marry",
+          "part_of_speech": "동",
+          "meaning": "결혼하다"
+        },
+        {
+          "source_order": 144,
+          "word": "festival",
+          "part_of_speech": "명",
+          "meaning": "축제"
+        },
+        {
+          "source_order": 145,
+          "word": "habit",
+          "part_of_speech": "명",
+          "meaning": "습관"
+        },
+        {
+          "source_order": 146,
+          "word": "memory",
+          "part_of_speech": "명",
+          "meaning": "기억"
+        },
+        {
+          "source_order": 147,
+          "word": "bath",
+          "part_of_speech": "명",
+          "meaning": "목욕"
+        },
+        {
+          "source_order": 148,
+          "word": "couple",
+          "part_of_speech": "명",
+          "meaning": "커플"
+        },
+        {
+          "source_order": 149,
+          "word": "together",
+          "part_of_speech": "부",
+          "meaning": "함께"
+        },
+        {
+          "source_order": 150,
+          "word": "aunt",
+          "part_of_speech": "명",
+          "meaning": "이모"
+        },
+        {
+          "source_order": 151,
+          "word": "brother",
+          "part_of_speech": "명",
+          "meaning": "형제"
+        },
+        {
+          "source_order": 152,
+          "word": "child",
+          "part_of_speech": "명",
+          "meaning": "아이"
+        },
+        {
+          "source_order": 153,
+          "word": "cousin",
+          "part_of_speech": "명",
+          "meaning": "사촌"
+        },
+        {
+          "source_order": 154,
+          "word": "room",
+          "part_of_speech": "명",
+          "meaning": "방"
+        },
+        {
+          "source_order": 155,
+          "word": "restroom",
+          "part_of_speech": "명",
+          "meaning": "화장실"
+        },
+        {
+          "source_order": 156,
+          "word": "house",
+          "part_of_speech": "명",
+          "meaning": "집"
+        },
+        {
+          "source_order": 157,
+          "word": "home",
+          "part_of_speech": "명",
+          "meaning": "집"
+        },
+        {
+          "source_order": 158,
+          "word": "lie",
+          "part_of_speech": "동",
+          "meaning": "눕다"
+        },
+        {
+          "source_order": 159,
+          "word": "telephone",
+          "part_of_speech": "명",
+          "meaning": "전화"
+        },
+        {
+          "source_order": 160,
+          "word": "wedding",
+          "part_of_speech": "명",
+          "meaning": "결혼식"
+        },
+        {
+          "source_order": 161,
+          "word": "life",
+          "part_of_speech": "명",
+          "meaning": "삶"
+        },
+        {
+          "source_order": 162,
+          "word": "sleep",
+          "part_of_speech": "동",
+          "meaning": "자다"
+        },
+        {
+          "source_order": 163,
+          "word": "live",
+          "part_of_speech": "동",
+          "meaning": "살다"
+        },
+        {
+          "source_order": 164,
+          "word": "window",
+          "part_of_speech": "명",
+          "meaning": "창문"
+        },
+        {
+          "source_order": 165,
+          "word": "bed",
+          "part_of_speech": "명",
+          "meaning": "침대"
+        },
+        {
+          "source_order": 166,
+          "word": "build",
+          "part_of_speech": "동",
+          "meaning": "짓다"
+        },
+        {
+          "source_order": 167,
+          "word": "clean",
+          "part_of_speech": "동",
+          "meaning": "청소하다"
+        },
+        {
+          "source_order": 168,
+          "word": "cover",
+          "part_of_speech": "동",
+          "meaning": "덮다"
+        },
+        {
+          "source_order": 169,
+          "word": "hang",
+          "part_of_speech": "동",
+          "meaning": "걸다"
+        },
+        {
+          "source_order": 170,
+          "word": "have",
+          "part_of_speech": "동",
+          "meaning": "가지다"
+        },
+        {
+          "source_order": 171,
+          "word": "end",
+          "part_of_speech": "명",
+          "meaning": "끝"
+        },
+        {
+          "source_order": 172,
+          "word": "stand",
+          "part_of_speech": "동",
+          "meaning": "서다"
+        },
+        {
+          "source_order": 173,
+          "word": "sit",
+          "part_of_speech": "동",
+          "meaning": "앉다"
+        },
+        {
+          "source_order": 174,
+          "word": "apartment",
+          "part_of_speech": "명",
+          "meaning": "아파트"
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Village 5 친구",
+      "korean_name": "친구",
+      "english_name": "friend",
+      "words": [
+        {
+          "source_order": 175,
+          "word": "dialogue",
+          "part_of_speech": "명",
+          "meaning": "대화"
+        },
+        {
+          "source_order": 176,
+          "word": "worry",
+          "part_of_speech": "동",
+          "meaning": "걱정하다"
+        },
+        {
+          "source_order": 177,
+          "word": "love",
+          "part_of_speech": "명",
+          "meaning": "사랑"
+        },
+        {
+          "source_order": 178,
+          "word": "like",
+          "part_of_speech": "동",
+          "meaning": "좋아하다"
+        },
+        {
+          "source_order": 179,
+          "word": "care",
+          "part_of_speech": "동",
+          "meaning": "돌보다"
+        },
+        {
+          "source_order": 180,
+          "word": "hope",
+          "part_of_speech": "동",
+          "meaning": "희망하다"
+        },
+        {
+          "source_order": 181,
+          "word": "wish",
+          "part_of_speech": "동",
+          "meaning": "바라다"
+        },
+        {
+          "source_order": 182,
+          "word": "luck",
+          "part_of_speech": "명",
+          "meaning": "행운"
+        },
+        {
+          "source_order": 183,
+          "word": "happy",
+          "part_of_speech": "형",
+          "meaning": "행복한"
+        },
+        {
+          "source_order": 184,
+          "word": "glad",
+          "part_of_speech": "형",
+          "meaning": "기쁜"
+        },
+        {
+          "source_order": 185,
+          "word": "friend",
+          "part_of_speech": "명",
+          "meaning": "친구"
+        },
+        {
+          "source_order": 186,
+          "word": "word",
+          "part_of_speech": "명",
+          "meaning": "단어"
+        },
+        {
+          "source_order": 187,
+          "word": "story",
+          "part_of_speech": "명",
+          "meaning": "이야기"
+        },
+        {
+          "source_order": 188,
+          "word": "congratulate",
+          "part_of_speech": "동",
+          "meaning": "축하하다"
+        },
+        {
+          "source_order": 189,
+          "word": "ready",
+          "part_of_speech": "형",
+          "meaning": "준비된"
+        },
+        {
+          "source_order": 190,
+          "word": "sure",
+          "part_of_speech": "형",
+          "meaning": "확신하는"
+        },
+        {
+          "source_order": 191,
+          "word": "hurry",
+          "part_of_speech": "동",
+          "meaning": "서두르다"
+        },
+        {
+          "source_order": 192,
+          "word": "alone",
+          "part_of_speech": "부",
+          "meaning": "혼자서"
+        },
+        {
+          "source_order": 193,
+          "word": "afraid",
+          "part_of_speech": "형",
+          "meaning": "두려운"
+        },
+        {
+          "source_order": 194,
+          "word": "sad",
+          "part_of_speech": "형",
+          "meaning": "슬픈"
+        },
+        {
+          "source_order": 195,
+          "word": "mad",
+          "part_of_speech": "형",
+          "meaning": "화난"
+        },
+        {
+          "source_order": 196,
+          "word": "hate",
+          "part_of_speech": "동",
+          "meaning": "미워하다"
+        },
+        {
+          "source_order": 197,
+          "word": "honest",
+          "part_of_speech": "형",
+          "meaning": "정직한"
+        },
+        {
+          "source_order": 198,
+          "word": "brave",
+          "part_of_speech": "형",
+          "meaning": "용감한"
+        },
+        {
+          "source_order": 199,
+          "word": "lazy",
+          "part_of_speech": "형",
+          "meaning": "게으른"
+        },
+        {
+          "source_order": 200,
+          "word": "fool",
+          "part_of_speech": "명",
+          "meaning": "바보"
+        },
+        {
+          "source_order": 201,
+          "word": "poor",
+          "part_of_speech": "형",
+          "meaning": "가난한"
+        },
+        {
+          "source_order": 202,
+          "word": "rich",
+          "part_of_speech": "형",
+          "meaning": "부유한"
+        },
+        {
+          "source_order": 203,
+          "word": "beauty",
+          "part_of_speech": "명",
+          "meaning": "아름다움"
+        },
+        {
+          "source_order": 204,
+          "word": "issue",
+          "part_of_speech": "명",
+          "meaning": "문제"
+        },
+        {
+          "source_order": 205,
+          "word": "campaign",
+          "part_of_speech": "명",
+          "meaning": "캠페인"
+        },
+        {
+          "source_order": 206,
+          "word": "fight",
+          "part_of_speech": "동",
+          "meaning": "싸우다"
+        },
+        {
+          "source_order": 207,
+          "word": "wet",
+          "part_of_speech": "형",
+          "meaning": "젖은"
+        },
+        {
+          "source_order": 208,
+          "word": "kick",
+          "part_of_speech": "동",
+          "meaning": "차다"
+        },
+        {
+          "source_order": 209,
+          "word": "kill",
+          "part_of_speech": "동",
+          "meaning": "죽이다"
+        },
+        {
+          "source_order": 210,
+          "word": "kiss",
+          "part_of_speech": "동",
+          "meaning": "키스하다"
+        },
+        {
+          "source_order": 211,
+          "word": "shy",
+          "part_of_speech": "형",
+          "meaning": "수줍은"
+        },
+        {
+          "source_order": 212,
+          "word": "mind",
+          "part_of_speech": "명",
+          "meaning": "마음"
+        },
+        {
+          "source_order": 213,
+          "word": "believe",
+          "part_of_speech": "동",
+          "meaning": "믿다"
+        },
+        {
+          "source_order": 214,
+          "word": "dream",
+          "part_of_speech": "동",
+          "meaning": "꿈꾸다"
+        },
+        {
+          "source_order": 215,
+          "word": "miss",
+          "part_of_speech": "동",
+          "meaning": "그리워하다"
+        },
+        {
+          "source_order": 216,
+          "word": "certain",
+          "part_of_speech": "형",
+          "meaning": "확실한"
+        },
+        {
+          "source_order": 217,
+          "word": "wrong",
+          "part_of_speech": "형",
+          "meaning": "틀린"
+        },
+        {
+          "source_order": 218,
+          "word": "fine",
+          "part_of_speech": "형",
+          "meaning": "괜찮은"
+        },
+        {
+          "source_order": 219,
+          "word": "smile",
+          "part_of_speech": "명",
+          "meaning": "미소"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "name": "Village 6 사람들",
+      "korean_name": "사람들",
+      "english_name": "people",
+      "words": [
+        {
+          "source_order": 220,
+          "word": "help",
+          "part_of_speech": "동",
+          "meaning": "돕다"
+        },
+        {
+          "source_order": 221,
+          "word": "same",
+          "part_of_speech": "형",
+          "meaning": "같은"
+        },
+        {
+          "source_order": 222,
+          "word": "become",
+          "part_of_speech": "동",
+          "meaning": "~이 되다"
+        },
+        {
+          "source_order": 223,
+          "word": "man",
+          "part_of_speech": "명",
+          "meaning": "남자"
+        },
+        {
+          "source_order": 224,
+          "word": "guy",
+          "part_of_speech": "명",
+          "meaning": "남자"
+        },
+        {
+          "source_order": 225,
+          "word": "group",
+          "part_of_speech": "명",
+          "meaning": "모임"
+        },
+        {
+          "source_order": 226,
+          "word": "boy",
+          "part_of_speech": "명",
+          "meaning": "소년"
+        },
+        {
+          "source_order": 227,
+          "word": "think",
+          "part_of_speech": "동",
+          "meaning": "생각하다"
+        },
+        {
+          "source_order": 228,
+          "word": "understand",
+          "part_of_speech": "동",
+          "meaning": "이해하다"
+        },
+        {
+          "source_order": 229,
+          "word": "people",
+          "part_of_speech": "명",
+          "meaning": "사람들"
+        },
+        {
+          "source_order": 230,
+          "word": "human",
+          "part_of_speech": "명",
+          "meaning": "인간"
+        },
+        {
+          "source_order": 231,
+          "word": "adult",
+          "part_of_speech": "명",
+          "meaning": "성인"
+        },
+        {
+          "source_order": 232,
+          "word": "woman",
+          "part_of_speech": "명",
+          "meaning": "여자"
+        },
+        {
+          "source_order": 233,
+          "word": "lady",
+          "part_of_speech": "명",
+          "meaning": "숙녀"
+        },
+        {
+          "source_order": 234,
+          "word": "gentleman",
+          "part_of_speech": "명",
+          "meaning": "신사"
+        },
+        {
+          "source_order": 235,
+          "word": "girl",
+          "part_of_speech": "명",
+          "meaning": "소녀"
+        },
+        {
+          "source_order": 236,
+          "word": "baby",
+          "part_of_speech": "명",
+          "meaning": "아기"
+        },
+        {
+          "source_order": 237,
+          "word": "member",
+          "part_of_speech": "명",
+          "meaning": "구성원"
+        },
+        {
+          "source_order": 238,
+          "word": "call",
+          "part_of_speech": "동",
+          "meaning": "전화하다"
+        },
+        {
+          "source_order": 239,
+          "word": "invite",
+          "part_of_speech": "동",
+          "meaning": "초대하다"
+        },
+        {
+          "source_order": 240,
+          "word": "ask",
+          "part_of_speech": "동",
+          "meaning": "묻다"
+        },
+        {
+          "source_order": 241,
+          "word": "answer",
+          "part_of_speech": "동",
+          "meaning": "대답하다"
+        },
+        {
+          "source_order": 242,
+          "word": "keep",
+          "part_of_speech": "동",
+          "meaning": "유지하다"
+        },
+        {
+          "source_order": 243,
+          "word": "feel",
+          "part_of_speech": "동",
+          "meaning": "느끼다"
+        },
+        {
+          "source_order": 244,
+          "word": "cry",
+          "part_of_speech": "동",
+          "meaning": "울다"
+        },
+        {
+          "source_order": 245,
+          "word": "want",
+          "part_of_speech": "동",
+          "meaning": "원하다"
+        },
+        {
+          "source_order": 246,
+          "word": "favorite",
+          "part_of_speech": "형",
+          "meaning": "가장 좋아하는"
+        },
+        {
+          "source_order": 247,
+          "word": "great",
+          "part_of_speech": "형",
+          "meaning": "훌륭한"
+        },
+        {
+          "source_order": 248,
+          "word": "fun",
+          "part_of_speech": "형",
+          "meaning": "재미있는"
+        },
+        {
+          "source_order": 249,
+          "word": "free",
+          "part_of_speech": "형",
+          "meaning": "자유로운"
+        },
+        {
+          "source_order": 250,
+          "word": "bad",
+          "part_of_speech": "형",
+          "meaning": "나쁜"
+        },
+        {
+          "source_order": 251,
+          "word": "ugly",
+          "part_of_speech": "형",
+          "meaning": "못생긴"
+        },
+        {
+          "source_order": 252,
+          "word": "kind",
+          "part_of_speech": "형",
+          "meaning": "친절한"
+        },
+        {
+          "source_order": 253,
+          "word": "agree",
+          "part_of_speech": "동",
+          "meaning": "동의하다"
+        },
+        {
+          "source_order": 254,
+          "word": "clever",
+          "part_of_speech": "형",
+          "meaning": "영리한"
+        },
+        {
+          "source_order": 255,
+          "word": "alright",
+          "part_of_speech": "형",
+          "meaning": "괜찮은"
+        },
+        {
+          "source_order": 256,
+          "word": "very",
+          "part_of_speech": "부",
+          "meaning": "아주"
+        },
+        {
+          "source_order": 257,
+          "word": "court",
+          "part_of_speech": "명",
+          "meaning": "법정"
+        },
+        {
+          "source_order": 258,
+          "word": "war",
+          "part_of_speech": "명",
+          "meaning": "전쟁"
+        },
+        {
+          "source_order": 259,
+          "word": "god",
+          "part_of_speech": "명",
+          "meaning": "신"
+        },
+        {
+          "source_order": 260,
+          "word": "do",
+          "part_of_speech": "동",
+          "meaning": "하다"
+        },
+        {
+          "source_order": 261,
+          "word": "short",
+          "part_of_speech": "형",
+          "meaning": "짧은"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "name": "Village 7 백화점",
+      "korean_name": "백화점",
+      "english_name": "department store",
+      "words": [
+        {
+          "source_order": 262,
+          "word": "small",
+          "part_of_speech": "형",
+          "meaning": "작은"
+        },
+        {
+          "source_order": 263,
+          "word": "skirt",
+          "part_of_speech": "명",
+          "meaning": "치마"
+        },
+        {
+          "source_order": 264,
+          "word": "sock",
+          "part_of_speech": "명",
+          "meaning": "양말"
+        },
+        {
+          "source_order": 265,
+          "word": "style",
+          "part_of_speech": "명",
+          "meaning": "스타일"
+        },
+        {
+          "source_order": 266,
+          "word": "shoe",
+          "part_of_speech": "명",
+          "meaning": "신발"
+        },
+        {
+          "source_order": 267,
+          "word": "umbrella",
+          "part_of_speech": "명",
+          "meaning": "우산"
+        },
+        {
+          "source_order": 268,
+          "word": "button",
+          "part_of_speech": "명",
+          "meaning": "단추"
+        },
+        {
+          "source_order": 269,
+          "word": "cap",
+          "part_of_speech": "명",
+          "meaning": "모자"
+        },
+        {
+          "source_order": 270,
+          "word": "store",
+          "part_of_speech": "명",
+          "meaning": "가게"
+        },
+        {
+          "source_order": 271,
+          "word": "ring",
+          "part_of_speech": "명",
+          "meaning": "반지"
+        },
+        {
+          "source_order": 272,
+          "word": "belt",
+          "part_of_speech": "명",
+          "meaning": "벨트"
+        },
+        {
+          "source_order": 273,
+          "word": "need",
+          "part_of_speech": "동",
+          "meaning": "필요하다"
+        },
+        {
+          "source_order": 274,
+          "word": "little",
+          "part_of_speech": "형",
+          "meaning": "작은"
+        },
+        {
+          "source_order": 275,
+          "word": "change",
+          "part_of_speech": "동",
+          "meaning": "바꾸다"
+        },
+        {
+          "source_order": 276,
+          "word": "soft",
+          "part_of_speech": "형",
+          "meaning": "부드러운"
+        },
+        {
+          "source_order": 277,
+          "word": "customer",
+          "part_of_speech": "명",
+          "meaning": "손님"
+        },
+        {
+          "source_order": 278,
+          "word": "model",
+          "part_of_speech": "명",
+          "meaning": "모델"
+        },
+        {
+          "source_order": 279,
+          "word": "job",
+          "part_of_speech": "명",
+          "meaning": "직업"
+        },
+        {
+          "source_order": 280,
+          "word": "company",
+          "part_of_speech": "명",
+          "meaning": "회사"
+        },
+        {
+          "source_order": 281,
+          "word": "program",
+          "part_of_speech": "명",
+          "meaning": "프로그램"
+        },
+        {
+          "source_order": 282,
+          "word": "control",
+          "part_of_speech": "명",
+          "meaning": "통제, 관리"
+        },
+        {
+          "source_order": 283,
+          "word": "power",
+          "part_of_speech": "명",
+          "meaning": "힘, 전력"
+        },
+        {
+          "source_order": 284,
+          "word": "safe",
+          "part_of_speech": "형",
+          "meaning": "안전한"
+        },
+        {
+          "source_order": 285,
+          "word": "dress",
+          "part_of_speech": "명",
+          "meaning": "원피스"
+        },
+        {
+          "source_order": 286,
+          "word": "shirt",
+          "part_of_speech": "명",
+          "meaning": "셔츠"
+        },
+        {
+          "source_order": 287,
+          "word": "pants",
+          "part_of_speech": "명",
+          "meaning": "바지"
+        },
+        {
+          "source_order": 288,
+          "word": "hat",
+          "part_of_speech": "명",
+          "meaning": "모자"
+        },
+        {
+          "source_order": 289,
+          "word": "helmet",
+          "part_of_speech": "명",
+          "meaning": "헬멧"
+        },
+        {
+          "source_order": 290,
+          "word": "clothes",
+          "part_of_speech": "명",
+          "meaning": "옷"
+        },
+        {
+          "source_order": 291,
+          "word": "coat",
+          "part_of_speech": "명",
+          "meaning": "외투"
+        },
+        {
+          "source_order": 292,
+          "word": "jacket",
+          "part_of_speech": "명",
+          "meaning": "재킷"
+        },
+        {
+          "source_order": 293,
+          "word": "part",
+          "part_of_speech": "명",
+          "meaning": "부분"
+        },
+        {
+          "source_order": 294,
+          "word": "bottom",
+          "part_of_speech": "명",
+          "meaning": "아래"
+        },
+        {
+          "source_order": 295,
+          "word": "big",
+          "part_of_speech": "형",
+          "meaning": "큰"
+        },
+        {
+          "source_order": 296,
+          "word": "double",
+          "part_of_speech": "형",
+          "meaning": "두 배의"
+        },
+        {
+          "source_order": 297,
+          "word": "new",
+          "part_of_speech": "형",
+          "meaning": "새로운"
+        },
+        {
+          "source_order": 298,
+          "word": "pretty",
+          "part_of_speech": "형",
+          "meaning": "예쁜"
+        },
+        {
+          "source_order": 299,
+          "word": "fall",
+          "part_of_speech": "동",
+          "meaning": "떨어지다"
+        },
+        {
+          "source_order": 300,
+          "word": "close",
+          "part_of_speech": "동",
+          "meaning": "닫다"
+        },
+        {
+          "source_order": 301,
+          "word": "middle",
+          "part_of_speech": "명",
+          "meaning": "가운데"
+        },
+        {
+          "source_order": 302,
+          "word": "low",
+          "part_of_speech": "형",
+          "meaning": "낮은"
+        },
+        {
+          "source_order": 303,
+          "word": "plastic",
+          "part_of_speech": "명",
+          "meaning": "플라스틱"
+        },
+        {
+          "source_order": 304,
+          "word": "bank",
+          "part_of_speech": "명",
+          "meaning": "은행"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "name": "Village 8 과일가게",
+      "korean_name": "과일가게",
+      "english_name": "fruit shop",
+      "words": [
+        {
+          "source_order": 305,
+          "word": "weight",
+          "part_of_speech": "명",
+          "meaning": "체중"
+        },
+        {
+          "source_order": 306,
+          "word": "get",
+          "part_of_speech": "동",
+          "meaning": "얻다"
+        },
+        {
+          "source_order": 307,
+          "word": "enough",
+          "part_of_speech": "형",
+          "meaning": "충분한"
+        },
+        {
+          "source_order": 308,
+          "word": "fruit",
+          "part_of_speech": "명",
+          "meaning": "과일"
+        },
+        {
+          "source_order": 309,
+          "word": "watermelon",
+          "part_of_speech": "명",
+          "meaning": "수박"
+        },
+        {
+          "source_order": 310,
+          "word": "banana",
+          "part_of_speech": "명",
+          "meaning": "바나나"
+        },
+        {
+          "source_order": 311,
+          "word": "orange",
+          "part_of_speech": "명",
+          "meaning": "오렌지"
+        },
+        {
+          "source_order": 312,
+          "word": "tomato",
+          "part_of_speech": "명",
+          "meaning": "토마토"
+        },
+        {
+          "source_order": 313,
+          "word": "carrot",
+          "part_of_speech": "명",
+          "meaning": "당근"
+        },
+        {
+          "source_order": 314,
+          "word": "vegetable",
+          "part_of_speech": "명",
+          "meaning": "채소"
+        },
+        {
+          "source_order": 315,
+          "word": "potato",
+          "part_of_speech": "명",
+          "meaning": "감자"
+        },
+        {
+          "source_order": 316,
+          "word": "salad",
+          "part_of_speech": "명",
+          "meaning": "샐러드"
+        },
+        {
+          "source_order": 317,
+          "word": "money",
+          "part_of_speech": "명",
+          "meaning": "돈"
+        },
+        {
+          "source_order": 318,
+          "word": "cash",
+          "part_of_speech": "명",
+          "meaning": "현금"
+        },
+        {
+          "source_order": 319,
+          "word": "cost",
+          "part_of_speech": "명",
+          "meaning": "가격"
+        },
+        {
+          "source_order": 320,
+          "word": "sale",
+          "part_of_speech": "명",
+          "meaning": "판매"
+        },
+        {
+          "source_order": 321,
+          "word": "shop",
+          "part_of_speech": "명",
+          "meaning": "가게"
+        },
+        {
+          "source_order": 322,
+          "word": "business",
+          "part_of_speech": "명",
+          "meaning": "사업"
+        },
+        {
+          "source_order": 323,
+          "word": "size",
+          "part_of_speech": "명",
+          "meaning": "크기"
+        },
+        {
+          "source_order": 324,
+          "word": "wait",
+          "part_of_speech": "동",
+          "meaning": "기다리다"
+        },
+        {
+          "source_order": 325,
+          "word": "pick",
+          "part_of_speech": "동",
+          "meaning": "집다"
+        },
+        {
+          "source_order": 326,
+          "word": "cheap",
+          "part_of_speech": "형",
+          "meaning": "싼"
+        },
+        {
+          "source_order": 327,
+          "word": "apple",
+          "part_of_speech": "명",
+          "meaning": "사과"
+        },
+        {
+          "source_order": 328,
+          "word": "heavy",
+          "part_of_speech": "형",
+          "meaning": "무거운"
+        },
+        {
+          "source_order": 329,
+          "word": "basket",
+          "part_of_speech": "명",
+          "meaning": "바구니"
+        },
+        {
+          "source_order": 330,
+          "word": "pay",
+          "part_of_speech": "동",
+          "meaning": "지불하다"
+        },
+        {
+          "source_order": 331,
+          "word": "buy",
+          "part_of_speech": "동",
+          "meaning": "사다"
+        },
+        {
+          "source_order": 332,
+          "word": "sell",
+          "part_of_speech": "동",
+          "meaning": "팔다"
+        },
+        {
+          "source_order": 333,
+          "word": "collect",
+          "part_of_speech": "동",
+          "meaning": "모으다"
+        },
+        {
+          "source_order": 334,
+          "word": "open",
+          "part_of_speech": "동",
+          "meaning": "열다"
+        },
+        {
+          "source_order": 335,
+          "word": "grape",
+          "part_of_speech": "명",
+          "meaning": "포도"
+        },
+        {
+          "source_order": 336,
+          "word": "field",
+          "part_of_speech": "명",
+          "meaning": "들판"
+        },
+        {
+          "source_order": 337,
+          "word": "farm",
+          "part_of_speech": "명",
+          "meaning": "농장"
+        },
+        {
+          "source_order": 338,
+          "word": "garden",
+          "part_of_speech": "명",
+          "meaning": "정원"
+        },
+        {
+          "source_order": 339,
+          "word": "put",
+          "part_of_speech": "동",
+          "meaning": "두다"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Village 9 식당",
+      "korean_name": "식당",
+      "english_name": "restaurant",
+      "words": [
+        {
+          "source_order": 340,
+          "word": "table",
+          "part_of_speech": "명",
+          "meaning": "식탁"
+        },
+        {
+          "source_order": 341,
+          "word": "service",
+          "part_of_speech": "명",
+          "meaning": "서비스"
+        },
+        {
+          "source_order": 342,
+          "word": "staff",
+          "part_of_speech": "명",
+          "meaning": "직원"
+        },
+        {
+          "source_order": 343,
+          "word": "delicious",
+          "part_of_speech": "형",
+          "meaning": "맛있는"
+        },
+        {
+          "source_order": 344,
+          "word": "full",
+          "part_of_speech": "형",
+          "meaning": "가득 찬"
+        },
+        {
+          "source_order": 345,
+          "word": "restaurant",
+          "part_of_speech": "명",
+          "meaning": "식당"
+        },
+        {
+          "source_order": 346,
+          "word": "dinner",
+          "part_of_speech": "명",
+          "meaning": "저녁 식사"
+        },
+        {
+          "source_order": 347,
+          "word": "hamburger",
+          "part_of_speech": "명",
+          "meaning": "햄버거"
+        },
+        {
+          "source_order": 348,
+          "word": "spaghetti",
+          "part_of_speech": "명",
+          "meaning": "스파게티"
+        },
+        {
+          "source_order": 349,
+          "word": "soup",
+          "part_of_speech": "명",
+          "meaning": "수프"
+        },
+        {
+          "source_order": 350,
+          "word": "steak",
+          "part_of_speech": "명",
+          "meaning": "스테이크"
+        },
+        {
+          "source_order": 351,
+          "word": "beef",
+          "part_of_speech": "명",
+          "meaning": "소고기"
+        },
+        {
+          "source_order": 352,
+          "word": "fish",
+          "part_of_speech": "명",
+          "meaning": "생선"
+        },
+        {
+          "source_order": 353,
+          "word": "salt",
+          "part_of_speech": "명",
+          "meaning": "소금"
+        },
+        {
+          "source_order": 354,
+          "word": "cook",
+          "part_of_speech": "동",
+          "meaning": "요리하다"
+        },
+        {
+          "source_order": 355,
+          "word": "food",
+          "part_of_speech": "명",
+          "meaning": "음식"
+        },
+        {
+          "source_order": 356,
+          "word": "lunch",
+          "part_of_speech": "명",
+          "meaning": "점심"
+        },
+        {
+          "source_order": 357,
+          "word": "breakfast",
+          "part_of_speech": "명",
+          "meaning": "아침 식사"
+        },
+        {
+          "source_order": 358,
+          "word": "chicken",
+          "part_of_speech": "명",
+          "meaning": "닭고기"
+        },
+        {
+          "source_order": 359,
+          "word": "meat",
+          "part_of_speech": "명",
+          "meaning": "고기"
+        },
+        {
+          "source_order": 360,
+          "word": "water",
+          "part_of_speech": "명",
+          "meaning": "물"
+        },
+        {
+          "source_order": 361,
+          "word": "check",
+          "part_of_speech": "동",
+          "meaning": "확인하다"
+        },
+        {
+          "source_order": 362,
+          "word": "give",
+          "part_of_speech": "동",
+          "meaning": "주다"
+        },
+        {
+          "source_order": 363,
+          "word": "choose",
+          "part_of_speech": "동",
+          "meaning": "고르다"
+        },
+        {
+          "source_order": 364,
+          "word": "line",
+          "part_of_speech": "명",
+          "meaning": "줄"
+        },
+        {
+          "source_order": 365,
+          "word": "door",
+          "part_of_speech": "명",
+          "meaning": "문"
+        },
+        {
+          "source_order": 366,
+          "word": "kitchen",
+          "part_of_speech": "명",
+          "meaning": "부엌"
+        },
+        {
+          "source_order": 367,
+          "word": "cup",
+          "part_of_speech": "명",
+          "meaning": "컵"
+        },
+        {
+          "source_order": 368,
+          "word": "egg",
+          "part_of_speech": "명",
+          "meaning": "달걀"
+        },
+        {
+          "source_order": 369,
+          "word": "fork",
+          "part_of_speech": "명",
+          "meaning": "포크"
+        },
+        {
+          "source_order": 370,
+          "word": "knife",
+          "part_of_speech": "명",
+          "meaning": "칼"
+        },
+        {
+          "source_order": 371,
+          "word": "chop",
+          "part_of_speech": "동",
+          "meaning": "자르다"
+        },
+        {
+          "source_order": 372,
+          "word": "make",
+          "part_of_speech": "동",
+          "meaning": "만들다"
+        },
+        {
+          "source_order": 373,
+          "word": "cheese",
+          "part_of_speech": "명",
+          "meaning": "치즈"
+        },
+        {
+          "source_order": 374,
+          "word": "bake",
+          "part_of_speech": "동",
+          "meaning": "굽다"
+        },
+        {
+          "source_order": 375,
+          "word": "cut",
+          "part_of_speech": "동",
+          "meaning": "자르다"
+        },
+        {
+          "source_order": 376,
+          "word": "eat",
+          "part_of_speech": "동",
+          "meaning": "먹다"
+        },
+        {
+          "source_order": 377,
+          "word": "fill",
+          "part_of_speech": "동",
+          "meaning": "채우다"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "name": "Village 10 카페",
+      "korean_name": "카페",
+      "english_name": "cafe",
+      "words": [
+        {
+          "source_order": 378,
+          "word": "warm",
+          "part_of_speech": "형",
+          "meaning": "따뜻한"
+        },
+        {
+          "source_order": 379,
+          "word": "talk",
+          "part_of_speech": "동",
+          "meaning": "말하다"
+        },
+        {
+          "source_order": 380,
+          "word": "cool",
+          "part_of_speech": "형",
+          "meaning": "멋진"
+        },
+        {
+          "source_order": 381,
+          "word": "quiet",
+          "part_of_speech": "형",
+          "meaning": "조용한"
+        },
+        {
+          "source_order": 382,
+          "word": "internet",
+          "part_of_speech": "명",
+          "meaning": "인터넷"
+        },
+        {
+          "source_order": 383,
+          "word": "meet",
+          "part_of_speech": "동",
+          "meaning": "만나다"
+        },
+        {
+          "source_order": 384,
+          "word": "smell",
+          "part_of_speech": "명",
+          "meaning": "냄새"
+        },
+        {
+          "source_order": 385,
+          "word": "sandwich",
+          "part_of_speech": "명",
+          "meaning": "샌드위치"
+        },
+        {
+          "source_order": 386,
+          "word": "sugar",
+          "part_of_speech": "명",
+          "meaning": "설탕"
+        },
+        {
+          "source_order": 387,
+          "word": "ice",
+          "part_of_speech": "명",
+          "meaning": "얼음"
+        },
+        {
+          "source_order": 388,
+          "word": "milk",
+          "part_of_speech": "명",
+          "meaning": "우유"
+        },
+        {
+          "source_order": 389,
+          "word": "coffee",
+          "part_of_speech": "명",
+          "meaning": "커피"
+        },
+        {
+          "source_order": 390,
+          "word": "juice",
+          "part_of_speech": "명",
+          "meaning": "주스"
+        },
+        {
+          "source_order": 391,
+          "word": "tea",
+          "part_of_speech": "명",
+          "meaning": "차"
+        },
+        {
+          "source_order": 392,
+          "word": "wine",
+          "part_of_speech": "명",
+          "meaning": "와인"
+        },
+        {
+          "source_order": 393,
+          "word": "spoon",
+          "part_of_speech": "명",
+          "meaning": "숟가락"
+        },
+        {
+          "source_order": 394,
+          "word": "bottle",
+          "part_of_speech": "명",
+          "meaning": "병"
+        },
+        {
+          "source_order": 395,
+          "word": "bill",
+          "part_of_speech": "명",
+          "meaning": "계산서"
+        },
+        {
+          "source_order": 396,
+          "word": "taste",
+          "part_of_speech": "명",
+          "meaning": "맛"
+        },
+        {
+          "source_order": 397,
+          "word": "cake",
+          "part_of_speech": "명",
+          "meaning": "케이크"
+        },
+        {
+          "source_order": 398,
+          "word": "biscuit",
+          "part_of_speech": "명",
+          "meaning": "비스킷"
+        },
+        {
+          "source_order": 399,
+          "word": "candy",
+          "part_of_speech": "명",
+          "meaning": "사탕"
+        },
+        {
+          "source_order": 400,
+          "word": "gum",
+          "part_of_speech": "명",
+          "meaning": "껌"
+        },
+        {
+          "source_order": 401,
+          "word": "chocolate",
+          "part_of_speech": "명",
+          "meaning": "초콜릿"
+        },
+        {
+          "source_order": 402,
+          "word": "cookie",
+          "part_of_speech": "명",
+          "meaning": "쿠키"
+        },
+        {
+          "source_order": 403,
+          "word": "cream",
+          "part_of_speech": "명",
+          "meaning": "크림"
+        },
+        {
+          "source_order": 404,
+          "word": "doughnut",
+          "part_of_speech": "명",
+          "meaning": "도넛"
+        },
+        {
+          "source_order": 405,
+          "word": "jam",
+          "part_of_speech": "명",
+          "meaning": "잼"
+        },
+        {
+          "source_order": 406,
+          "word": "pizza",
+          "part_of_speech": "명",
+          "meaning": "피자"
+        },
+        {
+          "source_order": 407,
+          "word": "bread",
+          "part_of_speech": "명",
+          "meaning": "빵"
+        },
+        {
+          "source_order": 408,
+          "word": "butter",
+          "part_of_speech": "명",
+          "meaning": "버터"
+        },
+        {
+          "source_order": 409,
+          "word": "drink",
+          "part_of_speech": "동",
+          "meaning": "마시다"
+        },
+        {
+          "source_order": 410,
+          "word": "dark",
+          "part_of_speech": "형",
+          "meaning": "어두운"
+        },
+        {
+          "source_order": 411,
+          "word": "gold",
+          "part_of_speech": "형",
+          "meaning": "금색의"
+        },
+        {
+          "source_order": 412,
+          "word": "light",
+          "part_of_speech": "형",
+          "meaning": "밝은, 연한"
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Village 11 동물원",
+      "korean_name": "동물원",
+      "english_name": "zoo",
+      "words": [
+        {
+          "source_order": 413,
+          "word": "zoo",
+          "part_of_speech": "명",
+          "meaning": "동물원"
+        },
+        {
+          "source_order": 414,
+          "word": "animal",
+          "part_of_speech": "명",
+          "meaning": "동물"
+        },
+        {
+          "source_order": 415,
+          "word": "bird",
+          "part_of_speech": "명",
+          "meaning": "새"
+        },
+        {
+          "source_order": 416,
+          "word": "cat",
+          "part_of_speech": "명",
+          "meaning": "고양이"
+        },
+        {
+          "source_order": 417,
+          "word": "cow",
+          "part_of_speech": "명",
+          "meaning": "소"
+        },
+        {
+          "source_order": 418,
+          "word": "dog",
+          "part_of_speech": "명",
+          "meaning": "개"
+        },
+        {
+          "source_order": 419,
+          "word": "duck",
+          "part_of_speech": "명",
+          "meaning": "오리"
+        },
+        {
+          "source_order": 420,
+          "word": "bear",
+          "part_of_speech": "명",
+          "meaning": "곰"
+        },
+        {
+          "source_order": 421,
+          "word": "bee",
+          "part_of_speech": "명",
+          "meaning": "벌"
+        },
+        {
+          "source_order": 422,
+          "word": "elephant",
+          "part_of_speech": "명",
+          "meaning": "코끼리"
+        },
+        {
+          "source_order": 423,
+          "word": "fox",
+          "part_of_speech": "명",
+          "meaning": "여우"
+        },
+        {
+          "source_order": 424,
+          "word": "horse",
+          "part_of_speech": "명",
+          "meaning": "말"
+        },
+        {
+          "source_order": 425,
+          "word": "lion",
+          "part_of_speech": "명",
+          "meaning": "사자"
+        },
+        {
+          "source_order": 426,
+          "word": "monkey",
+          "part_of_speech": "명",
+          "meaning": "원숭이"
+        },
+        {
+          "source_order": 427,
+          "word": "mouse",
+          "part_of_speech": "명",
+          "meaning": "쥐"
+        },
+        {
+          "source_order": 428,
+          "word": "pig",
+          "part_of_speech": "명",
+          "meaning": "돼지"
+        },
+        {
+          "source_order": 429,
+          "word": "tiger",
+          "part_of_speech": "명",
+          "meaning": "호랑이"
+        },
+        {
+          "source_order": 430,
+          "word": "puppy",
+          "part_of_speech": "명",
+          "meaning": "강아지"
+        },
+        {
+          "source_order": 431,
+          "word": "rabbit",
+          "part_of_speech": "명",
+          "meaning": "토끼"
+        },
+        {
+          "source_order": 432,
+          "word": "tail",
+          "part_of_speech": "명",
+          "meaning": "꼬리"
+        },
+        {
+          "source_order": 433,
+          "word": "bat",
+          "part_of_speech": "명",
+          "meaning": "방망이"
+        },
+        {
+          "source_order": 434,
+          "word": "hunt",
+          "part_of_speech": "동",
+          "meaning": "사냥하다"
+        },
+        {
+          "source_order": 435,
+          "word": "forest",
+          "part_of_speech": "명",
+          "meaning": "숲"
+        },
+        {
+          "source_order": 436,
+          "word": "ground",
+          "part_of_speech": "명",
+          "meaning": "땅"
+        },
+        {
+          "source_order": 437,
+          "word": "hill",
+          "part_of_speech": "명",
+          "meaning": "언덕"
+        },
+        {
+          "source_order": 438,
+          "word": "wood",
+          "part_of_speech": "명",
+          "meaning": "나무"
+        },
+        {
+          "source_order": 439,
+          "word": "park",
+          "part_of_speech": "명",
+          "meaning": "공원"
+        },
+        {
+          "source_order": 441,
+          "word": "danger",
+          "part_of_speech": "명",
+          "meaning": "위험"
+        },
+        {
+          "source_order": 442,
+          "word": "large",
+          "part_of_speech": "형",
+          "meaning": "큰"
+        },
+        {
+          "source_order": 443,
+          "word": "tall",
+          "part_of_speech": "형",
+          "meaning": "키가 큰"
+        },
+        {
+          "source_order": 444,
+          "word": "young",
+          "part_of_speech": "형",
+          "meaning": "어린"
+        },
+        {
+          "source_order": 445,
+          "word": "catch",
+          "part_of_speech": "동",
+          "meaning": "잡다"
+        },
+        {
+          "source_order": 446,
+          "word": "black",
+          "part_of_speech": "형",
+          "meaning": "검은"
+        },
+        {
+          "source_order": 447,
+          "word": "brown",
+          "part_of_speech": "형",
+          "meaning": "갈색의"
+        },
+        {
+          "source_order": 448,
+          "word": "white",
+          "part_of_speech": "형",
+          "meaning": "흰색"
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "name": "Village 12 여행",
+      "korean_name": "여행",
+      "english_name": "travel",
+      "words": [
+        {
+          "source_order": 449,
+          "word": "map",
+          "part_of_speech": "명",
+          "meaning": "지도"
+        },
+        {
+          "source_order": 450,
+          "word": "place",
+          "part_of_speech": "명",
+          "meaning": "장소"
+        },
+        {
+          "source_order": 451,
+          "word": "space",
+          "part_of_speech": "명",
+          "meaning": "공간"
+        },
+        {
+          "source_order": 452,
+          "word": "cross",
+          "part_of_speech": "동",
+          "meaning": "건너다"
+        },
+        {
+          "source_order": 453,
+          "word": "decide",
+          "part_of_speech": "동",
+          "meaning": "결정하다"
+        },
+        {
+          "source_order": 454,
+          "word": "voice",
+          "part_of_speech": "명",
+          "meaning": "목소리"
+        },
+        {
+          "source_order": 455,
+          "word": "travel",
+          "part_of_speech": "명",
+          "meaning": "여행"
+        },
+        {
+          "source_order": 456,
+          "word": "busy",
+          "part_of_speech": "형",
+          "meaning": "바쁜"
+        },
+        {
+          "source_order": 457,
+          "word": "old",
+          "part_of_speech": "형",
+          "meaning": "오래된"
+        },
+        {
+          "source_order": 458,
+          "word": "trip",
+          "part_of_speech": "명",
+          "meaning": "여행"
+        },
+        {
+          "source_order": 459,
+          "word": "fly",
+          "part_of_speech": "동",
+          "meaning": "날다"
+        },
+        {
+          "source_order": 460,
+          "word": "arrive",
+          "part_of_speech": "동",
+          "meaning": "도착하다"
+        },
+        {
+          "source_order": 461,
+          "word": "break",
+          "part_of_speech": "동",
+          "meaning": "부수다"
+        },
+        {
+          "source_order": 462,
+          "word": "come",
+          "part_of_speech": "동",
+          "meaning": "오다"
+        },
+        {
+          "source_order": 463,
+          "word": "plan",
+          "part_of_speech": "동",
+          "meaning": "계획하다"
+        },
+        {
+          "source_order": 464,
+          "word": "return",
+          "part_of_speech": "동",
+          "meaning": "돌아오다"
+        },
+        {
+          "source_order": 465,
+          "word": "walk",
+          "part_of_speech": "동",
+          "meaning": "걷다"
+        },
+        {
+          "source_order": 466,
+          "word": "move",
+          "part_of_speech": "동",
+          "meaning": "움직이다"
+        },
+        {
+          "source_order": 467,
+          "word": "party",
+          "part_of_speech": "명",
+          "meaning": "파티"
+        },
+        {
+          "source_order": 468,
+          "word": "pass",
+          "part_of_speech": "동",
+          "meaning": "지나가다"
+        },
+        {
+          "source_order": 469,
+          "word": "remember",
+          "part_of_speech": "동",
+          "meaning": "기억하다"
+        },
+        {
+          "source_order": 470,
+          "word": "stop",
+          "part_of_speech": "동",
+          "meaning": "멈추다"
+        },
+        {
+          "source_order": 471,
+          "word": "try",
+          "part_of_speech": "동",
+          "meaning": "시도하다"
+        },
+        {
+          "source_order": 472,
+          "word": "begin",
+          "part_of_speech": "동",
+          "meaning": "시작하다"
+        },
+        {
+          "source_order": 473,
+          "word": "start",
+          "part_of_speech": "동",
+          "meaning": "시작하다"
+        },
+        {
+          "source_order": 474,
+          "word": "see",
+          "part_of_speech": "동",
+          "meaning": "보다"
+        },
+        {
+          "source_order": 475,
+          "word": "finish",
+          "part_of_speech": "동",
+          "meaning": "끝내다"
+        },
+        {
+          "source_order": 476,
+          "word": "visit",
+          "part_of_speech": "동",
+          "meaning": "방문하다"
+        },
+        {
+          "source_order": 477,
+          "word": "watch",
+          "part_of_speech": "동",
+          "meaning": "보다"
+        },
+        {
+          "source_order": 478,
+          "word": "wear",
+          "part_of_speech": "동",
+          "meaning": "입다"
+        },
+        {
+          "source_order": 479,
+          "word": "work",
+          "part_of_speech": "동",
+          "meaning": "일하다"
+        },
+        {
+          "source_order": 480,
+          "word": "brush",
+          "part_of_speech": "동",
+          "meaning": "솔질하다"
+        },
+        {
+          "source_order": 481,
+          "word": "camp",
+          "part_of_speech": "명",
+          "meaning": "캠프"
+        },
+        {
+          "source_order": 482,
+          "word": "early",
+          "part_of_speech": "부",
+          "meaning": "일찍"
+        },
+        {
+          "source_order": 483,
+          "word": "late",
+          "part_of_speech": "형",
+          "meaning": "늦은"
+        },
+        {
+          "source_order": 484,
+          "word": "already",
+          "part_of_speech": "부",
+          "meaning": "이미"
+        },
+        {
+          "source_order": 485,
+          "word": "always",
+          "part_of_speech": "부",
+          "meaning": "항상"
+        },
+        {
+          "source_order": 486,
+          "word": "church",
+          "part_of_speech": "명",
+          "meaning": "교회"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "name": "Village 13 자연",
+      "korean_name": "자연",
+      "english_name": "nature",
+      "words": [
+        {
+          "source_order": 487,
+          "word": "high",
+          "part_of_speech": "형",
+          "meaning": "높은"
+        },
+        {
+          "source_order": 488,
+          "word": "dry",
+          "part_of_speech": "형",
+          "meaning": "마른"
+        },
+        {
+          "source_order": 489,
+          "word": "stone",
+          "part_of_speech": "명",
+          "meaning": "돌"
+        },
+        {
+          "source_order": 490,
+          "word": "look",
+          "part_of_speech": "동",
+          "meaning": "보다"
+        },
+        {
+          "source_order": 491,
+          "word": "clear",
+          "part_of_speech": "동",
+          "meaning": "치우다"
+        },
+        {
+          "source_order": 492,
+          "word": "hot",
+          "part_of_speech": "형",
+          "meaning": "더운"
+        },
+        {
+          "source_order": 493,
+          "word": "bridge",
+          "part_of_speech": "명",
+          "meaning": "다리"
+        },
+        {
+          "source_order": 494,
+          "word": "weather",
+          "part_of_speech": "명",
+          "meaning": "날씨"
+        },
+        {
+          "source_order": 495,
+          "word": "way",
+          "part_of_speech": "명",
+          "meaning": "길"
+        },
+        {
+          "source_order": 496,
+          "word": "earth",
+          "part_of_speech": "명",
+          "meaning": "지구"
+        },
+        {
+          "source_order": 497,
+          "word": "slow",
+          "part_of_speech": "형",
+          "meaning": "느린"
+        },
+        {
+          "source_order": 498,
+          "word": "long",
+          "part_of_speech": "형",
+          "meaning": "긴"
+        },
+        {
+          "source_order": 499,
+          "word": "circle",
+          "part_of_speech": "명",
+          "meaning": "원"
+        },
+        {
+          "source_order": 500,
+          "word": "sun",
+          "part_of_speech": "명",
+          "meaning": "해, 태양"
+        },
+        {
+          "source_order": 501,
+          "word": "moon",
+          "part_of_speech": "명",
+          "meaning": "달"
+        },
+        {
+          "source_order": 502,
+          "word": "star",
+          "part_of_speech": "명",
+          "meaning": "별"
+        },
+        {
+          "source_order": 503,
+          "word": "air",
+          "part_of_speech": "명",
+          "meaning": "공기"
+        },
+        {
+          "source_order": 504,
+          "word": "heat",
+          "part_of_speech": "명",
+          "meaning": "열"
+        },
+        {
+          "source_order": 505,
+          "word": "cold",
+          "part_of_speech": "명",
+          "meaning": "추위 (형) 추운"
+        },
+        {
+          "source_order": 506,
+          "word": "snow",
+          "part_of_speech": "명",
+          "meaning": "눈"
+        },
+        {
+          "source_order": 507,
+          "word": "rain",
+          "part_of_speech": "명",
+          "meaning": "비"
+        },
+        {
+          "source_order": 508,
+          "word": "spring",
+          "part_of_speech": "명",
+          "meaning": "봄"
+        },
+        {
+          "source_order": 509,
+          "word": "summer",
+          "part_of_speech": "명",
+          "meaning": "여름"
+        },
+        {
+          "source_order": 510,
+          "word": "autumn",
+          "part_of_speech": "명",
+          "meaning": "가을"
+        },
+        {
+          "source_order": 511,
+          "word": "winter",
+          "part_of_speech": "명",
+          "meaning": "겨울"
+        },
+        {
+          "source_order": 512,
+          "word": "nature",
+          "part_of_speech": "명",
+          "meaning": "자연"
+        },
+        {
+          "source_order": 513,
+          "word": "mountain",
+          "part_of_speech": "명",
+          "meaning": "산"
+        },
+        {
+          "source_order": 514,
+          "word": "river",
+          "part_of_speech": "명",
+          "meaning": "강"
+        },
+        {
+          "source_order": 515,
+          "word": "lake",
+          "part_of_speech": "명",
+          "meaning": "호수"
+        },
+        {
+          "source_order": 516,
+          "word": "sea",
+          "part_of_speech": "명",
+          "meaning": "바다"
+        },
+        {
+          "source_order": 517,
+          "word": "beach",
+          "part_of_speech": "명",
+          "meaning": "해변"
+        },
+        {
+          "source_order": 518,
+          "word": "sand",
+          "part_of_speech": "명",
+          "meaning": "모래"
+        },
+        {
+          "source_order": 519,
+          "word": "rock",
+          "part_of_speech": "명",
+          "meaning": "바위"
+        },
+        {
+          "source_order": 520,
+          "word": "flower",
+          "part_of_speech": "명",
+          "meaning": "꽃"
+        },
+        {
+          "source_order": 521,
+          "word": "rose",
+          "part_of_speech": "명",
+          "meaning": "장미"
+        },
+        {
+          "source_order": 522,
+          "word": "tree",
+          "part_of_speech": "명",
+          "meaning": "나무"
+        },
+        {
+          "source_order": 523,
+          "word": "grass",
+          "part_of_speech": "명",
+          "meaning": "풀"
+        },
+        {
+          "source_order": 524,
+          "word": "fire",
+          "part_of_speech": "명",
+          "meaning": "불"
+        },
+        {
+          "source_order": 526,
+          "word": "tent",
+          "part_of_speech": "명",
+          "meaning": "텐트"
+        },
+        {
+          "source_order": 527,
+          "word": "far",
+          "part_of_speech": "형",
+          "meaning": "먼"
+        },
+        {
+          "source_order": 529,
+          "word": "area",
+          "part_of_speech": "명",
+          "meaning": "지역"
+        },
+        {
+          "source_order": 530,
+          "word": "grow",
+          "part_of_speech": "동",
+          "meaning": "자라다"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "name": "Village 14 공항",
+      "korean_name": "공항",
+      "english_name": "airport",
+      "words": [
+        {
+          "source_order": 531,
+          "word": "pilot",
+          "part_of_speech": "명",
+          "meaning": "조종사"
+        },
+        {
+          "source_order": 532,
+          "word": "camera",
+          "part_of_speech": "명",
+          "meaning": "카메라"
+        },
+        {
+          "source_order": 533,
+          "word": "box",
+          "part_of_speech": "명",
+          "meaning": "상자"
+        },
+        {
+          "source_order": 534,
+          "word": "left",
+          "part_of_speech": "형",
+          "meaning": "왼쪽의"
+        },
+        {
+          "source_order": 535,
+          "word": "ticket",
+          "part_of_speech": "명",
+          "meaning": "표, 티켓"
+        },
+        {
+          "source_order": 536,
+          "word": "cloud",
+          "part_of_speech": "명",
+          "meaning": "구름"
+        },
+        {
+          "source_order": 537,
+          "word": "holiday",
+          "part_of_speech": "명",
+          "meaning": "휴일"
+        },
+        {
+          "source_order": 538,
+          "word": "sky",
+          "part_of_speech": "명",
+          "meaning": "하늘"
+        },
+        {
+          "source_order": 539,
+          "word": "wind",
+          "part_of_speech": "명",
+          "meaning": "바람"
+        },
+        {
+          "source_order": 540,
+          "word": "town",
+          "part_of_speech": "명",
+          "meaning": "마을"
+        },
+        {
+          "source_order": 541,
+          "word": "street",
+          "part_of_speech": "명",
+          "meaning": "거리"
+        },
+        {
+          "source_order": 542,
+          "word": "road",
+          "part_of_speech": "명",
+          "meaning": "길"
+        },
+        {
+          "source_order": 543,
+          "word": "center",
+          "part_of_speech": "명",
+          "meaning": "중심"
+        },
+        {
+          "source_order": 544,
+          "word": "gas",
+          "part_of_speech": "명",
+          "meaning": "가스"
+        },
+        {
+          "source_order": 545,
+          "word": "land",
+          "part_of_speech": "명",
+          "meaning": "땅"
+        },
+        {
+          "source_order": 546,
+          "word": "airplane",
+          "part_of_speech": "명",
+          "meaning": "비행기"
+        },
+        {
+          "source_order": 547,
+          "word": "bus",
+          "part_of_speech": "명",
+          "meaning": "버스"
+        },
+        {
+          "source_order": 548,
+          "word": "car",
+          "part_of_speech": "명",
+          "meaning": "자동차"
+        },
+        {
+          "source_order": 549,
+          "word": "subway",
+          "part_of_speech": "명",
+          "meaning": "지하철"
+        },
+        {
+          "source_order": 550,
+          "word": "taxi",
+          "part_of_speech": "명",
+          "meaning": "택시"
+        },
+        {
+          "source_order": 551,
+          "word": "train",
+          "part_of_speech": "명",
+          "meaning": "기차"
+        },
+        {
+          "source_order": 552,
+          "word": "truck",
+          "part_of_speech": "명",
+          "meaning": "트럭"
+        },
+        {
+          "source_order": 553,
+          "word": "bike",
+          "part_of_speech": "명",
+          "meaning": "자전거"
+        },
+        {
+          "source_order": 554,
+          "word": "boat",
+          "part_of_speech": "명",
+          "meaning": "배"
+        },
+        {
+          "source_order": 555,
+          "word": "ship",
+          "part_of_speech": "명",
+          "meaning": "선박"
+        },
+        {
+          "source_order": 556,
+          "word": "drive",
+          "part_of_speech": "동",
+          "meaning": "운전하다"
+        },
+        {
+          "source_order": 557,
+          "word": "run",
+          "part_of_speech": "동",
+          "meaning": "달리다"
+        },
+        {
+          "source_order": 558,
+          "word": "down",
+          "part_of_speech": "부",
+          "meaning": "아래로"
+        },
+        {
+          "source_order": 559,
+          "word": "news",
+          "part_of_speech": "명",
+          "meaning": "뉴스"
+        },
+        {
+          "source_order": 560,
+          "word": "newspaper",
+          "part_of_speech": "명",
+          "meaning": "신문"
+        },
+        {
+          "source_order": 561,
+          "word": "police",
+          "part_of_speech": "명",
+          "meaning": "경찰"
+        },
+        {
+          "source_order": 562,
+          "word": "abroad",
+          "part_of_speech": "부",
+          "meaning": "해외에"
+        },
+        {
+          "source_order": 563,
+          "word": "culture",
+          "part_of_speech": "명",
+          "meaning": "문화"
+        },
+        {
+          "source_order": 564,
+          "word": "city",
+          "part_of_speech": "명",
+          "meaning": "도시"
+        },
+        {
+          "source_order": 565,
+          "word": "world",
+          "part_of_speech": "명",
+          "meaning": "세계"
+        },
+        {
+          "source_order": 566,
+          "word": "country",
+          "part_of_speech": "명",
+          "meaning": "나라"
+        },
+        {
+          "source_order": 567,
+          "word": "nation",
+          "part_of_speech": "명",
+          "meaning": "국가"
+        },
+        {
+          "source_order": 568,
+          "word": "oil",
+          "part_of_speech": "명",
+          "meaning": "기름"
+        },
+        {
+          "source_order": 569,
+          "word": "blue",
+          "part_of_speech": "형",
+          "meaning": "파란"
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "name": "Village 15 운동장",
+      "korean_name": "운동장",
+      "english_name": "Play ground",
+      "words": [
+        {
+          "source_order": 570,
+          "word": "win",
+          "part_of_speech": "동",
+          "meaning": "이기다"
+        },
+        {
+          "source_order": 571,
+          "word": "strong",
+          "part_of_speech": "형",
+          "meaning": "강한"
+        },
+        {
+          "source_order": 572,
+          "word": "fast",
+          "part_of_speech": "형",
+          "meaning": "빠른"
+        },
+        {
+          "source_order": 573,
+          "word": "drop",
+          "part_of_speech": "동",
+          "meaning": "떨어뜨리다"
+        },
+        {
+          "source_order": 574,
+          "word": "hit",
+          "part_of_speech": "동",
+          "meaning": "치다"
+        },
+        {
+          "source_order": 575,
+          "word": "up",
+          "part_of_speech": "부",
+          "meaning": "위로"
+        },
+        {
+          "source_order": 576,
+          "word": "swim",
+          "part_of_speech": "동",
+          "meaning": "수영하다"
+        },
+        {
+          "source_order": 577,
+          "word": "hold",
+          "part_of_speech": "동",
+          "meaning": "잡다"
+        },
+        {
+          "source_order": 578,
+          "word": "join",
+          "part_of_speech": "동",
+          "meaning": "참여하다"
+        },
+        {
+          "source_order": 579,
+          "word": "ball",
+          "part_of_speech": "명",
+          "meaning": "공"
+        },
+        {
+          "source_order": 580,
+          "word": "turn",
+          "part_of_speech": "동",
+          "meaning": "돌다"
+        },
+        {
+          "source_order": 581,
+          "word": "quick",
+          "part_of_speech": "형",
+          "meaning": "빠른"
+        },
+        {
+          "source_order": 582,
+          "word": "climb",
+          "part_of_speech": "동",
+          "meaning": "오르다"
+        },
+        {
+          "source_order": 583,
+          "word": "jump",
+          "part_of_speech": "동",
+          "meaning": "뛰다"
+        },
+        {
+          "source_order": 584,
+          "word": "ahead",
+          "part_of_speech": "부",
+          "meaning": "앞에"
+        },
+        {
+          "source_order": 585,
+          "word": "track",
+          "part_of_speech": "명",
+          "meaning": "운동장"
+        },
+        {
+          "source_order": 586,
+          "word": "sport",
+          "part_of_speech": "명",
+          "meaning": "스포츠"
+        },
+        {
+          "source_order": 587,
+          "word": "game",
+          "part_of_speech": "명",
+          "meaning": "경기"
+        },
+        {
+          "source_order": 588,
+          "word": "team",
+          "part_of_speech": "명",
+          "meaning": "팀"
+        },
+        {
+          "source_order": 589,
+          "word": "play",
+          "part_of_speech": "동",
+          "meaning": "경기하다"
+        },
+        {
+          "source_order": 590,
+          "word": "soccer",
+          "part_of_speech": "명",
+          "meaning": "축구"
+        },
+        {
+          "source_order": 591,
+          "word": "football",
+          "part_of_speech": "명",
+          "meaning": "미식축구"
+        },
+        {
+          "source_order": 592,
+          "word": "baseball",
+          "part_of_speech": "명",
+          "meaning": "야구"
+        },
+        {
+          "source_order": 593,
+          "word": "basketball",
+          "part_of_speech": "명",
+          "meaning": "농구"
+        },
+        {
+          "source_order": 594,
+          "word": "tennis",
+          "part_of_speech": "명",
+          "meaning": "테니스"
+        },
+        {
+          "source_order": 595,
+          "word": "badminton",
+          "part_of_speech": "명",
+          "meaning": "배드민턴"
+        },
+        {
+          "source_order": 596,
+          "word": "marathon",
+          "part_of_speech": "명",
+          "meaning": "마라톤"
+        },
+        {
+          "source_order": 597,
+          "word": "race",
+          "part_of_speech": "명",
+          "meaning": "경주"
+        },
+        {
+          "source_order": 598,
+          "word": "goal",
+          "part_of_speech": "명",
+          "meaning": "골"
+        },
+        {
+          "source_order": 599,
+          "word": "hike",
+          "part_of_speech": "동",
+          "meaning": "하이킹하다"
+        },
+        {
+          "source_order": 600,
+          "word": "skate",
+          "part_of_speech": "동",
+          "meaning": "스케이트를 타다"
+        },
+        {
+          "source_order": 601,
+          "word": "ski",
+          "part_of_speech": "동",
+          "meaning": "스키를 타다"
+        },
+        {
+          "source_order": 602,
+          "word": "speed",
+          "part_of_speech": "명",
+          "meaning": "속도"
+        },
+        {
+          "source_order": 603,
+          "word": "recreation",
+          "part_of_speech": "명",
+          "meaning": "오락"
+        },
+        {
+          "source_order": 604,
+          "word": "hobby",
+          "part_of_speech": "명",
+          "meaning": "취미"
+        },
+        {
+          "source_order": 605,
+          "word": "energy",
+          "part_of_speech": "명",
+          "meaning": "에너지"
+        },
+        {
+          "source_order": 606,
+          "word": "push",
+          "part_of_speech": "동",
+          "meaning": "밀다"
+        },
+        {
+          "source_order": 607,
+          "word": "well",
+          "part_of_speech": "부",
+          "meaning": "잘"
+        },
+        {
+          "source_order": 608,
+          "word": "take",
+          "part_of_speech": "동",
+          "meaning": "가지다"
+        },
+        {
+          "source_order": 609,
+          "word": "find",
+          "part_of_speech": "동",
+          "meaning": "찾다"
+        },
+        {
+          "source_order": 610,
+          "word": "side",
+          "part_of_speech": "명",
+          "meaning": "측면"
+        },
+        {
+          "source_order": 611,
+          "word": "front",
+          "part_of_speech": "명",
+          "meaning": "앞"
+        },
+        {
+          "source_order": 612,
+          "word": "top",
+          "part_of_speech": "명",
+          "meaning": "위"
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "name": "Village 16 예술",
+      "korean_name": "예술",
+      "english_name": "art",
+      "words": [
+        {
+          "source_order": 613,
+          "word": "design",
+          "part_of_speech": "동",
+          "meaning": "디자인하다"
+        },
+        {
+          "source_order": 614,
+          "word": "picture",
+          "part_of_speech": "명",
+          "meaning": "그림"
+        },
+        {
+          "source_order": 615,
+          "word": "fan",
+          "part_of_speech": "명",
+          "meaning": "팬"
+        },
+        {
+          "source_order": 616,
+          "word": "show",
+          "part_of_speech": "동",
+          "meaning": "보여주다"
+        },
+        {
+          "source_order": 617,
+          "word": "image",
+          "part_of_speech": "명",
+          "meaning": "이미지"
+        },
+        {
+          "source_order": 618,
+          "word": "television",
+          "part_of_speech": "명",
+          "meaning": "텔레비전"
+        },
+        {
+          "source_order": 620,
+          "word": "hero",
+          "part_of_speech": "명",
+          "meaning": "영웅"
+        },
+        {
+          "source_order": 621,
+          "word": "king",
+          "part_of_speech": "명",
+          "meaning": "왕"
+        },
+        {
+          "source_order": 622,
+          "word": "queen",
+          "part_of_speech": "명",
+          "meaning": "여왕"
+        },
+        {
+          "source_order": 623,
+          "word": "prince",
+          "part_of_speech": "명",
+          "meaning": "왕자"
+        },
+        {
+          "source_order": 624,
+          "word": "album",
+          "part_of_speech": "명",
+          "meaning": "앨범"
+        },
+        {
+          "source_order": 625,
+          "word": "medal",
+          "part_of_speech": "명",
+          "meaning": "메달"
+        },
+        {
+          "source_order": 626,
+          "word": "draw",
+          "part_of_speech": "동",
+          "meaning": "그리다"
+        },
+        {
+          "source_order": 628,
+          "word": "color",
+          "part_of_speech": "명",
+          "meaning": "색깔"
+        },
+        {
+          "source_order": 629,
+          "word": "act",
+          "part_of_speech": "동",
+          "meaning": "행동하다"
+        },
+        {
+          "source_order": 630,
+          "word": "speak",
+          "part_of_speech": "동",
+          "meaning": "말하다"
+        },
+        {
+          "source_order": 631,
+          "word": "sing",
+          "part_of_speech": "동",
+          "meaning": "노래하다"
+        },
+        {
+          "source_order": 632,
+          "word": "dance",
+          "part_of_speech": "동",
+          "meaning": "춤추다"
+        },
+        {
+          "source_order": 633,
+          "word": "comic",
+          "part_of_speech": "명",
+          "meaning": "만화"
+        },
+        {
+          "source_order": 634,
+          "word": "video",
+          "part_of_speech": "명",
+          "meaning": "비디오"
+        },
+        {
+          "source_order": 635,
+          "word": "paint",
+          "part_of_speech": "동",
+          "meaning": "그리다"
+        },
+        {
+          "source_order": 636,
+          "word": "film",
+          "part_of_speech": "명",
+          "meaning": "영화"
+        },
+        {
+          "source_order": 637,
+          "word": "song",
+          "part_of_speech": "명",
+          "meaning": "노래"
+        },
+        {
+          "source_order": 638,
+          "word": "sound",
+          "part_of_speech": "명",
+          "meaning": "소리"
+        },
+        {
+          "source_order": 639,
+          "word": "movie",
+          "part_of_speech": "명",
+          "meaning": "영화"
+        },
+        {
+          "source_order": 640,
+          "word": "guitar",
+          "part_of_speech": "명",
+          "meaning": "기타"
+        },
+        {
+          "source_order": 641,
+          "word": "drum",
+          "part_of_speech": "명",
+          "meaning": "드럼"
+        },
+        {
+          "source_order": 642,
+          "word": "violin",
+          "part_of_speech": "명",
+          "meaning": "바이올린"
+        },
+        {
+          "source_order": 643,
+          "word": "right",
+          "part_of_speech": "형",
+          "meaning": "옳은"
+        },
+        {
+          "source_order": 644,
+          "word": "music",
+          "part_of_speech": "명",
+          "meaning": "음악"
+        },
+        {
+          "source_order": 645,
+          "word": "art",
+          "part_of_speech": "명",
+          "meaning": "예술"
+        },
+        {
+          "source_order": 646,
+          "word": "bright",
+          "part_of_speech": "형",
+          "meaning": "밝은"
+        },
+        {
+          "source_order": 647,
+          "word": "radio",
+          "part_of_speech": "명",
+          "meaning": "라디오"
+        },
+        {
+          "source_order": 648,
+          "word": "piano",
+          "part_of_speech": "명",
+          "meaning": "피아노"
+        }
+      ]
+    }
+  ]
+}

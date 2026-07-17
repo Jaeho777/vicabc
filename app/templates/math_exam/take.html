@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block body_class %}theme-learning{% endblock %}
+{% block title %}{{ exam.title }} - 수학시험{% endblock %}
+
+{% block extra_head %}
+<script>
+window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+    .math-take-shell {
+        max-width: 1040px;
+        margin: 0 auto 56px;
+    }
+    .math-exam-header {
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        background: #fff;
+        padding: 22px;
+        margin-bottom: 18px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
+    }
+    .math-exam-header h1 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: 0;
+    }
+    .math-sticky-bar {
+        position: sticky;
+        top: 12px;
+        z-index: 5;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(8px);
+    }
+    .math-question-card {
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        margin-bottom: 16px;
+    }
+    .math-question-card h2 {
+        font-size: 1.08rem;
+        font-weight: 800;
+        line-height: 1.45;
+        letter-spacing: 0;
+    }
+    .math-source {
+        color: var(--app-muted);
+        font-size: 0.82rem;
+        margin-bottom: 8px;
+    }
+    .math-body-lines {
+        border-left: 3px solid var(--page-accent);
+        background: var(--app-surface-soft);
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin: 12px 0;
+        white-space: pre-line;
+    }
+    .math-latex {
+        background: var(--app-surface-soft);
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        padding: 14px;
+        margin: 12px 0;
+        font-size: 1.1rem;
+        overflow-x: auto;
+    }
+    .math-choice {
+        display: block;
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        background: #fff;
+    }
+    .math-choice:hover {
+        border-color: var(--page-accent);
+        background: var(--page-accent-wash);
+    }
+    .math-choice input {
+        margin-right: 8px;
+    }
+    @media (max-width: 576px) {
+        .math-exam-header h1 {
+            font-size: 1.45rem;
+        }
+        .math-sticky-bar {
+            position: static;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="math-take-shell">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.math_index') }}">수학시험</a></li>
+            <li class="breadcrumb-item active">{{ exam.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="math-exam-header">
+        <div class="d-flex flex-wrap justify-content-between gap-3 align-items-start">
+            <div>
+                <div class="learning-eyebrow">{{ exam.grade }}</div>
+                <h1>{{ exam.title }}</h1>
+                <p class="text-muted mb-0">{{ exam.source_file }}</p>
+            </div>
+            <span class="badge bg-primary fs-6">{{ exam.questions|length }}문항</span>
+        </div>
+    </div>
+
+    <form method="post" id="math-exam-form">
+        <div class="math-sticky-bar">
+            <div>
+                <strong>응시 문항</strong>
+                <span class="text-muted ms-1">{{ exam.questions|length }}개</span>
+            </div>
+            <button type="submit" class="btn btn-primary">제출하고 채점</button>
+        </div>
+
+        {% for question in exam.questions %}
+        <section class="card math-question-card" id="{{ question.id }}">
+            <div class="card-body">
+                <div class="math-source">{{ question.source }} · {{ question.section }}</div>
+                <h2>{{ loop.index }}. {{ question.prompt }}</h2>
+
+                {% if question.latex %}
+                <div class="math-latex">\( {{ question.latex }} \)</div>
+                {% endif %}
+
+                {% if question.body %}
+                <div class="math-body-lines">
+                    {% for line in question.body %}{{ line }}{% if not loop.last %}
+{% endif %}{% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mt-3">
+                    {% for choice in question.choices %}
+                    <label class="math-choice">
+                        <input type="radio" name="{{ question.id }}" value="{{ choice.value }}" required>
+                        <strong>{{ choice.label }}</strong> {{ choice.text }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+
+        <div class="d-flex justify-content-between gap-2 mt-4">
+            <a href="{{ url_for('exam.math_index') }}" class="btn btn-outline-secondary">목록으로</a>
+            <button type="submit" class="btn btn-primary btn-lg">제출하고 채점</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

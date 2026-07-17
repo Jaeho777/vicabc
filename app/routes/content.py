@@ -5,7 +5,6 @@ from app.extensions import db
 from app.models.level import Level
 from app.models.vocabulary import Vocabulary
 from app.routes.admin import admin_required, admin_level_required
-import pandas as pd
 import os
 from werkzeug.utils import secure_filename
 
@@ -35,6 +34,8 @@ def import_vocabulary():
             return redirect(request.url)
         
         try:
+            import pandas as pd
+
             # 데이터프레임으로 읽기
             df = pd.read_excel(file)
             
@@ -267,6 +268,5 @@ def import_story():
         except Exception as e:
             db.session.rollback()
             flash(f'파일 처리 중 오류가 발생했습니다: {str(e)}', 'danger')
-    
+
     return render_template('admin/import_story.html')
-    

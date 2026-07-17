@@ -9,6 +9,45 @@
            <h4 class="m-0">단어 학습</h4>
         </div>
         <div class="card-body">
+            {% if village_levels %}
+            <section class="mb-4" aria-labelledby="village-voca-heading">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <h5 class="mb-1" id="village-voca-heading">Village VOCA</h5>
+                        <p class="text-muted mb-0">최종 VOCA DB 기준 16개 Village</p>
+                    </div>
+                    <span class="badge bg-primary">총 642단어</span>
+                </div>
+                <div class="row g-3">
+                    {% for level in village_levels %}
+                    {% set progress = level_progress[level.id] %}
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="border rounded h-100 p-3 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <div>
+                                    <h6 class="mb-1">{{ level.name }}</h6>
+                                    <small class="text-muted">{{ level.description.split(' · ')[0] if level.description else '' }}</small>
+                                </div>
+                                <span class="badge bg-light text-dark">{{ progress.total_words }}개</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: {{ progress.progress_percent }}%;"
+                                     aria-valuenow="{{ progress.progress_percent }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="small text-muted mb-3">{{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
+                            <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info mt-auto w-100">
+                                <i class="bi bi-book"></i> 학습하기
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <hr class="my-4">
+            {% endif %}
+
             <!-- 상위 탭: 초등, 중등, 고등 -->
             <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
                 <li class="nav-item" role="presentation">

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block body_class %}theme-learning{% endblock %}
+{% block title %}수학시험 - VOCA 애플리케이션{% endblock %}
+
+{% block extra_head %}
+<style>
+    .math-shell {
+        max-width: 1080px;
+        margin: 0 auto 48px;
+    }
+    .math-page-title {
+        margin-bottom: 18px;
+    }
+    .math-page-title h1 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: 0;
+    }
+    .math-exam-card {
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+        height: 100%;
+    }
+    .math-exam-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0 16px;
+    }
+    .math-exam-meta .badge {
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.45rem 0.6rem;
+    }
+    .math-latest {
+        border-top: 1px solid var(--app-border);
+        margin-top: 16px;
+        padding-top: 14px;
+        color: var(--app-muted);
+        font-size: 0.95rem;
+    }
+    @media (max-width: 576px) {
+        .math-page-title h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="math-shell">
+    <div class="math-page-title">
+        <div class="learning-eyebrow">Math Exam</div>
+        <h1>수학시험</h1>
+        <p class="text-muted mb-0">수와 연산 HWP 교재 기반 시험</p>
+    </div>
+
+    <div class="row g-4">
+        {% for exam in exams %}
+        {% set latest = latest_results.get(exam.id) %}
+        <div class="col-md-6">
+            <div class="card math-exam-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <div class="text-muted small">{{ exam.grade }}</div>
+                            <h2 class="h4 mb-0">{{ exam.title }}</h2>
+                        </div>
+                        <span class="badge bg-primary">{{ exam.questions|length }}문항</span>
+                    </div>
+
+                    <div class="math-exam-meta">
+                        <span class="badge bg-light text-dark border">{{ exam.source_file }}</span>
+                    </div>
+
+                    <p class="mb-3">{{ exam.description }}</p>
+
+                    <a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}" class="btn btn-primary w-100">시험 보기</a>
+
+                    {% if latest %}
+                    <div class="math-latest">
+                        <div><strong>최근 점수:</strong> {{ latest.score }}점 ({{ latest.correct_count }}/{{ latest.total_questions }})</div>
+                        <div><strong>제출:</strong> {{ latest.submitted_at }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

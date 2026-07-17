@@ -5,17 +5,120 @@ from app.extensions import db
 from app.models.level import Level
 from app.models.vocabulary import Vocabulary
 from app.models.certification import Certification
+from app.services.math_exam_data import get_math_exam, get_math_exams
 from datetime import datetime
 import random
 import pytz
+import re
+import unicodedata
 
 exam_bp = Blueprint('exam', __name__, url_prefix='/exam')
+
+
+CIRCLED_DIGITS = str.maketrans({
+    '①': '1',
+    '②': '2',
+    '③': '3',
+    '④': '4',
+    '⑤': '5',
+})
+
+
+def normalize_math_answer(value):
+    """Normalize student answers for lightweight arithmetic grading."""
+    value = unicodedata.normalize('NFKC', str(value or '')).strip().lower()
+    value = value.translate(CIRCLED_DIGITS)
+    value = value.replace('−', '-').replace('–', '-').replace('÷', '/')
+    value = value.replace('，', ',').replace('、', ',')
+    value = re.sub(r'(정답|답|입니다|이다)', '', value)
+    value = re.sub(r'(명|원|마리|권|쪽|개|cm²|cm2|cm|mm|kg|g|l|m²|m2|m)', '', value)
+    value = re.sub(r'\s+', '', value)
+    value = value.replace(',', '')
+    return value
+
+
+def is_math_answer_correct(question, submitted_answer):
+    acceptable_answers = [question.get('answer', '')]
+    acceptable_answers.extend(question.get('accepted', []))
+    normalized_submitted = normalize_math_answer(submitted_answer)
+    normalized_answers = {normalize_math_answer(answer) for answer in acceptable_answers}
+    return normalized_submitted in normalized_answers
+
+
+def get_math_submitted_answer_display(question, submitted_answer):
+    for choice in question.get('choices', []):
+        if str(choice.get('value')) == str(submitted_answer):
+            return f"{choice.get('label')} {choice.get('text')}"
+    return submitted_answer
+
+
+@exam_bp.route('/math')
+@login_required
+def math_index():
+    latest_results = session.get('math_exam_latest_results', {})
+    return render_template(
+        'math_exam/index.html',
+        exams=get_math_exams(),
+        latest_results=latest_results,
+    )
+
+
+@exam_bp.route('/math/<exam_id>', methods=['GET', 'POST'])
+@login_required
+def math_take_exam(exam_id):
+    exam = get_math_exam(exam_id)
+    if not exam:
+        flash('수학시험을 찾을 수 없습니다.', 'danger')
+        return redirect(url_for('exam.math_index'))
+
+    if request.method == 'POST':
+        graded_questions = []
+        correct_count = 0
+
+        for question in exam['questions']:
+            submitted_answer = request.form.get(question['id'], '')
+            is_correct = is_math_answer_correct(question, submitted_answer)
+            if is_correct:
+                correct_count += 1
+            graded_question = dict(question)
+            graded_question['submitted_answer'] = submitted_answer
+            graded_question['submitted_answer_display'] = get_math_submitted_answer_display(question, submitted_answer)
+            graded_question['is_correct'] = is_correct
+            graded_questions.append(graded_question)
+
+        total_questions = len(exam['questions'])
+        score = round((correct_count / total_questions) * 100) if total_questions else 0
+        passed = score >= 80
+
+        latest_results = session.get('math_exam_latest_results', {})
+        latest_results[exam_id] = {
+            'score': score,
+            'correct_count': correct_count,
+            'total_questions': total_questions,
+            'passed': passed,
+            'submitted_at': datetime.now(pytz.timezone('Asia/Seoul')).strftime('%Y-%m-%d %H:%M'),
+        }
+        session['math_exam_latest_results'] = latest_results
+        session.modified = True
+
+        return render_template(
+            'math_exam/result.html',
+            exam=exam,
+            questions=graded_questions,
+            correct_count=correct_count,
+            total_questions=total_questions,
+            score=score,
+            passed=passed,
+        )
+
+    return render_template('math_exam/take.html', exam=exam)
 
 @exam_bp.route('/voca')
 @login_required
 def voca_index():
     """VOCA 인증시험 메인 페이지"""
     # 초등, 중등, 고등 카테고리의 레벨들을 가져옴
+    village_levels = Level.query.filter_by(category='VOCA').all()
     elementary_levels = Level.query.filter_by(category='초등').all()
     middle_levels = Level.query.filter_by(category='중등').all()
     high_levels = Level.query.filter_by(category='고등').all()
@@ -38,10 +141,11 @@ def voca_index():
     elementary_levels.sort(key=sort_by_group)
     middle_levels.sort(key=sort_by_group)
     high_levels.sort(key=sort_by_group)
+    village_levels.sort(key=lambda level: int(''.join(filter(str.isdigit, level.name.split()[1])) or 0))
     
     # 사용자의 이전 인증 시험 결과 가져오기
     previous_results = {}
-    for level in elementary_levels + middle_levels + high_levels:
+    for level in village_levels + elementary_levels + middle_levels + high_levels:
         # 해당 레벨의 최근 시험 결과
         latest_cert = (Certification.query
                        .filter_by(user_id=current_user.id, level_id=level.id)
@@ -56,6 +160,7 @@ def voca_index():
             }
     
     return render_template('voca_exam/index.html',
+                          village_levels=village_levels,
                           elementary_levels=elementary_levels,
                           middle_levels=middle_levels,
                           high_levels=high_levels,

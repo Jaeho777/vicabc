@@ -1,7 +1,5 @@
 import os
 import tempfile
-import whisper
-import numpy as np
 import time
 from difflib import SequenceMatcher
 
@@ -13,6 +11,8 @@ def get_whisper_model(model_size="small"):
     """위스퍼 모델을 로드하는 함수 (지연 로딩)"""
     global whisper_model
     if whisper_model is None:
+        import whisper
+
         # 처음 호출될 때만 모델 로드
         whisper_model = whisper.load_model(model_size)
     return whisper_model
