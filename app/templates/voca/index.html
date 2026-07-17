@@ -14,34 +14,49 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                     <div>
                         <h5 class="mb-1" id="village-voca-heading">Village VOCA</h5>
-                        <p class="text-muted mb-0">최종 VOCA DB 기준 16개 Village</p>
+                        <p class="text-muted mb-0">초등 1~6학년 학기별 16개 Village</p>
                     </div>
                     <span class="badge bg-primary">총 642단어</span>
                 </div>
-                <div class="row g-3">
-                    {% for level in village_levels %}
-                    {% set progress = level_progress[level.id] %}
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="border rounded h-100 p-3 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
-                                <div>
-                                    <h6 class="mb-1">{{ level.name }}</h6>
-                                    <small class="text-muted">{{ level.description.split(' · ')[0] if level.description else '' }}</small>
+                <div class="village-curriculum">
+                    {% for grade_group in village_curriculum %}
+                    <section class="py-3 {% if not loop.last %}border-bottom{% endif %}" aria-labelledby="village-grade-{{ grade_group.grade }}">
+                        <h6 class="fw-bold mb-3" id="village-grade-{{ grade_group.grade }}">{{ grade_group.label }}</h6>
+                        <div class="row g-4">
+                            {% for semester in grade_group.semesters %}
+                            <div class="col-lg-6">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom pb-2 mb-3">
+                                    <strong>{{ semester.number }}학기</strong>
+                                    <span class="badge bg-light text-dark border">Village {{ semester.village_numbers|join(', ') }}</span>
                                 </div>
-                                <span class="badge bg-light text-dark">{{ progress.total_words }}개</span>
+                                <div class="d-grid gap-3">
+                                    {% for level in semester.levels %}
+                                    {% set progress = level_progress[level.id] %}
+                                    <div class="border rounded p-3 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                            <div>
+                                                <h6 class="mb-1">{{ level.name }}</h6>
+                                                <small class="text-muted">{{ level.description.split(' · ')[0] if level.description else '' }}</small>
+                                            </div>
+                                            <span class="badge bg-light text-dark">{{ progress.total_words }}개</span>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 8px;">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                 style="width: {{ progress.progress_percent }}%;"
+                                                 aria-valuenow="{{ progress.progress_percent }}"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <p class="small text-muted mb-3">{{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
+                                        <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info mt-auto w-100">
+                                            <i class="bi bi-book"></i> 학습하기
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div class="progress mb-2" style="height: 8px;">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                     style="width: {{ progress.progress_percent }}%;"
-                                     aria-valuenow="{{ progress.progress_percent }}"
-                                     aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="small text-muted mb-3">{{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</p>
-                            <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-info mt-auto w-100">
-                                <i class="bi bi-book"></i> 학습하기
-                            </a>
+                            {% endfor %}
                         </div>
-                    </div>
+                    </section>
                     {% endfor %}
                 </div>
             </section>

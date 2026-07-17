@@ -9,6 +9,7 @@ from flask import session
 from datetime import datetime
 
 from app.models.user_progress import UserProgress
+from app.services.village_curriculum import build_village_curriculum
 
 
 voca_bp = Blueprint('voca', __name__, url_prefix='/voca')
@@ -41,6 +42,7 @@ def index():
     middle_levels.sort(key=sort_by_group)
     high_levels.sort(key=sort_by_group)
     village_levels.sort(key=lambda level: int(''.join(filter(str.isdigit, level.name.split()[1])) or 0))
+    village_curriculum = build_village_curriculum(village_levels)
     
     # 사용자의 모든 레벨 진도 정보 가져오기
     from app.models.user_progress import UserProgress
@@ -92,6 +94,7 @@ def index():
     
     return render_template('voca/index.html', 
                            village_levels=village_levels,
+                           village_curriculum=village_curriculum,
                            elementary_levels=elementary_levels,
                            middle_levels=middle_levels,
                            high_levels=high_levels,

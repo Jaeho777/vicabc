@@ -6,6 +6,7 @@ from app.models.level import Level
 from app.models.vocabulary import Vocabulary
 from app.models.certification import Certification
 from app.services.math_exam_data import get_math_exam, get_math_exams
+from app.services.village_curriculum import build_village_curriculum
 from datetime import datetime
 import random
 import pytz
@@ -142,6 +143,7 @@ def voca_index():
     middle_levels.sort(key=sort_by_group)
     high_levels.sort(key=sort_by_group)
     village_levels.sort(key=lambda level: int(''.join(filter(str.isdigit, level.name.split()[1])) or 0))
+    village_curriculum = build_village_curriculum(village_levels)
     
     # 사용자의 이전 인증 시험 결과 가져오기
     previous_results = {}
@@ -161,6 +163,7 @@ def voca_index():
     
     return render_template('voca_exam/index.html',
                           village_levels=village_levels,
+                          village_curriculum=village_curriculum,
                           elementary_levels=elementary_levels,
                           middle_levels=middle_levels,
                           high_levels=high_levels,
