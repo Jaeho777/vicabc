@@ -124,7 +124,12 @@ window.MathJax = {
                 <h1>{{ exam.title }}</h1>
                 <p class="text-muted mb-0">{{ exam.source_file }}</p>
             </div>
-            <span class="badge bg-primary fs-6">{{ exam.questions|length }}문항</span>
+            <div class="d-flex flex-column align-items-end gap-2">
+                <span class="badge bg-primary fs-6">{{ exam.questions|length }}문항</span>
+                <a href="{{ url_for('exam.math_workbook_start', exam_id=exam.id) }}" class="btn btn-sm btn-outline-primary">
+                    전체 문제집 {{ exam.workbook.page_count }}쪽
+                </a>
+            </div>
         </div>
     </div>
 

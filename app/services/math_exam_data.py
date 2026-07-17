@@ -5,6 +5,10 @@ MATH_EXAMS = {
         "grade": "초등 3-1",
         "source_file": "수와 연산 3-1(완성본).hwp",
         "description": "덧셈과 뺄셈 중심의 객관식 시험",
+        "workbook": {
+            "page_count": 109,
+            "static_directory": "math_workbooks/grade3-1",
+        },
         "questions": [
             {
                 "id": "g3_01",
@@ -258,6 +262,10 @@ MATH_EXAMS = {
         "grade": "초등 6-1",
         "source_file": "수와 연산 6-1(완성본).hwp",
         "description": "분수의 나눗셈과 소수의 나눗셈 객관식 시험",
+        "workbook": {
+            "page_count": 35,
+            "static_directory": "math_workbooks/grade6-1",
+        },
         "questions": [
             {
                 "id": "g6_01",

@@ -1,5 +1,5 @@
 # app/routes/exam.py
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, jsonify
+from flask import Blueprint, abort, render_template, redirect, url_for, flash, request, session, jsonify
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models.level import Level
@@ -61,6 +61,41 @@ def math_index():
         'math_exam/index.html',
         exams=get_math_exams(),
         latest_results=latest_results,
+    )
+
+
+@exam_bp.route('/math/<exam_id>/workbook')
+@login_required
+def math_workbook_start(exam_id):
+    exam = get_math_exam(exam_id)
+    if not exam or not exam.get('workbook'):
+        abort(404)
+    return redirect(url_for('exam.math_workbook_page', exam_id=exam_id, page_number=1))
+
+
+@exam_bp.route('/math/<exam_id>/workbook/<int:page_number>')
+@login_required
+def math_workbook_page(exam_id, page_number):
+    exam = get_math_exam(exam_id)
+    if not exam or not exam.get('workbook'):
+        abort(404)
+
+    workbook = exam['workbook']
+    page_count = workbook['page_count']
+    if page_number < 1 or page_number > page_count:
+        abort(404)
+
+    page_filename = f"{workbook['static_directory']}/page-{page_number:03d}.webp"
+    pagination_start = max(1, page_number - 2)
+    pagination_end = min(page_count, page_number + 2)
+
+    return render_template(
+        'math_exam/workbook.html',
+        exam=exam,
+        workbook=workbook,
+        page_number=page_number,
+        page_filename=page_filename,
+        page_numbers=range(pagination_start, pagination_end + 1),
     )
 
 

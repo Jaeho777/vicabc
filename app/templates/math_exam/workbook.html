@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block body_class %}theme-learning{% endblock %}
+{% block title %}{{ exam.title }} 전체 문제집 - 수학시험{% endblock %}
+
+{% block extra_head %}
+<style>
+    .workbook-shell {
+        max-width: 1240px;
+        margin: 0 auto 56px;
+    }
+    .workbook-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+    .workbook-header h1 {
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin: 0 0 4px;
+    }
+    .workbook-toolbar {
+        position: sticky;
+        top: 12px;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: 44px minmax(132px, 180px) 44px;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px;
+        margin-bottom: 14px;
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(8px);
+    }
+    .workbook-toolbar .btn {
+        width: 44px;
+        height: 40px;
+        padding: 6px;
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+    .workbook-toolbar .form-select {
+        height: 40px;
+        text-align: center;
+    }
+    .workbook-page {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--app-border);
+        background: #fff;
+    }
+    .workbook-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 16px;
+    }
+    .workbook-pagination .btn {
+        min-width: 42px;
+    }
+    @media (max-width: 576px) {
+        .workbook-header {
+            align-items: flex-start;
+        }
+        .workbook-header h1 {
+            font-size: 1.35rem;
+        }
+        .workbook-toolbar {
+            position: static;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="workbook-shell">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('exam.math_index') }}">수학시험</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ exam.title }} 전체 문제집</li>
+        </ol>
+    </nav>
+
+    <header class="workbook-header">
+        <div>
+            <div class="learning-eyebrow">{{ exam.grade }}</div>
+            <h1>{{ exam.title }} 전체 문제집</h1>
+            <p class="text-muted mb-0">{{ page_number }} / {{ workbook.page_count }}쪽</p>
+        </div>
+        <a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}" class="btn btn-outline-primary">
+            20문항 채점 시험
+        </a>
+    </header>
+
+    <div class="workbook-toolbar" aria-label="문제집 페이지 이동">
+        {% if page_number > 1 %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=page_number - 1) }}" title="이전 쪽" aria-label="이전 쪽">&larr;</a>
+        {% else %}
+        <button class="btn btn-outline-secondary" type="button" disabled aria-label="이전 쪽">&larr;</button>
+        {% endif %}
+
+        <select class="form-select" id="workbook-page-select" aria-label="문제집 쪽 선택">
+            {% for number in range(1, workbook.page_count + 1) %}
+            <option value="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=number) }}" {% if number == page_number %}selected{% endif %}>{{ number }} / {{ workbook.page_count }}쪽</option>
+            {% endfor %}
+        </select>
+
+        {% if page_number < workbook.page_count %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=page_number + 1) }}" title="다음 쪽" aria-label="다음 쪽">&rarr;</a>
+        {% else %}
+        <button class="btn btn-outline-secondary" type="button" disabled aria-label="다음 쪽">&rarr;</button>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('static', filename=page_filename) }}" target="_blank" rel="noopener" title="새 창에서 원본 크기로 보기">
+        <img
+            class="workbook-page"
+            src="{{ url_for('static', filename=page_filename) }}"
+            alt="{{ exam.title }} {{ page_number }}쪽"
+            width="1200"
+            height="1698"
+        >
+    </a>
+
+    <nav class="workbook-pagination" aria-label="현재 쪽 주변 이동">
+        {% if page_number > 1 %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=1) }}">처음</a>
+        {% endif %}
+        {% for number in page_numbers %}
+        <a class="btn {% if number == page_number %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=number) }}" {% if number == page_number %}aria-current="page"{% endif %}>{{ number }}</a>
+        {% endfor %}
+        {% if page_number < workbook.page_count %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('exam.math_workbook_page', exam_id=exam.id, page_number=workbook.page_count) }}">마지막</a>
+        {% endif %}
+    </nav>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('workbook-page-select').addEventListener('change', function () {
+    window.location.href = this.value;
+});
+</script>
+{% endblock %}

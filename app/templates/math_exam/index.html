@@ -69,7 +69,7 @@
                             <div class="text-muted small">{{ exam.grade }}</div>
                             <h2 class="h4 mb-0">{{ exam.title }}</h2>
                         </div>
-                        <span class="badge bg-primary">{{ exam.questions|length }}문항</span>
+                        <span class="badge bg-primary">{{ exam.questions|length }}문항 채점</span>
                     </div>
 
                     <div class="math-exam-meta">
@@ -78,7 +78,14 @@
 
                     <p class="mb-3">{{ exam.description }}</p>
 
-                    <a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}" class="btn btn-primary w-100">시험 보기</a>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('exam.math_workbook_start', exam_id=exam.id) }}" class="btn btn-primary">
+                            전체 문제집 보기 ({{ exam.workbook.page_count }}쪽)
+                        </a>
+                        <a href="{{ url_for('exam.math_take_exam', exam_id=exam.id) }}" class="btn btn-outline-primary">
+                            20문항 시험 보고 채점하기
+                        </a>
+                    </div>
 
                     {% if latest %}
                     <div class="math-latest">
