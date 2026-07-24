@@ -56,6 +56,9 @@
         font-weight: bold;
         margin: 10px 0;
     }
+    .voca-practice-shell .learning-step .btn {
+        min-width: 136px;
+    }
 </style>
 {% endblock %}
 
@@ -96,7 +99,7 @@
                     </div>
                     <div class="card-body text-center">
                         <p class="mb-3" id="listening-instruction">단어의 발음을 들어보세요.</p>
-                        <button id="btn-listen" class="btn btn-primary btn-lg mb-3">
+                        <button id="btn-listen" class="btn btn-primary mb-3">
                             <i class="bi bi-volume-up"></i> 발음 듣기
                         </button>
                         <div id="listen-again-container" style="display:none;">
@@ -104,7 +107,7 @@
                                 <i class="bi bi-volume-up"></i> 다시 한번 더 듣기
                             </button>
                         </div>
-                        <button id="btn-next-to-speaking" class="btn btn-success" style="display:none;">
+                        <button id="btn-next-to-speaking" class="btn btn-primary" style="display:none;">
                             다음 단계로 <i class="bi bi-arrow-right"></i>
                         </button>
                     </div>
@@ -121,10 +124,10 @@
                         <p class="mb-3" id="speaking-instruction">단어를 직접 발음해보세요.</p>    
                         <!-- 말하기/중지 버튼 컨테이너 -->
                         <div id="recording-controls" class="d-flex justify-content-center align-items-center mb-3">
-                            <button id="btn-record" class="btn btn-danger btn-lg me-2">
+                            <button id="btn-record" class="btn btn-primary me-2">
                                 <i class="bi bi-mic"></i> 말하기 시작
                             </button>
-                            <button id="btn-stop-record" class="btn btn-secondary btn-lg" disabled>
+                            <button id="btn-stop-record" class="btn btn-outline-secondary" disabled>
                                 <i class="bi bi-stop-fill"></i> 중지
                             </button>
                             <div id="recording-indicator-container" class="ms-2"></div>
@@ -138,17 +141,17 @@
                         <!-- 결과 버튼 컨테이너 -->
                         <div id="result-buttons-container" style="display:none;">
                             <div class="d-flex justify-content-center gap-2 mb-3">
-                                <button id="btn-play-recording" class="btn btn-outline-success" style="min-width: 150px;">
+                                <button id="btn-play-recording" class="btn btn-outline-primary">
                                     <i class="bi bi-play-circle"></i> 내 녹음 듣기
                                 </button>
-                                <button id="btn-record-again" class="btn btn-outline-danger" style="min-width: 150px;">
+                                <button id="btn-record-again" class="btn btn-outline-primary">
                                     <i class="bi bi-mic"></i> 다시 한번 더 말하기
                                 </button>
                             </div>
                         </div>
                         
                         <!-- 다음 단계로 버튼 -->
-                        <button id="btn-next-to-writing" class="btn btn-success" style="display:none;">
+                        <button id="btn-next-to-writing" class="btn btn-primary" style="display:none;">
                             다음 단계로 <i class="bi bi-arrow-right"></i>
                         </button>
                     </div>
@@ -156,7 +159,6 @@
             </div>
 
             <!-- 쓰기 단계 -->
-            <!-- 쓰기 단계 --><!-- 쓰기 단계 -->
         <div id="step-writing" class="learning-step">
             <div class="card">
                 <div class="card-header bg-info text-white">
@@ -166,7 +168,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="english-input" class="form-label">영어 단어:</label>
-                            <input type="text" id="english-input" class="form-control form-control-lg" placeholder="영어 단어를 입력하세요">
+                            <input type="text" id="english-input" class="form-control" placeholder="영어 단어를 입력하세요">
                         </div>
                         <div class="col-md-6 mb-3">
                             {% if vocabulary.part_of_speech %}
@@ -174,11 +176,11 @@
                             {% else %}
                                 <label for="korean-input" class="form-label">한글 뜻:</label>
                             {% endif %}
-                            <input type="text" id="korean-input" class="form-control form-control-lg" placeholder="한글 뜻을 입력하세요">
+                            <input type="text" id="korean-input" class="form-control" placeholder="한글 뜻을 입력하세요">
                         </div>
                     </div>
                     <div class="text-center mt-3">
-                        <button id="btn-next-to-result" class="btn btn-success btn-lg">
+                        <button id="btn-next-to-result" class="btn btn-primary">
                             마침 <i class="bi bi-check-lg"></i>
                         </button>
                     </div>
@@ -229,10 +231,10 @@
                         </div>
                         
                         <div class="mt-4">
-                            <a href="{{ url_for('voca.level_practice', level_id=level.id, word_index=next_index) }}" class="btn btn-primary btn-lg me-2">
+                            <a href="{{ url_for('voca.level_practice', level_id=level.id, word_index=next_index) }}" class="btn btn-primary me-2">
                                 <i class="bi bi-arrow-right"></i> 다음 단어 학습하기
                             </a>
-                            <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-secondary btn-lg">
+                            <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-outline-primary">
                                 <i class="bi bi-list"></i> 단어 목록으로
                             </a>
                         </div>

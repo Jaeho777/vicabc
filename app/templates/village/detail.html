@@ -21,7 +21,7 @@
     }
     .feedback-box,
     .writing-box {
-        border-radius: 14px;
+        border-radius: 4px;
         border: 1px solid var(--app-border);
         background: var(--app-surface-soft);
         padding: 14px 16px;
@@ -41,7 +41,7 @@
     }
     .writing-input {
         min-height: 110px;
-        border-radius: 14px;
+        border-radius: 4px;
         resize: vertical;
     }
     .dialogue-line-label {
@@ -51,6 +51,50 @@
     }
     .lesson-card[hidden] {
         display: none !important;
+    }
+    .village-top-anchor {
+        height: 1px;
+        scroll-margin-top: 12px;
+    }
+    .practice-panel .learning-step {
+        display: grid;
+        grid-template-columns: minmax(170px, 0.8fr) minmax(260px, 1.2fr);
+        align-items: center;
+        gap: 14px;
+    }
+    .village-step-control {
+        min-width: 0;
+    }
+    .village-step-control > :last-child {
+        margin-bottom: 0 !important;
+    }
+    .village-top-button {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        display: inline-grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border: 1px solid var(--page-accent);
+        border-radius: 4px;
+        background: #fff;
+        color: var(--page-accent);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+        z-index: 1030;
+    }
+    .village-top-button:hover {
+        background: var(--page-accent);
+        color: #fff;
+    }
+    @media (max-width: 768px) {
+        .practice-panel .learning-step {
+            grid-template-columns: 1fr;
+        }
+        .village-top-button {
+            right: 12px;
+            bottom: 12px;
+        }
     }
     @keyframes pulse {
         0% { opacity: 1; }
@@ -63,6 +107,7 @@
 {% block content %}
 {% set is_current_village = latest_progress and latest_progress.village_number == village.number %}
 {% set initial_lesson_number = latest_progress.lesson_number if is_current_village else 1 %}
+<span id="village-top" class="village-top-anchor d-block" aria-hidden="true"></span>
 <div class="learning-shell"
      data-village-number="{{ village.number }}"
      data-initial-lesson="{{ initial_lesson_number }}">
@@ -186,7 +231,7 @@
                                         <div class="learning-meta">대화를 먼저 듣고 리듬과 발음을 익히세요.</div>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                <div class="village-step-control d-flex flex-wrap align-items-center justify-content-end gap-2">
                                     <button type="button" class="btn btn-primary js-play-reference" data-default-label="대화 듣기">대화 듣기</button>
                                     <span class="learning-meta">두 문장이 이어서 재생됩니다.</span>
                                 </div>
@@ -203,9 +248,9 @@
                                         <div class="learning-meta">듣고 나서 바로 같은 흐름으로 말해 보세요.</div>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-wrap align-items-center gap-2">
-                                    <button type="button" class="btn btn-danger js-record-start">말하기 시작</button>
-                                    <button type="button" class="btn btn-secondary js-record-stop" disabled>중지</button>
+                                <div class="village-step-control d-flex flex-wrap align-items-center justify-content-end gap-2">
+                                    <button type="button" class="btn btn-primary js-record-start">말하기 시작</button>
+                                    <button type="button" class="btn btn-outline-secondary js-record-stop" disabled>중지</button>
                                     <span class="js-recording-status small text-danger"></span>
                                 </div>
                             </div>
@@ -218,7 +263,9 @@
                                         <div class="learning-meta">녹음한 발음을 다시 확인하세요.</div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-outline-primary js-play-recording" data-default-label="내 말 듣기" disabled>내 말 듣기</button>
+                                <div class="village-step-control d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-primary js-play-recording" data-default-label="내 말 듣기" disabled>내 말 듣기</button>
+                                </div>
                             </div>
 
                             <div class="learning-step">
@@ -229,7 +276,7 @@
                                         <div class="learning-meta">인식 결과와 빠진 단어를 확인합니다.</div>
                                     </div>
                                 </div>
-                                <div class="feedback-box is-placeholder js-result-box">
+                                <div class="village-step-control feedback-box is-placeholder js-result-box">
                                     녹음 후 결과가 여기에 표시됩니다.
                                 </div>
                             </div>
@@ -242,13 +289,15 @@
                                         <div class="learning-meta">방금 들은 영어 문장을 직접 적어보세요.</div>
                                     </div>
                                 </div>
-                                <textarea class="form-control writing-input js-writing-input" placeholder="영어 문장을 입력하세요"></textarea>
-                                <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <button type="button" class="btn btn-outline-primary js-check-writing">쓰기 확인</button>
-                                    <button type="button" class="btn btn-light js-clear-writing">지우기</button>
-                                </div>
-                                <div class="writing-box is-placeholder mt-3 js-writing-result">
-                                    문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.
+                                <div class="village-step-control">
+                                    <textarea class="form-control writing-input js-writing-input" placeholder="영어 문장을 입력하세요"></textarea>
+                                    <div class="d-flex flex-wrap justify-content-end gap-2 mt-3">
+                                        <button type="button" class="btn btn-primary js-check-writing">쓰기 확인</button>
+                                        <button type="button" class="btn btn-outline-secondary js-clear-writing">지우기</button>
+                                    </div>
+                                    <div class="writing-box is-placeholder mt-3 js-writing-result">
+                                        문장을 입력한 뒤 쓰기 확인을 누르면 결과가 표시됩니다.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -258,6 +307,9 @@
         </section>
         {% endfor %}
     </div>
+    <a class="village-top-button" href="#village-top" title="맨 위로" aria-label="맨 위로">
+        <i class="bi bi-arrow-up" aria-hidden="true"></i>
+    </a>
 </div>
 {% endblock %}
 

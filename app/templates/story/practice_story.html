@@ -7,15 +7,15 @@
 <style>
     .story-summary,
     .story-card {
-        border-radius: 18px;
-        border: 0;
-        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        border-radius: 4px;
+        border: 1px solid var(--app-border);
+        box-shadow: none;
     }
     .reference-box,
     .practice-panel,
     .writing-panel,
     .result-panel {
-        border-radius: 14px;
+        border-radius: 4px;
         border: 1px solid var(--app-border);
         background: #fff;
         padding: 18px;
@@ -41,7 +41,7 @@
         word-break: break-word;
     }
     .score-tile {
-        border-radius: 14px;
+        border-radius: 4px;
         background: var(--app-surface-soft);
         padding: 18px;
         text-align: center;
@@ -194,9 +194,9 @@
                     <div class="small text-secondary mb-3">원본을 들은 뒤 영어 문장을 이어서 그대로 따라 말해보세요.</div>
 
                     <div class="d-flex flex-wrap align-items-center gap-2">
-                        <button type="button" id="btn-record" class="btn btn-danger">따라 말하기 시작</button>
-                        <button type="button" id="btn-stop-record" class="btn btn-secondary" disabled>중지</button>
-                        <button type="button" id="btn-play-recording" class="btn btn-outline-success d-none">내 녹음 듣기</button>
+                        <button type="button" id="btn-record" class="btn btn-primary">따라 말하기 시작</button>
+                        <button type="button" id="btn-stop-record" class="btn btn-outline-secondary" disabled>중지</button>
+                        <button type="button" id="btn-play-recording" class="btn btn-outline-primary d-none">내 녹음 듣기</button>
                         <span id="recording-status"></span>
                     </div>
 
@@ -234,7 +234,7 @@
                     <div class="learning-eyebrow mb-1">Result</div>
                     <h5 class="mb-0">현재 점수와 저장 상태</h5>
                 </div>
-                <button type="button" id="btn-save-progress" class="btn btn-success">학습 결과 저장</button>
+                <button type="button" id="btn-save-progress" class="btn btn-primary">학습 결과 저장</button>
             </div>
 
             <div class="row g-3 mb-3">
