@@ -48,3 +48,20 @@ visible annotations, interactions, and responsive behavior were checked.
       using comparable saturation, spacing, borders, and interaction states
 - [ ] Exact layer dimensions, font tokens, and exported assets require Figma
       editor access for API verification
+
+## External production verification
+
+Verified against `https://vicabc.kr` on 2026-07-25 with a newly registered
+non-admin account and a separate cookie session.
+
+- [x] DNS resolves to the production host and HTTP redirects to HTTPS
+- [x] Logged-out visitors are redirected to the login page
+- [x] A new user can register, log in, and see Math, VOCA, Bible Story, and Village
+- [x] Math 3-1 and 6-1 workbooks open for the new user
+- [x] All 144 workbook images return HTTP 200 (109 pages + 35 pages)
+- [x] All 16 managed VOCA levels open and expose all 642 source words
+- [x] Managed VOCA sync reports 642 unchanged words and no missing or updated rows
+- [x] VOCA practice, Bible Story practice, and Village practice return HTTP 200
+- [x] Logout restores the protected-page login redirect
+- [x] The temporary user and its single generated progress record were removed
+- [x] Production service remained active with no new service log errors
