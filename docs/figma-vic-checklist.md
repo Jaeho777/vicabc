@@ -55,4 +55,4 @@ from the public canvas by inspecting each screen at readable zoom.
 - [x] Village certification exam
 - [x] Math workbook viewer and 20-question grading
 - [ ] Figma layer/token verification after editor access is granted
-- [ ] Final production screenshots and live regression checks
+- [x] Final production screenshots and live regression checks
