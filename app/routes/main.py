@@ -1,4 +1,6 @@
 # app/routes/main.py
+from datetime import datetime
+
 from flask import render_template
 from flask_login import current_user, login_required
 
@@ -69,6 +71,7 @@ def index():
 
     return render_template(
         "index.html",
+        today_label=datetime.now().strftime("%Y년 %m월 %d일"),
         village_latest=village_latest,
         story_latest_learning=story_latest_learning,
         village_latest_learning=village_latest_learning,

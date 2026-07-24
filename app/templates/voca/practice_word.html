@@ -1,31 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}단어 학습 - {{ vocabulary.word }} - VOCA 애플리케이션{% endblock %}
+{% block body_class %}theme-learning theme-voca{% endblock %}
+{% block title %}단어 학습 - {{ vocabulary.word }} - VIC 애플리케이션{% endblock %}
 
 {% block extra_head %}
 <style>
     .learning-step {
         display: none;
-        margin-bottom: 30px;
+        margin-bottom: 0;
     }
     .learning-step.active {
         display: block;
     }
     .word-card {
-        padding: 30px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        min-height: 176px;
+        padding: 30px 20px;
+        background-color: var(--app-surface-soft);
+        border: 1px solid var(--app-border);
+        border-radius: 4px;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
     .word {
-        font-size: 48px;
+        font-size: 2.5rem;
         font-weight: bold;
         margin-bottom: 10px;
     }
     .meaning {
-        font-size: 24px;
+        font-size: 1.25rem;
         margin-bottom: 20px;
     }
     .hidden-content {
@@ -58,7 +60,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="learning-shell voca-practice-shell">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('voca.index') }}">VOCA 레벨</a></li>
@@ -68,7 +70,7 @@
     </nav>
 
     <!-- 단어 정보 카드 -->
-    <div class="card mb-4">
+    <div class="card learning-card mb-4">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="m-0">단어 학습</h2>

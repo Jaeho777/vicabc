@@ -95,6 +95,10 @@ def index():
     return render_template('voca/index.html', 
                            village_levels=village_levels,
                            village_curriculum=village_curriculum,
+                           village_total_words=sum(
+                               level_progress[level.id]['total_words']
+                               for level in village_levels
+                           ),
                            elementary_levels=elementary_levels,
                            middle_levels=middle_levels,
                            high_levels=high_levels,

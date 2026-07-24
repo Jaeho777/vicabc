@@ -49,6 +49,9 @@
         font-weight: 850;
         margin-right: 6px;
     }
+    .lesson-card[hidden] {
+        display: none !important;
+    }
     @keyframes pulse {
         0% { opacity: 1; }
         50% { opacity: 0.4; }
@@ -59,7 +62,10 @@
 
 {% block content %}
 {% set is_current_village = latest_progress and latest_progress.village_number == village.number %}
-<div class="learning-shell" data-village-number="{{ village.number }}">
+{% set initial_lesson_number = latest_progress.lesson_number if is_current_village else 1 %}
+<div class="learning-shell"
+     data-village-number="{{ village.number }}"
+     data-initial-lesson="{{ initial_lesson_number }}">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('village.index') }}">Village</a></li>
@@ -119,7 +125,10 @@
 
     <div class="d-flex flex-column gap-3">
         {% for lesson in village.lessons %}
-        <section class="learning-card lesson-card" id="lesson-{{ lesson.number }}" data-lesson-number="{{ lesson.number }}">
+        <section class="learning-card lesson-card"
+                 id="lesson-{{ lesson.number }}"
+                 data-lesson-number="{{ lesson.number }}"
+                 {% if lesson.number != initial_lesson_number %}hidden{% endif %}>
             <div class="learning-card-pad">
                 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
                     <div>
@@ -632,9 +641,36 @@ function clearWriting(panel) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const learningShell = document.querySelector('.learning-shell');
+    const initialLesson = Number(learningShell?.dataset.initialLesson || 1);
+    const hashLesson = Number(String(window.location.hash || '').replace('#lesson-', ''));
+
+    function activateLesson(lessonNumber, shouldScroll = false) {
+        const target = document.querySelector(`.lesson-card[data-lesson-number="${lessonNumber}"]`);
+        if (!target) {
+            return;
+        }
+
+        document.querySelectorAll('.lesson-card').forEach((lessonCard) => {
+            lessonCard.hidden = lessonCard !== target;
+        });
+        document.querySelectorAll('[data-lesson-jump]').forEach((link) => {
+            const isActive = Number(link.dataset.lessonJump || 0) === lessonNumber;
+            link.classList.toggle('is-current', isActive);
+            link.setAttribute('aria-current', isActive ? 'true' : 'false');
+        });
+        window.history.replaceState(null, '', `#lesson-${lessonNumber}`);
+        saveVillageProgress(lessonNumber);
+
+        if (shouldScroll) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
     document.querySelectorAll('[data-lesson-jump]').forEach((link) => {
-        link.addEventListener('click', () => {
-            saveVillageProgress(Number(link.dataset.lessonJump || 0));
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            activateLesson(Number(link.dataset.lessonJump || 0), true);
         });
     });
 
@@ -654,10 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const hashLesson = Number(String(window.location.hash || '').replace('#lesson-', ''));
-    if (hashLesson) {
-        saveVillageProgress(hashLesson);
-    }
+    activateLesson(hashLesson || initialLesson);
 
     document.querySelectorAll('.js-reference-audio').forEach((audio) => {
         audio.addEventListener('ended', () => {
