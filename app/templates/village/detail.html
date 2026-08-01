@@ -87,6 +87,52 @@
         background: var(--page-accent);
         color: #fff;
     }
+    .theme-village .village-lesson-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .theme-village .village-lesson-card {
+        border-radius: 8px;
+        box-shadow: none;
+    }
+    .theme-village .village-lesson-card .learning-card-pad {
+        display: flex;
+        min-height: 142px;
+        flex-direction: column;
+        padding: 16px;
+    }
+    .theme-village .village-lesson-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    .theme-village .village-lesson-card h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 850;
+    }
+    .theme-village .village-lesson-card .learning-chip {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+    }
+    .theme-village .village-lesson-sentence {
+        margin: 14px 0 0;
+        color: var(--app-muted);
+        font-size: 0.88rem;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+    .theme-village .village-lesson-action {
+        margin-top: auto;
+        color: var(--page-accent-dark);
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+    @media (max-width: 992px) {
+        .theme-village .village-lesson-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
     @media (max-width: 768px) {
         .practice-panel .learning-step {
             grid-template-columns: 1fr;
@@ -94,6 +140,14 @@
         .village-top-button {
             right: 12px;
             bottom: 12px;
+        }
+        .theme-village .village-lesson-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 430px) {
+        .theme-village .village-lesson-grid {
+            grid-template-columns: 1fr;
         }
     }
     @keyframes pulse {
@@ -136,33 +190,16 @@
         </div>
     </section>
 
-    <div class="learning-card mb-3">
-        <div class="learning-card-pad">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-                <div>
-                    <div class="learning-eyebrow mb-1">Lessons</div>
-                    <h2 class="fs-5 fw-bold">바로 이동</h2>
-                </div>
-                <span class="learning-chip">{{ village.lesson_count }}개</span>
-            </div>
-            <div class="learning-jump-strip">
-                {% for lesson in village.lessons %}
-                <a href="#lesson-{{ lesson.number }}" data-lesson-jump="{{ lesson.number }}">Lesson {{ lesson.number }}</a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="learning-grid mb-4">
+    <div class="learning-grid village-lesson-grid mb-4">
         {% for lesson in village.lessons %}
-        <a href="#lesson-{{ lesson.number }}" class="learning-card learning-card-link" data-lesson-jump="{{ lesson.number }}">
+        <a href="#lesson-{{ lesson.number }}" class="learning-card learning-card-link village-lesson-card" data-lesson-jump="{{ lesson.number }}">
             <div class="learning-card-pad">
-                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
-                    <span class="learning-number">{{ lesson.number }}</span>
+                <div class="village-lesson-card-head">
+                    <h3>{{ lesson.title }}</h3>
                     <span class="learning-chip learning-chip-muted">듣기 · 말하기 · 쓰기</span>
                 </div>
-                <h3 class="fs-6 fw-bold mb-2">{{ lesson.title }}</h3>
-                <div class="learning-meta">{{ lesson.dialogue_lines[0].text }} / {{ lesson.dialogue_lines[1].text }}</div>
+                <div class="village-lesson-sentence">{{ lesson.dialogue_lines[0].text }} / {{ lesson.dialogue_lines[1].text }}</div>
+                <div class="village-lesson-action">학습하기 <i class="bi bi-arrow-right" aria-hidden="true"></i></div>
             </div>
         </a>
         {% endfor %}
