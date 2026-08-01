@@ -45,6 +45,41 @@
         margin: 1rem 0 0;
         padding: 0.7rem 0.85rem;
     }
+    .writing-feedback-banner {
+        border: 1px solid #9edfc7;
+        border-radius: 4px;
+        background-color: #f7fffb;
+        background-image: url("{{ url_for('static', filename='images/writing-success-banner-v1.png') }}");
+        background-position: center;
+        background-size: cover;
+        padding: 26px 18px;
+        text-align: center;
+    }
+    .writing-feedback-icon {
+        color: #0f766e;
+        font-size: 1.35rem;
+    }
+    .writing-feedback-title {
+        color: #0f172a;
+        font-size: 1rem;
+        font-weight: 800;
+    }
+    .writing-feedback-scores {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 14px;
+    }
+    .writing-feedback-score {
+        min-width: 150px;
+        padding: 10px 14px;
+        border: 1px solid rgba(15, 118, 110, 0.22);
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #0f172a;
+        font-weight: 700;
+    }
     .english-line {
         font-size: 1.2rem;
         font-weight: 700;
@@ -240,7 +275,7 @@
                 <button type="button" id="btn-check-writing" class="btn btn-primary">쓰기 점수 계산</button>
             </div>
 
-            <div id="writing-feedback" class="alert alert-light border mt-3 mb-0 d-none"></div>
+            <div id="writing-feedback" class="writing-feedback-banner mt-3 d-none" role="status"></div>
         </div>
 
         <div class="result-panel">
@@ -569,9 +604,12 @@ function evaluateWriting() {
     const feedback = document.getElementById("writing-feedback");
     feedback.classList.remove("d-none");
     feedback.innerHTML = `
-        <div class="fw-semibold mb-2">쓰기 평가 결과</div>
-        <div class="mb-1"><strong>영어 쓰기:</strong> ${englishScore}점</div>
-        <div><strong>한글 쓰기:</strong> ${koreanScore}점</div>
+        <i class="bi bi-stars writing-feedback-icon" aria-hidden="true"></i>
+        <div class="writing-feedback-title mt-2">쓰기 평가 결과</div>
+        <div class="writing-feedback-scores">
+            <div class="writing-feedback-score">영어 쓰기 ${englishScore}점</div>
+            <div class="writing-feedback-score">한글 쓰기 ${koreanScore}점</div>
+        </div>
     `;
     revealReferenceAfterWriting();
 }
@@ -604,7 +642,7 @@ async function saveProgress() {
         storyPracticeState.status = data.status;
         updateStatusBadge(data.status);
 
-        showSaveFeedback(data.status === 2 ? "success" : "warning", data.status === 2
+        showSaveFeedback("success", data.status === 2
             ? "학습 완료로 저장되었습니다."
             : "학습 중 상태로 저장되었습니다. 세 점수가 모두 80점 이상이면 학습 완료로 표시됩니다.");
     } catch (error) {
@@ -620,7 +658,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStatusBadge(initialStatus);
 
     if (initialStatus > 0) {
-        showSaveFeedback(initialStatus === 2 ? "success" : "warning", initialStatus === 2
+        showSaveFeedback("success", initialStatus === 2
             ? "이전에 저장된 학습 완료 기록이 있습니다."
             : "이전에 저장된 학습 중 기록이 있습니다. 새 점수로 다시 저장할 수 있습니다.");
     }
