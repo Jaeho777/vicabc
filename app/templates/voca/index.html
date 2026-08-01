@@ -7,18 +7,19 @@
 {% set progress = level_progress[level.id] %}
 <article class="curriculum-card">
     <div class="curriculum-card-head">
-        <div>
-            <h4>{{ level.name }}</h4>
-            <p>{{ level.description.split(' · ')[0] if level.description else 'VOCA 학습' }}</p>
-        </div>
-        <span class="status-chip">{{ progress.total_words }}개</span>
+        <h4>{{ village_level_display_names.get(level.id, level.name) }}</h4>
+        <span class="curriculum-card-marker" aria-hidden="true"></span>
     </div>
     <div class="curriculum-progress" aria-label="{{ level.name }} 진도">
         <span style="width: {{ progress.progress_percent }}%"></span>
     </div>
-    <div class="curriculum-card-meta">
-        <span>{{ progress.completed_words }}/{{ progress.total_words }} 완료</span>
-        <span>{{ progress.progress_percent }}%</span>
+    <div class="curriculum-card-meta curriculum-card-progress-copy">
+        <span>진도: {{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</span>
+    </div>
+    <div class="curriculum-card-status">
+        <span class="status-chip{% if progress.progress_percent >= 100 %} is-success{% endif %}">
+            {% if progress.progress_percent >= 100 %}완료{% elif progress.in_progress_words %}진행 중{% else %}미시작{% endif %}
+        </span>
     </div>
     <div class="curriculum-card-actions">
         <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-sm btn-primary">
@@ -37,17 +38,28 @@
 
 {% block content %}
 <div class="learning-shell">
-    <header class="page-heading">
-        <div>
-            <span class="page-kicker">VOCA Learning</span>
-            <h1>단어 학습</h1>
-            <p>학년과 학기를 선택해 학습을 시작하세요.</p>
+    {% if current_village_level %}
+    {% set current_progress = level_progress[current_village_level.id] %}
+    <header class="voca-current-summary">
+        <div class="voca-current-summary-head">
+            <div>
+                <span class="page-kicker">현재 학습</span>
+                <h1>{{ village_level_display_names.get(current_village_level.id, current_village_level.name) }}</h1>
+            </div>
+            <span class="status-chip{% if current_progress.progress_percent >= 100 %} is-success{% endif %}">
+                {% if current_progress.progress_percent >= 100 %}완료{% elif current_progress.in_progress_words %}진행 중{% else %}미시작{% endif %}
+            </span>
         </div>
-        <a href="{{ url_for('exam.voca_index') }}" class="btn btn-outline-primary">
-            <i class="bi bi-patch-check"></i>
-            인증시험
-        </a>
+        <div class="voca-current-summary-progress">
+            <div class="curriculum-progress" aria-label="현재 과정 진도"><span style="width: {{ current_progress.progress_percent }}%"></span></div>
+            <span>{{ current_progress.completed_words }}/{{ current_progress.total_words }} 단어 완료</span>
+        </div>
+        <div class="voca-current-summary-actions">
+            <a href="{{ url_for('voca.voca_level_words', level_id=current_village_level.id) }}" class="btn btn-primary">학습하기</a>
+            <a href="{{ url_for('exam.voca_index') }}" class="btn btn-outline-primary">인증시험</a>
+        </div>
     </header>
+    {% endif %}
 
     <nav class="section-tabs" aria-label="VOCA 과정 선택">
         <button class="section-tab active" type="button" data-bs-toggle="tab" data-bs-target="#village-voca" aria-controls="village-voca" aria-selected="true">Village VOCA</button>
@@ -60,8 +72,8 @@
         <section class="tab-pane fade show active curriculum-section" id="village-voca">
             <div class="section-heading">
                 <div>
-                    <h2>Village VOCA</h2>
-                    <p>초등 1-6학년 학기별 16개 Village</p>
+                    <h2><i class="bi bi-translate" aria-hidden="true"></i> 단어 학습</h2>
+                    <p>초등 1-6학년 학기별 Village 단어 과정</p>
                 </div>
                 <span class="status-chip">{{ village_total_words }}단어</span>
             </div>

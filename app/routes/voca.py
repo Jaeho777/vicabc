@@ -91,6 +91,25 @@ def index():
                 'in_progress_words': 0,
                 'progress_percent': 0
             }
+
+    village_level_display_names = {}
+    for grade_group in village_curriculum:
+        for semester in grade_group['semesters']:
+            for level in semester['levels']:
+                place_name = level.name.split(maxsplit=2)[-1]
+                village_level_display_names[level.id] = (
+                    f"초등{grade_group['grade']}-{semester['number']} {place_name}"
+                )
+
+    current_village_level = next(
+        (
+            level
+            for level in village_levels
+            if level_progress[level.id]['total_words']
+            and level_progress[level.id]['progress_percent'] < 100
+        ),
+        village_levels[0] if village_levels else None,
+    )
     
     return render_template('voca/index.html', 
                            village_levels=village_levels,
@@ -102,7 +121,9 @@ def index():
                            elementary_levels=elementary_levels,
                            middle_levels=middle_levels,
                            high_levels=high_levels,
-                           level_progress=level_progress)
+                           level_progress=level_progress,
+                           current_village_level=current_village_level,
+                           village_level_display_names=village_level_display_names)
 
 
 @voca_bp.route('/level/<int:level_id>')
