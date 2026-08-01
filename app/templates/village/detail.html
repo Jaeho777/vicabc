@@ -58,9 +58,12 @@
     }
     .practice-panel .learning-step {
         display: grid;
-        grid-template-columns: minmax(170px, 0.8fr) minmax(260px, 1.2fr);
+        grid-template-columns: minmax(360px, 1fr) auto;
         align-items: center;
         gap: 14px;
+    }
+    .practice-panel .learning-step-head .learning-meta {
+        white-space: nowrap;
     }
     .village-step-control {
         min-width: 0;
@@ -72,6 +75,12 @@
     }
     .village-step-control .btn {
         white-space: nowrap;
+    }
+    .village-step-listen-control {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        gap: 6px;
     }
     .support-panel-header {
         display: grid;
@@ -157,6 +166,9 @@
     @media (max-width: 768px) {
         .practice-panel .learning-step {
             grid-template-columns: 1fr;
+        }
+        .practice-panel .learning-step-head .learning-meta {
+            white-space: normal;
         }
         .village-step-control {
             justify-self: stretch;
@@ -298,7 +310,7 @@
                                         <div class="learning-meta">대화를 먼저 듣고 리듬과 발음을 익히세요.</div>
                                     </div>
                                 </div>
-                                <div class="village-step-control d-flex flex-wrap align-items-center justify-content-end gap-2">
+                                <div class="village-step-control village-step-listen-control">
                                     <button type="button" class="btn btn-primary js-play-reference" data-default-label="대화 듣기">대화 듣기</button>
                                     <span class="learning-meta">두 문장이 이어서 재생됩니다.</span>
                                 </div>
