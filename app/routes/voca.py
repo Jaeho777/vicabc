@@ -14,6 +14,19 @@ from app.services.village_curriculum import build_village_curriculum
 
 voca_bp = Blueprint('voca', __name__, url_prefix='/voca')
 
+
+def build_village_level_display_names(village_levels):
+    display_names = {}
+    for grade_group in build_village_curriculum(village_levels):
+        for semester in grade_group['semesters']:
+            for level in semester['levels']:
+                place_name = level.name.split(maxsplit=2)[-1]
+                display_names[level.id] = (
+                    f"초등{grade_group['grade']}-{semester['number']} {place_name}"
+                )
+    return display_names
+
+
 @voca_bp.route('/')
 @login_required
 def index():
@@ -92,14 +105,7 @@ def index():
                 'progress_percent': 0
             }
 
-    village_level_display_names = {}
-    for grade_group in village_curriculum:
-        for semester in grade_group['semesters']:
-            for level in semester['levels']:
-                place_name = level.name.split(maxsplit=2)[-1]
-                village_level_display_names[level.id] = (
-                    f"초등{grade_group['grade']}-{semester['number']} {place_name}"
-                )
+    village_level_display_names = build_village_level_display_names(village_levels)
 
     current_village_level = next(
         (
@@ -159,9 +165,14 @@ def voca_level_words(level_id):
     # 완료된 단어 수 계산
     completed_words = sum(1 for entry in progress_entries if entry.status == 2)
     total_words = len(vocabularies)
+    level_display_name = level.name
+    if level.category == 'VOCA':
+        village_levels = Level.query.filter_by(category='VOCA').all()
+        level_display_name = build_village_level_display_names(village_levels).get(level.id, level.name)
     
     return render_template('voca/voca_level_words.html', 
                            level=level,
+                           level_display_name=level_display_name,
                            vocabularies=vocabularies,
                            vocabulary_progress=vocabulary_progress,
                            total_words=total_words,
@@ -172,8 +183,9 @@ def voca_level_words(level_id):
 
 @voca_bp.route('/level/<int:level_id>/practice')
 @voca_bp.route('/level/<int:level_id>/practice/<int:word_index>')
+@voca_bp.route('/level/<int:level_id>/practice/word/<int:vocabulary_id>')
 @login_required
-def level_practice(level_id, word_index=None):
+def level_practice(level_id, word_index=None, vocabulary_id=None):
     # 레벨 정보 가져오기
     level = Level.query.get_or_404(level_id)
     
@@ -197,8 +209,15 @@ def level_practice(level_id, word_index=None):
     # 총 단어 수
     total_words = len(vocabularies)
     
+    if vocabulary_id is not None:
+        vocabulary = Vocabulary.query.filter_by(
+            id=vocabulary_id,
+            level_id=level_id
+        ).first_or_404()
+        array_index = session[session_key].index(vocabulary_id)
+        word_number = array_index + 1
     # word_index가 지정되지 않았으면 랜덤 인덱스 생성
-    if word_index is None:
+    elif word_index is None:
         import random
         random_vocabulary = random.choice(vocabularies)
         vocabulary = random_vocabulary

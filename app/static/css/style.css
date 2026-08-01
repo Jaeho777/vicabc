@@ -2152,6 +2152,101 @@ body.theme-dashboard .dashboard-activity a {
 
 /* VOCA curriculum screen */
 
+.theme-voca .level-detail-breadcrumb {
+    margin-bottom: 12px;
+}
+
+.theme-voca .voca-level-hero {
+    margin-bottom: 18px;
+    border: 1px solid var(--app-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.theme-voca .voca-level-hero-head {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 18px;
+    background: var(--page-accent);
+    color: #fff;
+}
+
+.theme-voca .voca-level-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.25rem;
+    white-space: nowrap;
+}
+
+.theme-voca .voca-level-hero-progress {
+    display: grid;
+    grid-template-columns: minmax(130px, 1fr) auto;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.theme-voca .voca-level-hero-progress .curriculum-progress {
+    height: 10px;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.94);
+}
+
+.theme-voca .voca-level-hero-progress .curriculum-progress span {
+    background: #89b8ff;
+}
+
+.theme-voca .voca-level-hero-progress > span {
+    color: #fff;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.theme-voca .voca-level-hero-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 18px;
+}
+
+.theme-voca .voca-level-hero-actions .btn {
+    min-height: 40px;
+    font-weight: 800;
+}
+
+.theme-voca .voca-level-hero-actions .btn-primary {
+    min-width: 178px;
+}
+
+.theme-voca .data-panel-head > span {
+    color: var(--app-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.theme-voca .word-learning-status {
+    color: #677386;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.theme-voca .word-learning-status.is-learning {
+    color: #c17a00;
+}
+
+.theme-voca .word-learning-status.is-complete {
+    color: #16815d;
+}
+
+.theme-voca .word-select-study {
+    min-width: 80px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
 .theme-voca .learning-shell {
     max-width: 1040px;
     margin: 0 auto;
@@ -2417,6 +2512,31 @@ body.theme-dashboard .dashboard-activity a {
 }
 
 @media (max-width: 768px) {
+    .theme-voca .voca-level-hero-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .theme-voca .voca-level-hero-progress {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .theme-voca .voca-level-hero-actions {
+        padding: 12px 14px;
+    }
+
+    .theme-voca .voca-level-hero-actions .btn {
+        flex: 1;
+    }
+
+    .theme-voca .voca-level-hero-actions .btn-primary {
+        min-width: 0;
+    }
+
     .theme-voca .voca-current-summary {
         max-width: none;
         margin-bottom: 22px;
