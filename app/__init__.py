@@ -1,6 +1,6 @@
 # app/__init__.py
 from flask import Flask
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from app.config import Config
 from app.extensions import db, migrate, login_manager
 
@@ -43,6 +43,14 @@ def create_app():
     with app.app_context():
         table_names = set(inspect(db.engine).get_table_names())
         if {'levels', 'vocabularies'}.issubset(table_names):
+            level_columns = {
+                column['name']
+                for column in inspect(db.engine).get_columns('levels')
+            }
+            if 'deleted_at' not in level_columns:
+                with db.engine.begin() as connection:
+                    connection.execute(text('ALTER TABLE levels ADD COLUMN deleted_at DATETIME'))
+
             from app.services.vocabulary_seed import sync_packaged_vocabulary
 
             sync_result = sync_packaged_vocabulary()

@@ -56,7 +56,7 @@
         </div>
         <div class="voca-current-summary-actions">
             <a href="{{ url_for('voca.voca_level_words', level_id=current_village_level.id) }}" class="btn btn-primary">학습하기</a>
-            <a href="{{ url_for('exam.voca_index') }}" class="btn btn-outline-primary">인증시험</a>
+            <a href="{{ url_for('exam.voca_index') }}" class="btn btn-primary">인증시험</a>
         </div>
     </header>
     {% endif %}
@@ -66,6 +66,9 @@
         <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#elementary-voca" aria-controls="elementary-voca" aria-selected="false">초등</button>
         <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#middle-voca" aria-controls="middle-voca" aria-selected="false">중등</button>
         <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#high-voca" aria-controls="high-voca" aria-selected="false">고등</button>
+        {% if current_user.is_admin and current_user.admin_type == 'A' %}
+        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#voca-trash" aria-controls="voca-trash" aria-selected="false"><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</button>
+        {% endif %}
     </nav>
 
     <div class="tab-content">
@@ -170,6 +173,72 @@
             </section>
             {% endfor %}
         </section>
+
+        {% if current_user.is_admin and current_user.admin_type == 'A' %}
+        <section class="tab-pane fade curriculum-section" id="voca-trash">
+            <div class="section-heading">
+                <div>
+                    <h2><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</h2>
+                    <p>삭제한 Village VOCA 과정은 단어와 학습 기록을 유지한 채 복구할 수 있습니다.</p>
+                </div>
+                <span class="status-chip learning-chip-muted">{{ deleted_village_levels|length }}개</span>
+            </div>
+
+            {% if deleted_village_levels %}
+            <div class="curriculum-grid">
+                {% for level in deleted_village_levels %}
+                <article class="curriculum-card">
+                    <div class="curriculum-card-head">
+                        <h4>{{ deleted_village_display_names.get(level.id, level.name) }}</h4>
+                        <span class="status-chip learning-chip-muted">삭제됨</span>
+                    </div>
+                    <div class="curriculum-card-meta">{{ level.vocabularies|length }}단어 · {{ level.deleted_at.strftime('%Y-%m-%d') if level.deleted_at else '' }}</div>
+                    <div class="curriculum-card-actions">
+                        <form method="post" action="{{ url_for('admin.restore_level', level_id=level.id) }}">
+                            <button class="btn btn-sm btn-primary" type="submit"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> 복구</button>
+                        </form>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="learning-empty">휴지통에 있는 Village VOCA 과정이 없습니다.</div>
+            {% endif %}
+        </section>
+        {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = [...document.querySelectorAll('.section-tab[data-bs-target]')];
+    const activateTab = (targetSelector) => {
+        const target = document.querySelector(targetSelector);
+        if (!target) {
+            return;
+        }
+
+        tabs.forEach((tab) => {
+            const isActive = tab.dataset.bsTarget === targetSelector;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+        });
+        document.querySelectorAll('.tab-content > .tab-pane').forEach((pane) => {
+            pane.classList.toggle('show', pane === target);
+            pane.classList.toggle('active', pane === target);
+        });
+    };
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => activateTab(tab.dataset.bsTarget));
+    });
+
+    const hashTarget = window.location.hash;
+    if (tabs.some((tab) => tab.dataset.bsTarget === hashTarget)) {
+        activateTab(hashTarget);
+    }
+});
+</script>
 {% endblock %}

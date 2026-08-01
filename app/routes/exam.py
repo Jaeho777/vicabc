@@ -154,10 +154,11 @@ def math_take_exam(exam_id):
 def voca_index():
     """VOCA 인증시험 메인 페이지"""
     # 초등, 중등, 고등 카테고리의 레벨들을 가져옴
-    village_levels = Level.query.filter_by(category='VOCA').all()
-    elementary_levels = Level.query.filter_by(category='초등').all()
-    middle_levels = Level.query.filter_by(category='중등').all()
-    high_levels = Level.query.filter_by(category='고등').all()
+    active_levels = Level.query.filter(Level.deleted_at.is_(None))
+    village_levels = active_levels.filter_by(category='VOCA').all()
+    elementary_levels = active_levels.filter_by(category='초등').all()
+    middle_levels = active_levels.filter_by(category='중등').all()
+    high_levels = active_levels.filter_by(category='고등').all()
     
     # 정렬 함수 (레벨 이름 기준) - 수정된 부분
     def sort_by_group(level):
@@ -209,7 +210,10 @@ def voca_index():
 def voca_start_exam(level_id):
     """VOCA 인증시험 시작"""
     # 레벨 정보 가져오기
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.filter(
+        Level.id == level_id,
+        Level.deleted_at.is_(None),
+    ).first_or_404()
     
     # 해당 레벨의 단어들 가져오기
     vocabularies = Vocabulary.query.filter_by(level_id=level_id).all()
@@ -234,7 +238,10 @@ def voca_start_exam(level_id):
 def voca_take_exam(level_id, word_index):
     """VOCA 인증시험 단어별 시험 페이지"""
     # 레벨 정보 가져오기
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.filter(
+        Level.id == level_id,
+        Level.deleted_at.is_(None),
+    ).first_or_404()
     
     # 세션에서 단어 ID 목록 가져오기
     session_key = f'exam_voca_level_{level_id}'
@@ -303,7 +310,10 @@ def save_voca_result():
 def voca_exam_result(level_id):
     """VOCA 시험 결과 페이지"""
     # 레벨 정보 가져오기
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.filter(
+        Level.id == level_id,
+        Level.deleted_at.is_(None),
+    ).first_or_404()
     
     # 세션에서 결과 가져오기
     results_key = f'exam_voca_results_{level_id}'

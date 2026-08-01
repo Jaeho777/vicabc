@@ -31,10 +31,18 @@ def build_village_level_display_names(village_levels):
 @login_required
 def index():
     # 초등, 중등, 고등 카테고리의 레벨들을 가져옴
-    village_levels = Level.query.filter_by(category='VOCA').all()
-    elementary_levels = Level.query.filter_by(category='초등').all()
-    middle_levels = Level.query.filter_by(category='중등').all()
-    high_levels = Level.query.filter_by(category='고등').all()
+    active_levels = Level.query.filter(Level.deleted_at.is_(None))
+    village_levels = active_levels.filter_by(category='VOCA').all()
+    elementary_levels = active_levels.filter_by(category='초등').all()
+    middle_levels = active_levels.filter_by(category='중등').all()
+    high_levels = active_levels.filter_by(category='고등').all()
+    deleted_village_levels = (
+        Level.query
+        .filter_by(category='VOCA')
+        .filter(Level.deleted_at.is_not(None))
+        .order_by(Level.deleted_at.desc())
+        .all()
+    )
     
     # 레벨 이름에서 그룹 번호 추출하여 정렬
     def sort_by_group(level):
@@ -106,6 +114,7 @@ def index():
             }
 
     village_level_display_names = build_village_level_display_names(village_levels)
+    deleted_village_display_names = build_village_level_display_names(deleted_village_levels)
 
     current_village_level = next(
         (
@@ -129,13 +138,18 @@ def index():
                            high_levels=high_levels,
                            level_progress=level_progress,
                            current_village_level=current_village_level,
-                           village_level_display_names=village_level_display_names)
+                           village_level_display_names=village_level_display_names,
+                           deleted_village_levels=deleted_village_levels,
+                           deleted_village_display_names=deleted_village_display_names)
 
 
 @voca_bp.route('/level/<int:level_id>')
 @login_required
 def voca_level_words(level_id):
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.filter(
+        Level.id == level_id,
+        Level.deleted_at.is_(None),
+    ).first_or_404()
     vocabularies = (
         Vocabulary.query
         .filter_by(level_id=level_id)
@@ -167,7 +181,7 @@ def voca_level_words(level_id):
     total_words = len(vocabularies)
     level_display_name = level.name
     if level.category == 'VOCA':
-        village_levels = Level.query.filter_by(category='VOCA').all()
+        village_levels = Level.query.filter_by(category='VOCA').filter(Level.deleted_at.is_(None)).all()
         level_display_name = build_village_level_display_names(village_levels).get(level.id, level.name)
     
     return render_template('voca/voca_level_words.html', 
@@ -187,7 +201,10 @@ def voca_level_words(level_id):
 @login_required
 def level_practice(level_id, word_index=None, vocabulary_id=None):
     # 레벨 정보 가져오기
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.filter(
+        Level.id == level_id,
+        Level.deleted_at.is_(None),
+    ).first_or_404()
     
     # 해당 레벨의 단어들 가져오기
     vocabularies = Vocabulary.query.filter_by(level_id=level_id).all()
@@ -235,7 +252,7 @@ def level_practice(level_id, word_index=None, vocabulary_id=None):
     next_index = word_number + 1 if word_number < total_words else 1
     level_display_name = level.name
     if level.category == 'VOCA':
-        village_levels = Level.query.filter_by(category='VOCA').all()
+        village_levels = Level.query.filter_by(category='VOCA').filter(Level.deleted_at.is_(None)).all()
         level_display_name = build_village_level_display_names(village_levels).get(level.id, level.name)
     
     return render_template('voca/practice_word.html', 

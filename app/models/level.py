@@ -10,6 +10,7 @@ class Level(db.Model):
     description = db.Column(db.String(200))
     category = db.Column(db.String(20), default='초등')  # 초등, 중등, 고등
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    deleted_at = db.Column(db.DateTime, nullable=True)
     
     # 관계 설정 (Level에 속한 단어들)
     vocabularies = db.relationship('Vocabulary', backref='level', lazy=True)

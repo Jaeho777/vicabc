@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 from functools import wraps
+from datetime import datetime
 from app.extensions import db
 from app.models.user import User
 import random #나중에 제거
@@ -177,38 +178,42 @@ def content_management():
 @admin_required
 @admin_level_required('A')  # 최종관리자만 접근 가능
 def delete_level(level_id):
-    """레벨과 관련된 모든 데이터 삭제"""
+    """레벨을 휴지통으로 이동하고 관련 학습 데이터를 보존한다."""
     try:
-        # 레벨 정보 가져오기
         level = Level.query.get_or_404(level_id)
         level_name = level.name
-        
-        # 해당 레벨의 모든 단어 가져오기
-        vocabularies = Vocabulary.query.filter_by(level_id=level_id).all()
-        vocabulary_ids = [vocab.id for vocab in vocabularies]
-        
-        # 1. 해당 단어들의 모든 학습 진도 기록 삭제
-        if vocabulary_ids:
-            UserProgress.query.filter(UserProgress.vocabulary_id.in_(vocabulary_ids)).delete(synchronize_session=False)
-        
-        # 2. 해당 레벨의 모든 인증 기록 삭제
-        Certification.query.filter_by(level_id=level_id).delete()
-        
-        # 3. 해당 레벨의 모든 단어 삭제
-        Vocabulary.query.filter_by(level_id=level_id).delete()
-        
-        # 4. 레벨 자체 삭제
-        db.session.delete(level)
-        
-        # 변경사항 커밋
+        if level.deleted_at:
+            flash(f'"{level_name}" 레벨은 이미 휴지통에 있습니다.', 'info')
+            return redirect(url_for('voca.index'))
+
+        level.deleted_at = datetime.utcnow()
         db.session.commit()
-        
-        flash(f'"{level_name}" 레벨과 관련된 모든 데이터가 성공적으로 삭제되었습니다.', 'success')
-        
+
+        flash(f'"{level_name}" 레벨을 휴지통으로 이동했습니다. 휴지통에서 복구할 수 있습니다.', 'success')
     except Exception as e:
-        # 오류 발생 시 롤백
         db.session.rollback()
         flash(f'레벨 삭제 중 오류가 발생했습니다: {str(e)}', 'danger')
-    
-    # 단어 학습 페이지로 리다이렉트
+
+    return redirect(url_for('voca.index'))
+
+
+@admin_bp.route('/restore_level/<int:level_id>', methods=['POST'])
+@login_required
+@admin_required
+@admin_level_required('A')
+def restore_level(level_id):
+    """휴지통에 있는 레벨을 기존 단어와 학습 기록 그대로 복구한다."""
+    try:
+        level = Level.query.get_or_404(level_id)
+        if not level.deleted_at:
+            flash(f'"{level.name}" 레벨은 휴지통에 없습니다.', 'info')
+            return redirect(url_for('voca.index'))
+
+        level.deleted_at = None
+        db.session.commit()
+        flash(f'"{level.name}" 레벨을 복구했습니다.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'레벨 복구 중 오류가 발생했습니다: {str(e)}', 'danger')
+
     return redirect(url_for('voca.index'))
