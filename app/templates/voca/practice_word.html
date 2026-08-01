@@ -59,6 +59,14 @@
     .voca-practice-shell .learning-step .btn {
         min-width: 136px;
     }
+    .listening-action {
+        min-height: 42px;
+    }
+    .listening-action .btn {
+        width: 164px;
+        min-height: 42px;
+        margin: 0;
+    }
 </style>
 {% endblock %}
 
@@ -99,13 +107,17 @@
                     </div>
                     <div class="card-body text-center">
                         <p class="mb-3" id="listening-instruction">단어의 발음을 들어보세요.</p>
-                        <button id="btn-listen" class="btn btn-primary mb-3">
-                            <i class="bi bi-volume-up"></i> 발음 듣기
-                        </button>
-                        <div id="listen-again-container" style="display:none;">
-                            <button id="btn-listen-again" class="btn btn-outline-primary mb-3">
-                                <i class="bi bi-volume-up"></i> 다시 한번 더 듣기
-                            </button>
+                        <div class="listening-action">
+                            <div id="listen-initial-container">
+                                <button id="btn-listen" class="btn btn-primary">
+                                    <i class="bi bi-volume-up"></i> 발음 듣기
+                                </button>
+                            </div>
+                            <div id="listen-again-container" style="display:none;">
+                                <button id="btn-listen-again" class="btn btn-primary">
+                                    <i class="bi bi-volume-up"></i> 다시 한번 더 듣기
+                                </button>
+                            </div>
                         </div>
                         <button id="btn-next-to-speaking" class="btn btn-primary" style="display:none;">
                             다음 단계로 <i class="bi bi-arrow-right"></i>
@@ -541,14 +553,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 듣기 버튼
     document.getElementById('btn-listen').addEventListener('click', function() {
         speakWord("{{ vocabulary.word }}");
-        this.style.display = 'none';
+        document.getElementById('listen-initial-container').style.display = 'none';
         document.getElementById('listen-again-container').style.display = 'block';
     });
 
     document.getElementById('btn-listen-again').addEventListener('click', function() {
         speakWord("{{ vocabulary.word }}");
         document.getElementById('listening-instruction').style.display = 'none';
-        this.style.display = 'none';
+        document.querySelector('.listening-action').style.display = 'none';
         document.getElementById('btn-next-to-speaking').style.display = 'block';
     });
     
