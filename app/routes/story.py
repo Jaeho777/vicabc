@@ -161,6 +161,13 @@ def _get_elementary_grade_counts():
     }
 
 
+def _get_elementary_grade_chapters():
+    return {
+        grade: _get_visible_grade_chapters(grade)
+        for grade in ELEMENTARY_GRADES
+    }
+
+
 def _build_chapter_progress(chapters):
     chapter_progress = {}
 
@@ -273,10 +280,15 @@ def _touch_story_progress(story_id):
 @story_bp.route('/')
 @login_required
 def index():
+    grade_chapters = _get_elementary_grade_chapters()
     return render_template(
         'story/index.html',
         grades=ELEMENTARY_GRADES,
-        grade_counts=_get_elementary_grade_counts(),
+        grade_counts={grade: len(chapters) for grade, chapters in grade_chapters.items()},
+        chapter_options={
+            grade: [chapter.order for chapter in chapters]
+            for grade, chapters in grade_chapters.items()
+        },
         latest_learning=_get_latest_story_learning(),
     )
 
@@ -291,10 +303,12 @@ def go_to_chapter():
         flash('학년과 챕터 번호를 선택해 주세요.', 'warning')
         return redirect(url_for('story.index'))
 
-    chapter = (
-        Chapter.query
-        .filter_by(grade=grade, order=chapter_order, category=ELEMENTARY_CATEGORY)
-        .first()
+    chapter = next(
+        (
+            item for item in _get_visible_grade_chapters(grade)
+            if item.order == chapter_order
+        ),
+        None,
     )
 
     if not chapter:

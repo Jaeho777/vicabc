@@ -2152,6 +2152,55 @@ body.theme-dashboard .dashboard-activity a {
 
 /* VOCA curriculum screen */
 
+.theme-story .story-hero-copy {
+    flex: 1 1 620px;
+    min-width: 0;
+}
+
+.theme-story .story-hero-sentence {
+    white-space: nowrap;
+}
+
+.theme-story .story-grade-card {
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.theme-story .story-grade-card .learning-card-pad {
+    display: flex;
+    min-height: 126px;
+    flex-direction: column;
+    gap: 18px;
+    padding: 16px;
+}
+
+.theme-story .story-grade-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.theme-story .story-grade-card-head h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 850;
+}
+
+.theme-story .story-grade-card .learning-chip {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+}
+
+.theme-story .story-grade-action {
+    width: 100%;
+    min-height: 38px;
+    margin-top: auto;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
 .theme-voca .level-detail-breadcrumb {
     margin-bottom: 12px;
 }
@@ -2512,6 +2561,10 @@ body.theme-dashboard .dashboard-activity a {
 }
 
 @media (max-width: 768px) {
+    .theme-story .story-hero-sentence {
+        white-space: normal;
+    }
+
     .theme-voca .voca-level-hero-head {
         align-items: flex-start;
         flex-direction: column;

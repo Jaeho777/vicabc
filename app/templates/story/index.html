@@ -7,12 +7,12 @@
 <div class="learning-shell">
     <section class="learning-hero">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-            <div>
+            <div class="story-hero-copy">
                 <div class="learning-eyebrow mb-2">Bible Story</div>
                 <h1 class="learning-hero-title mb-3">스토리 학습을 바로 시작하세요</h1>
                 <p class="learning-hero-text mb-0">
-                    학년을 고르거나 챕터 번호를 입력해서 바로 이동할 수 있습니다. 최근에 열었던 스토리는
-                    이어하기에서 바로 다시 시작합니다.
+                    <span class="story-hero-sentence">학년을 고르거나 챕터 번호를 선택해 바로 이동할 수 있습니다.</span>
+                    <span class="story-hero-sentence">최근에 열었던 스토리는 이어하기에서 바로 다시 시작합니다.</span>
                 </p>
             </div>
             <div class="learning-actions">
@@ -60,7 +60,11 @@
                 </div>
                 <div>
                     <label class="form-label" for="story-chapter">챕터</label>
-                    <input class="form-control" id="story-chapter" name="chapter" type="number" min="1" placeholder="10">
+                    <select class="form-select" id="story-chapter" name="chapter" required>
+                        {% for chapter_order in chapter_options.get(grades[0], []) %}
+                        <option value="{{ chapter_order }}">Chapter {{ chapter_order }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">찾아가기</button>
             </form>
@@ -77,17 +81,46 @@
 
     <div class="learning-grid-compact">
         {% for grade in grades %}
-        <a href="{{ url_for('story.grade_chapters', grade=grade) }}" class="learning-card learning-card-link">
+        <article class="learning-card story-grade-card">
             <div class="learning-card-pad">
-                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
-                    <span class="learning-number">{{ grade }}</span>
+                <div class="story-grade-card-head">
+                    <h4>{{ grade }}학년</h4>
                     <span class="learning-chip">{{ grade_counts.get(grade, 0) }}개</span>
                 </div>
-                <h4 class="fs-6 fw-bold mb-1">{{ grade }}학년</h4>
-                <div class="learning-meta">챕터 목록 보기</div>
+                <a href="{{ url_for('story.grade_chapters', grade=grade) }}" class="btn btn-outline-primary story-grade-action">
+                    챕터 목록 보기 <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
             </div>
-        </a>
+        </article>
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const chapterOptions = {{ chapter_options | tojson }};
+    const gradeSelect = document.getElementById('story-grade');
+    const chapterSelect = document.getElementById('story-chapter');
+
+    function updateChapterOptions() {
+        const chapterOrders = chapterOptions[gradeSelect.value] || [];
+        const previousValue = chapterSelect.value;
+
+        chapterSelect.innerHTML = '';
+        chapterOrders.forEach((chapterOrder) => {
+            const option = document.createElement('option');
+            option.value = chapterOrder;
+            option.textContent = `Chapter ${chapterOrder}`;
+            chapterSelect.appendChild(option);
+        });
+
+        chapterSelect.disabled = chapterOrders.length === 0;
+        if (chapterOrders.includes(Number(previousValue))) {
+            chapterSelect.value = previousValue;
+        }
+    }
+
+    gradeSelect.addEventListener('change', updateChapterOptions);
+</script>
 {% endblock %}
