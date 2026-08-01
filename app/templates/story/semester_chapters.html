@@ -18,19 +18,22 @@
 
     <section class="learning-hero">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-            <div>
+            <div class="story-hero-copy">
                 <div class="learning-eyebrow mb-2">Grade {{ grade }}{% if semester %} · Semester {{ semester }}{% endif %}</div>
                 <h1 class="learning-hero-title mb-3">{{ grade }}학년{% if semester %} {{ semester }}학기{% endif %} 챕터</h1>
                 <p class="learning-hero-text mb-0">
-                    챕터 카드를 누르면 스토리 목록으로 바로 이동합니다. 진행률이 높은 챕터와 아직 시작하지 않은 챕터를
-                    한 화면에서 비교할 수 있습니다.
+                    <span class="story-hero-sentence">챕터 카드를 누르면 스토리 목록으로 바로 이동합니다.</span>
+                    <span class="story-hero-sentence">진행률이 높은 챕터와 아직 시작하지 않은 챕터를 한 화면에서 비교할 수 있습니다.</span>
                 </p>
             </div>
             <div class="learning-actions">
                 {% if latest_learning and latest_learning.chapter.grade == grade %}
                 <a href="{{ latest_learning.url }}" class="btn btn-primary">이어하기</a>
                 {% endif %}
-                <a href="{{ url_for('story.index') }}" class="btn btn-outline-primary">학년 선택</a>
+                <a href="{{ url_for('story.index') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    학년 선택
+                </a>
             </div>
         </div>
     </section>
