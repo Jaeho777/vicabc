@@ -4,110 +4,80 @@
 {% block title %}학습 대시보드 - VIC 애플리케이션{% endblock %}
 
 {% block content %}
-{% set voca_cert = current_user.get_certification_level('초등') %}
 <div class="dashboard-shell">
     <header class="dashboard-welcome">
         <div>
-            <span class="dashboard-kicker">학습 대시보드</span>
-            <h1>{{ current_user.full_name }}님, 환영합니다</h1>
-            <p>{{ today_label }}</p>
+            <h1>{{ current_user.full_name }}님, 환영합니다!</h1>
+            <p>오늘도 즐겁게 영어 공부를 시작해볼까요?</p>
         </div>
-        <a href="{{ url_for('exam.math_index') }}" class="btn btn-primary">
-            <i class="bi bi-calculator" aria-hidden="true"></i>
-            수학시험
-        </a>
     </header>
 
     <section class="dashboard-products" aria-label="학습 영역">
         <article class="dashboard-product is-voca">
-            <div class="dashboard-product-head">
-                <span class="dashboard-product-icon"><i class="bi bi-alphabet-uppercase"></i></span>
-                <span class="status-chip">{{ voca_cert.level.name if voca_cert.level else '미인증' }}</span>
+            <div class="dashboard-product-copy">
+                <div class="dashboard-product-heading">
+                    <h2>VOCA</h2>
+                    <a href="{{ url_for('exam.voca_index') }}" class="dashboard-cert-link">인증 시험 <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <p>듣고 말하고 쓰며 외우는 단어 학습</p>
             </div>
-            <h2>VOCA</h2>
-            <p>{{ voca_cert.date.strftime('%Y-%m-%d') if voca_cert.date else '단어 학습을 시작하세요' }}</p>
-            <div class="dashboard-product-actions">
-                <a href="{{ url_for('voca.index') }}" class="btn btn-sm btn-primary">학습</a>
-                <a href="{{ url_for('exam.voca_index') }}" class="btn btn-sm btn-outline-primary">인증시험</a>
-            </div>
+            <a href="{{ url_for('voca.index') }}" class="dashboard-start-link">학습하기 <i class="bi bi-arrow-right"></i></a>
         </article>
 
         <article class="dashboard-product is-story">
-            <div class="dashboard-product-head">
-                <span class="dashboard-product-icon"><i class="bi bi-book"></i></span>
-                <span class="status-chip">
-                    {% if story_latest_learning %}Story {{ story_latest_learning.story.order }}{% else %}미학습{% endif %}
-                </span>
+            <div class="dashboard-product-copy">
+                <div class="dashboard-product-heading">
+                    <h2>Bible Story</h2>
+                    <a href="{{ url_for('story.story_exam_index') }}" class="dashboard-cert-link">인증 시험 <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <p>영어 성경으로 배우는 이야기 영어</p>
             </div>
-            <h2>Bible Story</h2>
-            <p>{{ story_latest_learning.chapter.title if story_latest_learning else '스토리 학습을 시작하세요' }}</p>
-            <div class="dashboard-product-actions">
-                {% if story_latest_learning %}
-                <a href="{{ url_for('story.chapter_practice', chapter_id=story_latest_learning.chapter.id, story_index=story_latest_learning.story.order) }}" class="btn btn-sm btn-primary">이어하기</a>
-                {% else %}
-                <a href="{{ url_for('story.index') }}" class="btn btn-sm btn-primary">학습</a>
-                {% endif %}
-                <a href="{{ url_for('story.story_exam_index') }}" class="btn btn-sm btn-outline-primary">인증시험</a>
-            </div>
+            <a href="{{ url_for('story.index') }}" class="dashboard-start-link">학습하기 <i class="bi bi-arrow-right"></i></a>
         </article>
 
         <article class="dashboard-product is-village">
-            <div class="dashboard-product-head">
-                <span class="dashboard-product-icon"><i class="bi bi-buildings"></i></span>
-                <span class="status-chip">{{ village_latest.level_label if village_latest else '미인증' }}</span>
+            <div class="dashboard-product-copy">
+                <div class="dashboard-product-heading">
+                    <h2>Village</h2>
+                    <a href="{{ url_for('village.exam') }}" class="dashboard-cert-link">인증 시험 <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <p>상황별 표현과 문장으로 배우는 실전 영어</p>
             </div>
-            <h2>Village</h2>
-            <p>
-                {% if village_latest_learning %}
-                Village {{ village_latest_learning.village_number }} · Lesson {{ village_latest_learning.lesson_number }}
-                {% else %}
-                대화 학습을 시작하세요
-                {% endif %}
-            </p>
-            <div class="dashboard-product-actions">
-                {% if village_latest_learning %}
-                <a href="{{ url_for('village.detail', village_number=village_latest_learning.village_number) }}#lesson-{{ village_latest_learning.lesson_number }}" class="btn btn-sm btn-primary">이어하기</a>
-                {% else %}
-                <a href="{{ url_for('village.index') }}" class="btn btn-sm btn-primary">학습</a>
-                {% endif %}
-                <a href="{{ url_for('village.exam') }}" class="btn btn-sm btn-outline-primary">인증시험</a>
-            </div>
-        </article>
-
-        <article class="dashboard-product is-math">
-            <div class="dashboard-product-head">
-                <span class="dashboard-product-icon"><i class="bi bi-calculator"></i></span>
-                <span class="status-chip">3-1 · 6-1</span>
-            </div>
-            <h2>수학</h2>
-            <p>전체 문제집과 객관식 채점 시험</p>
-            <div class="dashboard-product-actions">
-                <a href="{{ url_for('exam.math_index') }}" class="btn btn-sm btn-primary">시험 보기</a>
-            </div>
+            <a href="{{ url_for('village.index') }}" class="dashboard-start-link">학습하기 <i class="bi bi-arrow-right"></i></a>
         </article>
     </section>
 
     <div class="dashboard-columns">
         <section class="dashboard-panel">
             <div class="dashboard-panel-head">
-                <h2><i class="bi bi-megaphone"></i> 공지사항</h2>
+                <h2><i class="bi bi-dot"></i> 공지사항</h2>
+                <a href="{{ url_for('exam.math_index') }}">더보기</a>
             </div>
             <ul class="dashboard-list">
-                <li><a href="{{ url_for('exam.math_index') }}">수학 3-1·6-1 전체 문제집이 등록되었습니다.</a><span>NEW</span></li>
-                <li><a href="{{ url_for('voca.index') }}">학기별 Village VOCA 단어를 확인하세요.</a><span>VOCA</span></li>
-                <li><a href="{{ url_for('story.index') }}">Bible Story 학습과 인증시험을 이용할 수 있습니다.</a><span>STORY</span></li>
+                <li><a href="{{ url_for('exam.math_index') }}">수학 3-1·6-1 전체 문제집과 시험이 준비되었습니다.</a><time>NEW</time></li>
+                <li><a href="{{ url_for('voca.index') }}">여름방학 단어 챌린지에 참여하고 포인트 받기</a><time>VOCA</time></li>
+                <li><a href="{{ url_for('village.index') }}">Village 대화 연습 신규 레슨 5개 추가</a><time>VILLAGE</time></li>
+                <li><a href="{{ url_for('story.index') }}">1학기 학습 리포트가 발송되었습니다.</a><time>STORY</time></li>
+                <li><a href="{{ url_for('story.index') }}">Bible Story 4단원이 오픈되었습니다.</a><time>NEW</time></li>
             </ul>
         </section>
 
         <section class="dashboard-panel">
             <div class="dashboard-panel-head">
-                <h2><i class="bi bi-bar-chart-line"></i> 학습 순위</h2>
+                <h2><i class="bi bi-trophy-fill"></i> 이번 주 랭킹</h2>
+                <span>상위 5명</span>
             </div>
             <ul class="dashboard-activity">
-                <li><span class="activity-rank">1</span><strong>VOCA</strong><a href="{{ url_for('voca.index') }}">단어 학습</a></li>
-                <li><span class="activity-rank">2</span><strong>Bible Story</strong><a href="{{ url_for('story.index') }}">스토리 학습</a></li>
-                <li><span class="activity-rank">3</span><strong>Village</strong><a href="{{ url_for('village.index') }}">대화 학습</a></li>
-                <li><span class="activity-rank">4</span><strong>수학</strong><a href="{{ url_for('exam.math_index') }}">문제집</a></li>
+                {% for entry in weekly_ranking %}
+                <li class="ranking-row rank-{{ entry.rank }}{% if entry.is_current_user %} is-current-user{% endif %}">
+                    <span class="activity-rank">{{ entry.rank }}</span>
+                    <span class="ranking-avatar">{{ entry.name[0] }}</span>
+                    <strong>{{ entry.name }}{% if entry.is_current_user %} <span>(나)</span>{% endif %}</strong>
+                    <span class="ranking-score">{{ entry.score }}점</span>
+                </li>
+                {% else %}
+                <li class="ranking-empty">이번 주 학습 기록이 아직 없습니다.</li>
+                {% endfor %}
             </ul>
         </section>
     </div>
