@@ -24,17 +24,6 @@
         box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
         height: 100%;
     }
-    .math-exam-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 12px 0 16px;
-    }
-    .math-exam-meta .badge {
-        font-size: 0.82rem;
-        font-weight: 700;
-        padding: 0.45rem 0.6rem;
-    }
     .math-latest {
         border-top: 1px solid var(--app-border);
         margin-top: 16px;
@@ -55,7 +44,7 @@
     <div class="math-page-title">
         <div class="learning-eyebrow">Math Exam</div>
         <h1>수학시험</h1>
-        <p class="text-muted mb-0">수와 연산 HWP 교재 기반 시험</p>
+        <p class="text-muted mb-0">수와 연산 교재 기반 시험</p>
     </div>
 
     <div class="row g-4">
@@ -70,10 +59,6 @@
                             <h2 class="h4 mb-0">{{ exam.title }}</h2>
                         </div>
                         <span class="badge bg-primary">{{ exam.questions|length }}문항 채점</span>
-                    </div>
-
-                    <div class="math-exam-meta">
-                        <span class="badge bg-light text-dark border">{{ exam.source_file }}</span>
                     </div>
 
                     <p class="mb-3">{{ exam.description }}</p>
