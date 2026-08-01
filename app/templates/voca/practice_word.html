@@ -67,7 +67,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('voca.index') }}">VOCA 레벨</a></li>
-            <li class="breadcrumb-item"><a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}">{{ level.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}">{{ level_display_name }}</a></li>
             <li class="breadcrumb-item active">학습</li>
         </ol>
     </nav>
@@ -81,14 +81,14 @@
             </div>
         </div>
         <div class="card-body">
+            <!-- 진행 단계 표시 -->
+            <div class="progress mb-4" aria-label="학습 단계">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">1/4</div>
+            </div>
+
             <div class="word-card">
                 <div id="word-display" class="word hidden-content">{{ vocabulary.word }}</div>
                 <div id="meaning-display" class="meaning hidden-content">{{ vocabulary.meaning }}</div>
-            </div>
-
-            <!-- 진행 단계 표시 -->
-            <div class="progress mb-4">
-                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">1/4</div>
             </div>
 
             <!-- 듣기 단계 -->

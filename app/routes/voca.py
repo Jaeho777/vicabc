@@ -233,9 +233,14 @@ def level_practice(level_id, word_index=None, vocabulary_id=None):
     
     # 다음 단어 인덱스 계산
     next_index = word_number + 1 if word_number < total_words else 1
+    level_display_name = level.name
+    if level.category == 'VOCA':
+        village_levels = Level.query.filter_by(category='VOCA').all()
+        level_display_name = build_village_level_display_names(village_levels).get(level.id, level.name)
     
     return render_template('voca/practice_word.html', 
                           level=level,
+                          level_display_name=level_display_name,
                           vocabulary=vocabulary,
                           word_number=word_number,
                           total_words=total_words,
