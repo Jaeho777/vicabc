@@ -409,14 +409,14 @@ function sendAudioToServer(audioBlob) {
         // 첫 번째 녹음
         if (speakCount === 0) {
         document.getElementById('result-buttons-container').style.display = 'block';
-        document.getElementById('btn-next-to-writing').style.display = 'block';
+        document.getElementById('btn-next-to-writing').style.display = 'inline-flex';
         speakCount++;
         } 
         // 두 번째 녹음
         else {
         document.getElementById('btn-record-again').style.display = 'none';
         document.getElementById('result-buttons-container').style.display = 'block';
-        document.getElementById('btn-next-to-writing').style.display = 'block';
+        document.getElementById('btn-next-to-writing').style.display = 'inline-flex';
          }
     })
     .catch(error => {
@@ -425,12 +425,12 @@ function sendAudioToServer(audioBlob) {
         
         if (speakCount === 0) {
             document.getElementById('result-buttons-container').style.display = 'block';
-            document.getElementById('btn-next-to-writing').style.display = 'block';
+            document.getElementById('btn-next-to-writing').style.display = 'inline-flex';
             speakCount++;
         } else {
             document.getElementById('btn-record-again').style.display = 'none';
             document.getElementById('result-buttons-container').style.display = 'block';
-            document.getElementById('btn-next-to-writing').style.display = 'block';
+            document.getElementById('btn-next-to-writing').style.display = 'inline-flex';
         }
     });
 }
@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
         speakWord("{{ vocabulary.word }}");
         document.getElementById('listening-instruction').style.display = 'none';
         document.querySelector('.listening-action').style.display = 'none';
-        document.getElementById('btn-next-to-speaking').style.display = 'block';
+        document.getElementById('btn-next-to-speaking').style.display = 'inline-flex';
     });
     
     document.getElementById('btn-next-to-speaking').addEventListener('click', function() {
