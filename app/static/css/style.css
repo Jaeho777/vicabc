@@ -2201,6 +2201,97 @@ body.theme-dashboard .dashboard-activity a {
     font-weight: 800;
 }
 
+.theme-story .story-list-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.theme-story .story-list-card {
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.theme-story .story-list-card .learning-card-pad {
+    display: flex;
+    min-height: 192px;
+    flex-direction: column;
+    gap: 13px;
+    padding: 15px;
+}
+
+.theme-story .story-list-card-head,
+.theme-story .story-list-card-identity {
+    display: flex;
+    align-items: center;
+}
+
+.theme-story .story-list-card-head {
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.theme-story .story-list-card-identity {
+    min-width: 0;
+    gap: 8px;
+}
+
+.theme-story .story-list-order {
+    display: inline-grid;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--page-accent-soft);
+    color: var(--page-accent-dark);
+    font-size: 0.75rem;
+    font-weight: 850;
+}
+
+.theme-story .story-list-card h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 850;
+}
+
+.theme-story .story-list-card .learning-chip {
+    min-height: 22px;
+    padding: 3px 7px;
+    font-size: 0.65rem;
+}
+
+.theme-story .story-list-card-copy {
+    display: grid;
+    gap: 7px;
+}
+
+.theme-story .story-list-card-copy p {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.theme-story .story-list-card-english {
+    color: #1f2937;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.theme-story .story-list-card-korean {
+    color: var(--app-muted);
+    font-size: 0.74rem;
+    line-height: 1.5;
+}
+
+.theme-story .story-list-card-action {
+    width: 100%;
+    min-height: 36px;
+    margin-top: auto;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
 .theme-voca .level-detail-breadcrumb {
     margin-bottom: 12px;
 }
