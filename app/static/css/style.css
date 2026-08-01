@@ -216,9 +216,9 @@ h4 {
 /* ==================== VIC Figma refresh ==================== */
 
 :root {
-    --vic-blue: #315fda;
-    --vic-blue-dark: #244bb5;
-    --vic-blue-soft: #eaf0ff;
+    --vic-blue: #466aa6;
+    --vic-blue-dark: #344f7d;
+    --vic-blue-soft: #eaf0f9;
     --vic-green: #157a68;
     --vic-green-dark: #0d5f52;
     --vic-green-soft: #e8f5f1;
@@ -250,7 +250,7 @@ body.theme-dashboard {
     --page-accent: var(--vic-blue);
     --page-accent-dark: var(--vic-blue-dark);
     --page-accent-soft: var(--vic-blue-soft);
-    --page-accent-wash: #f6f8ff;
+    --page-accent-wash: #f5f7fb;
 }
 
 body.theme-voca {
@@ -288,6 +288,12 @@ body.theme-village {
     color: #fff;
 }
 
+.theme-dashboard .vic-navbar {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+    background: var(--page-accent);
+    color: #fff;
+}
+
 .vic-navbar .container {
     min-height: 52px;
 }
@@ -319,6 +325,11 @@ body.theme-village {
 }
 
 .theme-learning .vic-brand-mark {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+.theme-dashboard .vic-brand-mark {
     background: rgba(255, 255, 255, 0.18);
     color: #fff;
 }
@@ -387,6 +398,11 @@ body.theme-village {
 }
 
 .theme-learning .vic-user-avatar {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.theme-dashboard .vic-user-avatar {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
 }
@@ -560,6 +576,7 @@ h4 {
 .dashboard-shell {
     max-width: 1040px;
     margin: 0 auto;
+    padding-bottom: 28px;
 }
 
 .dashboard-welcome {
@@ -567,23 +584,43 @@ h4 {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px;
+    min-height: 132px;
+    padding: 24px;
     margin-bottom: 14px;
-    border: 1px solid #cbdced;
+    border: 1px solid var(--page-accent-dark);
     border-radius: 4px;
-    background: #eaf4ff;
+    background: var(--page-accent);
+    color: #fff;
 }
 
 .dashboard-welcome h1 {
     margin: 3px 0 4px;
     font-size: 1.35rem;
     font-weight: 800;
+    color: #fff;
 }
 
 .dashboard-welcome p {
     margin: 0;
-    color: var(--app-muted);
+    color: rgba(255, 255, 255, 0.82);
     font-size: 0.8rem;
+}
+
+.dashboard-welcome .dashboard-kicker {
+    color: #fff;
+}
+
+.dashboard-welcome .btn-primary {
+    border-color: #fff !important;
+    background-color: #fff !important;
+    color: var(--page-accent-dark) !important;
+}
+
+.dashboard-welcome .btn-primary:hover,
+.dashboard-welcome .btn-primary:focus {
+    border-color: #fff !important;
+    background-color: var(--page-accent-soft) !important;
+    color: var(--page-accent-dark) !important;
 }
 
 .dashboard-products {
@@ -595,7 +632,8 @@ h4 {
 
 .dashboard-product {
     min-width: 0;
-    padding: 14px;
+    min-height: 188px;
+    padding: 16px 14px;
     border: 1px solid var(--app-border);
     border-top: 3px solid var(--product-color);
     border-radius: 4px;
@@ -667,6 +705,7 @@ h4 {
 }
 
 .dashboard-panel {
+    min-height: 226px;
     overflow: hidden;
 }
 
@@ -698,10 +737,16 @@ h4 {
     display: flex;
     align-items: center;
     gap: 9px;
-    min-height: 42px;
-    padding: 9px 14px;
+    min-height: 54px;
+    padding: 11px 14px;
     border-bottom: 1px solid #edf0f4;
     font-size: 0.77rem;
+}
+
+@media (max-width: 1120px) {
+    .dashboard-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .dashboard-list li:last-child,
@@ -1192,7 +1237,12 @@ h4 {
     }
 
     .dashboard-welcome {
+        flex-direction: column;
         padding: 15px;
+    }
+
+    .dashboard-welcome > .btn {
+        width: 100%;
     }
 
     .dashboard-products,

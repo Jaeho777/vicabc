@@ -8,7 +8,7 @@
 <div class="dashboard-shell">
     <header class="dashboard-welcome">
         <div>
-            <span class="dashboard-kicker">Learning Dashboard</span>
+            <span class="dashboard-kicker">학습 대시보드</span>
             <h1>{{ current_user.full_name }}님, 환영합니다</h1>
             <p>{{ today_label }}</p>
         </div>
@@ -101,7 +101,7 @@
 
         <section class="dashboard-panel">
             <div class="dashboard-panel-head">
-                <h2><i class="bi bi-clock-history"></i> 오늘의 학습</h2>
+                <h2><i class="bi bi-bar-chart-line"></i> 학습 순위</h2>
             </div>
             <ul class="dashboard-activity">
                 <li><span class="activity-rank">1</span><strong>VOCA</strong><a href="{{ url_for('voca.index') }}">단어 학습</a></li>
