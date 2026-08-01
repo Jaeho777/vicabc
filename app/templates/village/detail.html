@@ -64,9 +64,30 @@
     }
     .village-step-control {
         min-width: 0;
+        justify-self: end;
+        max-width: 100%;
     }
     .village-step-control > :last-child {
         margin-bottom: 0 !important;
+    }
+    .village-step-control .btn {
+        white-space: nowrap;
+    }
+    .support-panel-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 12px;
+    }
+    .support-panel-copy {
+        min-width: 0;
+    }
+    .support-panel-copy .learning-meta {
+        overflow-wrap: anywhere;
+    }
+    .support-panel-action {
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
     .village-top-button {
         position: fixed;
@@ -136,6 +157,15 @@
     @media (max-width: 768px) {
         .practice-panel .learning-step {
             grid-template-columns: 1fr;
+        }
+        .village-step-control {
+            justify-self: stretch;
+        }
+        .support-panel-header {
+            grid-template-columns: 1fr;
+        }
+        .support-panel-action {
+            justify-self: start;
         }
         .village-top-button {
             right: 12px;
@@ -242,13 +272,13 @@
                         </div>
 
                         <div class="learning-panel support-panel">
-                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                                <div>
+                            <div class="support-panel-header">
+                                <div class="support-panel-copy">
                                     <div class="learning-eyebrow mb-1">Variation</div>
                                     <div class="fw-semibold">다른 표현으로 들어보기</div>
                                     <div class="learning-meta mt-1">키워드를 바꿔 말하는 예시를 들어보세요.</div>
                                 </div>
-                                <button type="button" class="btn btn-outline-primary js-play-reference" data-default-label="바꿔 듣기">바꿔 듣기</button>
+                                <button type="button" class="btn btn-outline-primary js-play-reference support-panel-action" data-default-label="바꿔 듣기">바꿔 듣기</button>
                             </div>
                             <audio preload="none" class="d-none js-reference-audio">
                                 <source src="{{ url_for('static', filename=lesson.practice_audio_path) }}" type="audio/mp4">
