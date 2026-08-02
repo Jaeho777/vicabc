@@ -8,18 +8,15 @@
 <article class="curriculum-card">
     <div class="curriculum-card-head">
         <h4>{{ village_level_display_names.get(level.id, level.name) }}</h4>
-        <span class="curriculum-card-marker" aria-hidden="true"></span>
+        <span class="status-chip{% if progress.progress_percent >= 100 %} is-success{% endif %}">
+            {% if progress.progress_percent >= 100 %}완료{% elif progress.in_progress_words %}진행 중{% else %}미시작{% endif %}
+        </span>
     </div>
     <div class="curriculum-progress" aria-label="{{ level.name }} 진도">
         <span style="width: {{ progress.progress_percent }}%"></span>
     </div>
     <div class="curriculum-card-meta curriculum-card-progress-copy">
         <span>진도: {{ progress.completed_words }}/{{ progress.total_words }} 단어 완료</span>
-    </div>
-    <div class="curriculum-card-status">
-        <span class="status-chip{% if progress.progress_percent >= 100 %} is-success{% endif %}">
-            {% if progress.progress_percent >= 100 %}완료{% elif progress.in_progress_words %}진행 중{% else %}미시작{% endif %}
-        </span>
     </div>
     <div class="curriculum-card-actions">
         <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-sm btn-primary">
@@ -43,7 +40,6 @@
     <header class="voca-current-summary">
         <div class="voca-current-summary-head">
             <div>
-                <span class="page-kicker">현재 학습</span>
                 <h1>{{ village_level_display_names.get(current_village_level.id, current_village_level.name) }}</h1>
             </div>
             <span class="status-chip{% if current_progress.progress_percent >= 100 %} is-success{% endif %}">
@@ -56,7 +52,6 @@
         </div>
         <div class="voca-current-summary-actions">
             <a href="{{ url_for('voca.voca_level_words', level_id=current_village_level.id) }}" class="btn btn-primary">학습하기</a>
-            <a href="{{ url_for('exam.voca_index') }}" class="btn btn-primary">인증시험</a>
         </div>
     </header>
     {% endif %}
