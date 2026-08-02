@@ -3152,6 +3152,37 @@ body.theme-voca .voca-course-content .curriculum-card-actions .btn-primary {
     height: 36px;
 }
 
+/* The header and course bar share the same visual alignment as the reference. */
+body.theme-voca .voca-curriculum-section > .section-heading {
+    position: relative;
+    align-items: flex-start;
+}
+
+body.theme-voca .voca-curriculum-section > .section-heading::after {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.38);
+    content: "";
+}
+
+body.theme-voca .voca-curriculum-section > .section-heading h2 {
+    z-index: 1;
+    padding-top: 16px;
+    color: #fff;
+}
+
+body.theme-voca .voca-curriculum-section > .section-tabs {
+    box-sizing: border-box;
+    margin: 24px -12px 12px;
+    padding: 0 12px;
+    border: 1px solid #e4e9f0;
+    border-radius: 4px 4px 0 0;
+    background: #fff;
+}
+
 /* VOCA screen: exact hierarchy and dimensions from the supplied reference. */
 .theme-voca .learning-shell {
     width: min(954px, calc(100% - 32px));
