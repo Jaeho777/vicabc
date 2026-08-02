@@ -19,10 +19,6 @@
             <div class="story-hero-copy">
                 <div class="learning-eyebrow mb-2">{{ chapter.grade }}학년 · Chapter {{ chapter.order }}</div>
                 <h1 class="learning-hero-title mb-3">{{ chapter.title }}</h1>
-                <p class="learning-hero-text mb-0">
-                    <span class="story-hero-sentence">스토리를 하나씩 듣고 말하고 써보며 학습합니다.</span>
-                    <span class="story-hero-sentence">각 스토리의 학습하기 버튼을 누르면 해당 순서로 바로 이동합니다.</span>
-                </p>
             </div>
             <div class="learning-actions">
                 <a href="{{ url_for('story.chapter_practice', chapter_id=chapter.id, story_index=resume_story_order) }}" class="btn btn-primary">
