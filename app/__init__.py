@@ -41,6 +41,12 @@ def create_app():
     app.register_blueprint(village_bp)
 
     with app.app_context():
+        from app.models.notice import Notice
+        from app.services.dashboard import ensure_dashboard_notices
+
+        Notice.__table__.create(bind=db.engine, checkfirst=True)
+        ensure_dashboard_notices()
+
         table_names = set(inspect(db.engine).get_table_names())
         if {'levels', 'vocabularies'}.issubset(table_names):
             level_columns = {

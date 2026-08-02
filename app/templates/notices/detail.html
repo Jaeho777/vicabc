@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ notice.title }} - 공지사항{% endblock %}
+
+{% block content %}
+<section class="community-shell" aria-labelledby="notice-title">
+    <div class="community-back-row">
+        <a href="{{ url_for('main.notices') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> 공지사항</a>
+    </div>
+    <article class="notice-detail">
+        <header>
+            <p class="community-kicker">NOTICE</p>
+            <h1 id="notice-title">{{ notice.title }}</h1>
+            <time datetime="{{ notice.published_at.isoformat() }}">{{ notice.published_at.strftime('%Y년 %m월 %d일') }}</time>
+        </header>
+        <div class="notice-detail-body">{{ notice.body }}</div>
+        {% if current_user.is_admin %}
+        <footer class="notice-detail-actions">
+            <a class="btn btn-outline-primary" href="{{ url_for('main.notice_edit', notice_id=notice.id) }}">수정</a>
+            <form method="post" action="{{ url_for('main.notice_delete', notice_id=notice.id) }}" onsubmit="return confirm('이 공지를 삭제할까요?');">
+                <button class="btn btn-outline-danger" type="submit">삭제</button>
+            </form>
+        </footer>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

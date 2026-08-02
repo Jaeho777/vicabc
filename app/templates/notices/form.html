@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{% if notice %}공지 수정{% else %}공지 작성{% endif %} - VIC 애플리케이션{% endblock %}
+
+{% block content %}
+<section class="community-shell" aria-labelledby="notice-form-title">
+    <div class="community-back-row">
+        <a href="{{ url_for('main.notices') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> 공지사항</a>
+    </div>
+    <form class="notice-form" method="post">
+        <header>
+            <p class="community-kicker">NOTICE</p>
+            <h1 id="notice-form-title">{% if notice %}공지 수정{% else %}공지 작성{% endif %}</h1>
+        </header>
+        <label for="notice-title">제목</label>
+        <input id="notice-title" name="title" type="text" maxlength="200" required value="{{ notice.title if notice else '' }}">
+        <label for="notice-published-at">게시 일시</label>
+        <input id="notice-published-at" name="published_at" type="datetime-local" value="{{ notice.published_at.strftime('%Y-%m-%dT%H:%M') if notice else '' }}">
+        <label for="notice-body">내용</label>
+        <textarea id="notice-body" name="body" rows="10">{{ notice.body if notice else '' }}</textarea>
+        <div class="notice-form-actions">
+            <a class="btn btn-outline-secondary" href="{{ url_for('main.notices') }}">취소</a>
+            <button class="btn btn-primary" type="submit">저장</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

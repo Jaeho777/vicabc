@@ -49,41 +49,36 @@
         <section class="reference-panel" id="dashboard-notices" aria-labelledby="notice-title">
             <header class="reference-panel-heading">
                 <h2 id="notice-title"><span class="reference-heading-dot" aria-hidden="true"></span>공지사항</h2>
-                <a href="#dashboard-notices">더보기</a>
+                <a href="{{ url_for('main.notices') }}">더보기</a>
             </header>
             <ul class="reference-notice-list">
-                <li><span>7월 정기 점검 안내 (7/22 새벽 2시~4시)</span><time datetime="2026-07-19">07.19</time></li>
-                <li><span>여름방학 단어 챌린지 참여하고 포인트 받기</span><time datetime="2026-07-17">07.17</time></li>
-                <li><span>Village 대화 연습 신규 레슨 5개 추가</span><time datetime="2026-07-14">07.14</time></li>
-                <li><span>1학기 학습 리포트가 발송되었습니다</span><time datetime="2026-07-10">07.10</time></li>
-                <li><span>Bible Story 4단원이 오픈되었습니다</span><time datetime="2026-07-05">07.05</time></li>
+                {% for notice in notices %}
+                <li>
+                    <a href="{{ url_for('main.notice_detail', notice_id=notice.id) }}">{{ notice.title }}</a>
+                    <time datetime="{{ notice.published_at.isoformat() }}">{{ notice.published_at.strftime('%m.%d') }}</time>
+                </li>
+                {% else %}
+                <li class="reference-empty-state">등록된 공지가 없습니다.</li>
+                {% endfor %}
             </ul>
         </section>
 
         <section class="reference-panel" id="dashboard-ranking" aria-labelledby="ranking-title">
             <header class="reference-panel-heading">
                 <h2 id="ranking-title"><i class="bi bi-trophy-fill" aria-hidden="true"></i> 이번 주 랭킹</h2>
-                <a href="#dashboard-ranking">전체보기</a>
+                <a href="{{ url_for('main.ranking') }}">전체보기</a>
             </header>
             <ol class="reference-ranking-list">
-                <li class="reference-ranking-item rank-one">
-                    <span class="reference-rank"><i class="bi bi-award-fill" aria-hidden="true"></i> 1위</span>
-                    <span class="reference-ranking-avatar avatar-orange">지우</span><span class="reference-ranking-name">이지우</span><strong>2,410점</strong>
+                {% for entry in rankings %}
+                <li class="reference-ranking-item {% if loop.index == 1 %}rank-one{% elif loop.index == 2 %}rank-two{% elif loop.index == 3 %}rank-three{% endif %}">
+                    <span class="reference-rank">{% if loop.index <= 3 %}<i class="bi bi-award-fill" aria-hidden="true"></i>{% endif %} {{ loop.index }}위</span>
+                    <span class="reference-ranking-avatar {{ entry.avatar_class }}">{{ entry.initial }}</span>
+                    <span class="reference-ranking-name">{% if entry.user.id == current_user.id %}나 ({{ entry.display_name }}){% else %}{{ entry.display_name }}{% endif %}</span>
+                    <strong>{{ '{:,}'.format(entry.score) }}점</strong>
                 </li>
-                <li class="reference-ranking-item rank-two">
-                    <span class="reference-rank"><i class="bi bi-award-fill" aria-hidden="true"></i> 2위</span>
-                    <span class="reference-ranking-avatar avatar-green">윤정</span><span class="reference-ranking-name">김윤정</span><strong>2,180점</strong>
-                </li>
-                <li class="reference-ranking-item rank-three">
-                    <span class="reference-rank"><i class="bi bi-award-fill" aria-hidden="true"></i> 3위</span>
-                    <span class="reference-ranking-avatar avatar-red">서연</span><span class="reference-ranking-name">박서연</span><strong>1,950점</strong>
-                </li>
-                <li class="reference-ranking-item">
-                    <span class="reference-rank">4위</span><span class="reference-ranking-avatar avatar-pink">하윤</span><span class="reference-ranking-name">최하윤</span><strong>1,760점</strong>
-                </li>
-                <li class="reference-ranking-item">
-                    <span class="reference-rank">5위</span><span class="reference-ranking-avatar avatar-blue">예진</span><span class="reference-ranking-name">나 (서예진)</span><strong>1,240점</strong>
-                </li>
+                {% else %}
+                <li class="reference-ranking-empty">이번 주 학습 기록이 아직 없습니다.</li>
+                {% endfor %}
             </ol>
         </section>
     </div>
