@@ -213,6 +213,364 @@ h4 {
     }
 }
 
+/* Homepage reference: main ver.1 */
+body.theme-dashboard {
+    background: #fbfcfe;
+    color: #102e50;
+}
+
+body.theme-dashboard .dashboard-navbar {
+    min-height: 78px;
+    border: 0;
+    background: #fbfcfe;
+    color: #102e50;
+    box-shadow: none;
+}
+
+body.theme-dashboard .dashboard-navbar .container {
+    width: min(1100px, calc(100% - 78px));
+    min-height: 78px;
+    max-width: none;
+    padding: 0;
+}
+
+body.theme-dashboard .dashboard-navbar .vic-brand {
+    gap: 0;
+    color: #102e50;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+body.theme-dashboard .dashboard-account-nav {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 9px;
+    margin-left: auto;
+}
+
+body.theme-dashboard .dashboard-account-nav .vic-user-name {
+    display: flex;
+    align-items: center;
+}
+
+body.theme-dashboard .dashboard-account-nav .vic-user-avatar {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    background: #398bdc;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+body.theme-dashboard .dashboard-account-nav .nav-link {
+    padding: 0;
+    color: #6e7784;
+    font-size: 0.86rem;
+}
+
+body.theme-dashboard main.app-content {
+    width: min(1100px, calc(100% - 78px));
+    max-width: none;
+    margin: 0 auto;
+    padding: 16px 0 28px;
+}
+
+.reference-dashboard {
+    display: grid;
+    gap: 24px;
+}
+
+.reference-welcome {
+    min-height: 116px;
+    padding: 28px 36px;
+    border-radius: 8px;
+    background: #e3f1ff;
+    box-shadow: 0 3px 5px rgba(15, 31, 50, 0.24);
+}
+
+.reference-welcome h1,
+.reference-welcome p,
+.reference-product h2,
+.reference-product p,
+.reference-panel h2 {
+    margin: 0;
+}
+
+.reference-welcome h1 {
+    color: #0f3154;
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.28;
+}
+
+.reference-welcome p {
+    margin-top: 6px;
+    color: #1d65ac;
+    font-size: 0.93rem;
+}
+
+.reference-products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.reference-product {
+    display: flex;
+    min-width: 0;
+    min-height: 79px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 24px 12px 18px;
+    border-top: 6px solid;
+    border-radius: 7px;
+    box-shadow: 0 3px 5px rgba(15, 31, 50, 0.22);
+}
+
+.reference-product-voca {
+    border-color: #18a57d;
+    background: #e4f6f0;
+    color: #034739;
+}
+
+.reference-product-story {
+    border-color: #7c6de1;
+    background: #eceaff;
+    color: #29235d;
+}
+
+.reference-product-village {
+    border-color: #f3a121;
+    background: #fff2dc;
+    color: #60380b;
+}
+
+.reference-product-copy {
+    min-width: 0;
+}
+
+.reference-product-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reference-product h2 {
+    font-size: 1.02rem;
+    font-weight: 800;
+}
+
+.reference-product p {
+    overflow: hidden;
+    margin-top: 7px;
+    color: inherit;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reference-certification {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    padding: 3px 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.62);
+    color: inherit;
+    font-size: 0.57rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.reference-certification:hover {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.reference-study-action {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 10px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.reference-product-voca .reference-study-action { background: #1da27d; }
+.reference-product-story .reference-study-action { background: #7b70d9; }
+.reference-product-village .reference-study-action { background: #f5a11d; }
+.reference-study-action:hover { color: #fff; text-decoration: none; filter: brightness(0.94); }
+
+.reference-lower-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.reference-panel {
+    min-height: 320px;
+    padding: 14px 26px 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 3px 5px rgba(15, 31, 50, 0.24);
+}
+
+.reference-panel-heading {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #8f8f8f;
+}
+
+.reference-panel-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #222;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.reference-panel-heading h2 .bi-trophy-fill {
+    color: #edaa06;
+    font-size: 1.2rem;
+}
+
+.reference-heading-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e86636;
+}
+
+.reference-panel-heading a {
+    color: #727272;
+    font-size: 0.7rem;
+    text-decoration: none;
+}
+
+.reference-notice-list,
+.reference-ranking-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.reference-notice-list li {
+    display: grid;
+    min-height: 50px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 0 24px;
+    border-bottom: 1px solid #a8a8a8;
+    color: #2b2b2b;
+    font-size: 0.77rem;
+}
+
+.reference-notice-list li:last-child { border-bottom: 0; }
+.reference-notice-list span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reference-notice-list time { color: #929292; font-size: 0.67rem; }
+
+.reference-ranking-list {
+    display: grid;
+    gap: 5px;
+    padding-top: 10px;
+}
+
+.reference-ranking-item {
+    display: grid;
+    min-height: 41px;
+    grid-template-columns: 61px 30px minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 0 22px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: #fcfcfc;
+    color: #303030;
+    font-size: 0.75rem;
+}
+
+.reference-ranking-item.rank-one { border-color: #f2cf00; background: #fffbe0; }
+.reference-ranking-item.rank-two { border-color: #b9b9b9; background: #f5f5f5; }
+.reference-ranking-item.rank-three { border-color: #db840d; background: #fff0d7; }
+
+.reference-rank {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 800;
+}
+
+.rank-one .reference-rank .bi-award-fill { color: #e2b008; }
+.rank-two .reference-rank .bi-award-fill { color: #9d9d9d; }
+.rank-three .reference-rank .bi-award-fill { color: #b86400; }
+
+.reference-ranking-avatar {
+    display: inline-grid;
+    width: 25px;
+    height: 25px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.55rem;
+}
+
+.avatar-orange { background: #f49a22; }
+.avatar-green { background: #16b83f; }
+.avatar-red { background: #e23940; }
+.avatar-pink { background: #e982ae; }
+.avatar-blue { background: #398bdc; }
+.reference-ranking-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reference-ranking-item strong { color: #123d69; font-size: 0.75rem; font-weight: 500; }
+
+@media (max-width: 900px) {
+    body.theme-dashboard .dashboard-navbar .container,
+    body.theme-dashboard main.app-content {
+        width: min(100% - 40px, 720px);
+    }
+
+    .reference-products { grid-template-columns: 1fr; }
+    .reference-lower-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    body.theme-dashboard .dashboard-navbar { min-height: 64px; }
+
+    body.theme-dashboard .dashboard-navbar .container {
+        width: calc(100% - 32px);
+        min-height: 64px;
+    }
+
+    body.theme-dashboard main.app-content {
+        width: calc(100% - 32px);
+        padding-top: 10px;
+    }
+
+    body.theme-dashboard .dashboard-navbar .vic-brand { font-size: 1rem; }
+    .reference-dashboard { gap: 16px; }
+    .reference-welcome { min-height: 0; padding: 22px 20px; }
+    .reference-welcome h1 { font-size: 1.2rem; }
+    .reference-product { padding-right: 14px; }
+    .reference-panel { min-height: 0; padding: 12px 14px; }
+    .reference-notice-list li { padding: 0 8px; }
+    .reference-ranking-item { grid-template-columns: 52px 30px minmax(0, 1fr) auto; padding: 0 10px; }
+}
+
 /* ==================== VIC Figma refresh ==================== */
 
 :root {
@@ -2649,6 +3007,95 @@ body.theme-dashboard .dashboard-activity a {
     .theme-voca .curriculum-semesters .curriculum-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Keep the reference homepage rules after the legacy dashboard styles. */
+body.theme-dashboard {
+    background: #fbfcfe;
+    color: #102e50;
+}
+
+body.theme-dashboard .dashboard-navbar {
+    min-height: 78px;
+    border: 0;
+    background: #fbfcfe;
+    color: #102e50;
+    box-shadow: none;
+}
+
+body.theme-dashboard .dashboard-navbar .container {
+    width: min(1100px, calc(100% - 78px));
+    min-height: 78px;
+    max-width: none;
+    padding: 0;
+}
+
+body.theme-dashboard .dashboard-navbar .vic-brand {
+    gap: 0;
+    color: #102e50;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+body.theme-dashboard .dashboard-account-nav {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 9px;
+    margin-left: auto;
+}
+
+body.theme-dashboard .dashboard-account-nav .vic-user-name {
+    display: flex;
+    align-items: center;
+}
+
+body.theme-dashboard .dashboard-account-nav .vic-user-avatar {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    background: #398bdc;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+body.theme-dashboard .dashboard-account-nav .nav-link {
+    padding: 0;
+    color: #6e7784;
+    font-size: 0.86rem;
+}
+
+body.theme-dashboard main.app-content {
+    width: min(1100px, calc(100% - 78px));
+    max-width: none;
+    margin: 0 auto;
+    padding: 16px 0 28px;
+}
+
+@media (max-width: 900px) {
+    body.theme-dashboard .dashboard-navbar .container,
+    body.theme-dashboard main.app-content {
+        width: min(720px, calc(100% - 40px));
+    }
+}
+
+@media (max-width: 560px) {
+    body.theme-dashboard .dashboard-navbar { min-height: 64px; }
+
+    body.theme-dashboard .dashboard-navbar .container {
+        width: calc(100% - 32px);
+        min-height: 64px;
+    }
+
+    body.theme-dashboard main.app-content {
+        width: calc(100% - 32px);
+        padding-top: 10px;
+    }
+
+    body.theme-dashboard .dashboard-navbar .vic-brand { font-size: 1rem; }
 }
 
 @media (max-width: 768px) {
