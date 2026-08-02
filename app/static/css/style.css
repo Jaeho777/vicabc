@@ -3093,6 +3093,56 @@ body.theme-voca .voca-curriculum-section > .section-tabs .section-tab-trash {
     padding-left: 7px;
 }
 
+/* Flex keeps the card internals aligned while still adapting to their content. */
+body.theme-voca .voca-course-content .curriculum-card {
+    display: flex;
+    height: 205px;
+    min-height: 205px;
+    flex-direction: column;
+    padding: 0 24px;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-head {
+    flex: 0 0 50px;
+    margin: 0 -24px;
+}
+
+body.theme-voca .voca-course-content .curriculum-card .curriculum-progress {
+    flex: 0 0 14px;
+    width: 100%;
+    margin: 24px 0 0;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-progress-copy {
+    display: flex;
+    min-height: 24px;
+    flex: 0 0 24px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-status {
+    min-height: 30px;
+    flex: 0 0 30px;
+    align-items: center;
+    padding: 0;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-actions {
+    min-height: 36px;
+    flex: 0 0 36px;
+    align-items: stretch;
+    margin-top: auto;
+    padding: 0;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-actions .btn-primary {
+    width: 100%;
+    min-height: 36px;
+    height: 36px;
+}
+
 /* VOCA screen: exact hierarchy and dimensions from the supplied reference. */
 .theme-voca .learning-shell {
     width: min(954px, calc(100% - 32px));
