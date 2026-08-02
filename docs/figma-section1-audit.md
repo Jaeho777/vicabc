@@ -1,67 +1,66 @@
-# VIC Figma Section 1 audit
+# VIC 운영 이미지 검수 기록
 
-Source: Figma file `VIC`, `Section 1`.
+## 상태 기준
 
-This audit compares the annotated public canvas against the live Flask
-templates. The Figma API account still cannot read layer metadata or design
-tokens, so exact numeric token comparison remains blocked. Screen structure,
-visible annotations, interactions, and responsive behavior were checked.
+- `반영 확인`: 운영 URL에서 해당 화면과 동작을 직접 확인함.
+- `미검수`: 이미지의 주석 항목을 운영 화면과 대조하지 않음.
+- `미완료`: 요구가 현재 구현과 다르거나, 필요한 원본 데이터가 없음.
 
-## Main
+이 문서는 기존의 완료 표시를 승계하지 않는다. 2026-08-02 현재, 이미지별
+주석을 운영 화면에서 전수 대조하지 않았으므로 아래 항목은 모두 재검수 대상이다.
 
-- [x] Compared all three main variants
-- [x] Latest `main ver.3` structure is used
-- [x] Welcome, product status, notices, and today's learning are present
-- [x] Math remains as an intentional fourth product required by the live site
+## 운영 배포 확인
 
-## VOCA - 7 screens
+- [x] `voca_app.service`가 실행 중이며 로그인 페이지와 보호 페이지가 응답함.
+- [x] 관리자 로그인 후 대시보드, 수학, VOCA, Bible Story, Village 진입 화면이 열림.
+- [x] 수학 3-1, 6-1 카드에서 원본 `.hwp` 파일명은 노출되지 않음.
+- [x] VOCA 16개 Village 과정과 휴지통 탭이 운영에서 보임.
+- [x] 운영 MySQL `levels.deleted_at` 열이 생성됨.
 
-- [x] Curriculum and grade selection
-- [x] Word list, progress, status, and random practice entry
-- [x] Listening initial and replay states
-- [x] Speaking, recording, and replay states
-- [x] Writing state
-- [x] Result and next-word state
-- [x] Repeated action buttons now share consistent size, position, and colors
+## 전달 이미지별 재검수 대상
 
-## Bible Story - 5 screens
+### 메인 대시보드
 
-- [x] Grade selection and chapter quick jump
-- [x] Grade chapter list
-- [x] Chapter story list and progress
-- [x] Story listening, speaking, writing, scoring, and save controls
-- [x] Practice cards now use the shared compact radius and flat surface style
+- [ ] 헤더 브랜드, 메뉴 중앙 정렬, 관리자/사용자 영역 배치
+- [ ] 환영 영역, 수학시험 진입 버튼, 네 개 학습 카드
+- [ ] 공지사항과 오늘의 학습/랭킹 영역의 실제 필요 여부와 배치
+- [ ] 카드 색상, 버튼 우선순위, 세로 여백
 
-## Village - 3 screens
+### VOCA 과정과 단어 학습
 
-- [x] Village selection and recent progress
-- [x] Lesson jump strip and lesson card list
-- [x] One selected lesson practice panel at a time
-- [x] Practice controls and result panels moved to the right column
-- [x] Added the annotated fixed `TOP` control
-- [x] Listening, speaking, replay, checking, and writing behavior retained
+- [ ] VOCA 과정 카드의 진행도, 상태, 학습하기 버튼 배치
+- [ ] 랜덤 단어 학습과 뒤로가기 동선
+- [ ] 단어 목록의 선택 학습, 상태 칩, 휴지통 복구 흐름
+- [ ] 듣기/다시 듣기/다음 단계 버튼의 통일된 위치·색상·문구
+- [ ] 말하기의 녹음, 재생, 다음 단계 버튼 배치
+- [ ] 쓰기의 제출 문구와 결과 상태
 
-## Shared annotation
+### Bible Story
 
-- [x] Header, card density, button dimensions, and surface treatment normalized
-- [x] VOCA, Bible Story, and Village accents keep distinct identities while
-      using comparable saturation, spacing, borders, and interaction states
-- [ ] Exact layer dimensions, font tokens, and exported assets require Figma
-      editor access for API verification
+- [ ] 학년 선택, 빠른 챕터 이동, 챕터 카드 동선
+- [ ] 학년/챕터/스토리 목록의 뒤로가기와 카드 정보 밀도
+- [ ] 영어 문장과 한국어 해석의 문장별 데이터 매칭
+- [ ] 학습 화면의 상태 표시, 듣기, TTS, 말하기, 쓰기, 결과 저장
+- [ ] 쓰기 정답 노출 시점, 결과 배너, 다음 스토리/목록 버튼 위치
 
-## External production verification
+### Village
 
-Verified against `https://vicabc.kr` on 2026-07-25 with a newly registered
-non-admin account and a separate cookie session.
+- [ ] Village 선택 카드의 문구, 카드 형식, 모바일 배열
+- [ ] Village 상세의 중복 바로 이동 영역 제거 여부
+- [ ] 레슨 카드의 번호, 학습하기 버튼, 선택 상태
+- [ ] 레슨 학습의 듣기/말하기/내 말 듣기 버튼 우측 정렬
+- [ ] 바꿔 듣기 영역의 줄바꿈과 겹침
+- [ ] 최상단 이동 버튼의 노출과 동작
 
-- [x] DNS resolves to the production host and HTTP redirects to HTTPS
-- [x] Logged-out visitors are redirected to the login page
-- [x] A new user can register, log in, and see Math, VOCA, Bible Story, and Village
-- [x] Math 3-1 and 6-1 workbooks open for the new user
-- [x] All 144 workbook images return HTTP 200 (109 pages + 35 pages)
-- [x] All 16 managed VOCA levels open and expose all 642 source words
-- [x] Managed VOCA sync reports 642 unchanged words and no missing or updated rows
-- [x] VOCA practice, Bible Story practice, and Village practice return HTTP 200
-- [x] Logout restores the protected-page login redirect
-- [x] The temporary user and its single generated progress record were removed
-- [x] Production service remained active with no new service log errors
+### 수학
+
+- [ ] 대시보드와 헤더에서 수학시험 진입 동선
+- [ ] 문제집 카드 문구와 원본 파일명 비노출
+- [ ] 3-1, 6-1 전체 문제집 페이지와 객관식 시험 흐름
+- [ ] 문제집 전체 문항을 객관식으로 전환했는지 여부
+
+## 명확한 미완료 항목
+
+- [ ] 수학 문제집의 전체 문항 객관식 전환과 정답 기준 확정
+- [ ] Bible Story의 영어/한국어 원문 대조 데이터 확보 및 매칭 보정
+- [ ] 전달 이미지의 데스크톱 및 모바일 주석 항목 전수 검수
