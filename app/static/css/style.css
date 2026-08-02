@@ -3009,6 +3009,258 @@ body.theme-dashboard .dashboard-activity a {
     }
 }
 
+/* Final precedence for the Group 76 VOCA card layout. */
+.theme-voca .curriculum-grid,
+.theme-voca .curriculum-semesters .curriculum-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.theme-voca .curriculum-card {
+    min-height: 188px;
+    padding: 0 12px 12px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+}
+
+.theme-voca .curriculum-card-head {
+    min-height: 50px;
+    margin: 0 -12px;
+    padding: 0 14px;
+}
+
+.theme-voca .curriculum-card .curriculum-progress {
+    height: 14px;
+    margin: 22px 12px 10px;
+    border-radius: 999px;
+    background: #e5e9ee;
+}
+
+.theme-voca .curriculum-card-progress-copy {
+    min-height: 22px;
+    color: #17202d;
+    font-size: 0.67rem;
+}
+
+.theme-voca .curriculum-card-actions {
+    justify-content: stretch;
+    padding-top: 9px;
+}
+
+.theme-voca .curriculum-card-actions .btn-primary {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 5px;
+    box-shadow: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* VOCA reference: Group 76 curriculum list. */
+.theme-voca .section-tabs {
+    width: fit-content;
+    margin: 0 0 0 18px;
+}
+
+.theme-voca .curriculum-section {
+    padding: 0 18px 22px;
+    border: 0;
+    border-top: 3px solid var(--page-accent);
+    border-radius: 0;
+    background: #f4f7fb;
+}
+
+.theme-voca .section-heading {
+    min-height: 70px;
+    align-items: center;
+    padding: 13px 16px;
+    margin: 0 -18px 16px;
+    border: 0;
+    background: var(--page-accent);
+}
+
+.theme-voca .section-heading h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+.theme-voca .section-heading h2 i {
+    margin-right: 7px;
+}
+
+.theme-voca .voca-grade-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 0 0 12px;
+}
+
+.theme-voca .voca-grade-tab {
+    min-height: 32px;
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 3px;
+    background: transparent;
+    color: #2563d9;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.theme-voca .voca-grade-tab.active,
+.theme-voca .voca-grade-tab:hover {
+    background: var(--page-accent);
+    color: #fff;
+}
+
+.theme-voca .curriculum-grade,
+.theme-voca .curriculum-grade + .curriculum-grade {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.theme-voca .curriculum-grid,
+.theme-voca .curriculum-semesters .curriculum-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.theme-voca .curriculum-card {
+    min-height: 188px;
+    padding: 0 12px 12px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+}
+
+.theme-voca .curriculum-card-head {
+    min-height: 50px;
+    margin: 0 -12px;
+    padding: 0 14px;
+    background: var(--page-accent);
+}
+
+.theme-voca .curriculum-card h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.theme-voca .curriculum-card-marker {
+    width: 11px;
+    height: 6px;
+    border-radius: 999px;
+    background: #ef4e67;
+}
+
+.theme-voca .curriculum-card .curriculum-progress {
+    height: 14px;
+    margin: 22px 12px 10px;
+    border-radius: 999px;
+    background: #e5e9ee;
+}
+
+.theme-voca .curriculum-card-progress-copy {
+    min-height: 22px;
+    justify-content: center;
+    color: #17202d;
+    font-size: 0.67rem;
+    text-align: center;
+}
+
+.theme-voca .curriculum-card-status {
+    display: flex;
+    min-height: 30px;
+    justify-content: center;
+    padding-top: 4px;
+}
+
+.theme-voca .curriculum-card-status .status-chip {
+    min-height: 20px;
+    padding: 2px 8px;
+    border: 0;
+    border-radius: 3px;
+    background: #747f89;
+    color: #fff;
+    font-size: 0.6rem;
+}
+
+.theme-voca .curriculum-card-status .status-chip.is-success {
+    background: #1c9a70;
+}
+
+.theme-voca .curriculum-card-actions {
+    justify-content: stretch;
+    padding-top: 9px;
+}
+
+.theme-voca .curriculum-card-actions .btn-primary {
+    width: 100%;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 5px;
+    box-shadow: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.theme-village .village-record-button {
+    display: inline-flex;
+    min-width: 112px;
+    height: 42px;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .theme-voca .curriculum-section {
+        padding: 0 12px 16px;
+    }
+
+    .theme-voca .section-heading {
+        margin-right: -12px;
+        margin-left: -12px;
+    }
+
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .theme-village .village-record-button {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+}
+
 /* Keep the reference homepage rules after the legacy dashboard styles. */
 body.theme-dashboard {
     background: #fbfcfe;
@@ -3461,6 +3713,70 @@ body.theme-voca {
         grid-template-columns: 1fr;
     }
 
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Group 76 overrides must remain after legacy VOCA responsive rules. */
+.theme-voca .curriculum-grid,
+.theme-voca .curriculum-semesters .curriculum-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.theme-voca .curriculum-card {
+    min-height: 188px;
+    padding: 0 12px 12px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+}
+
+.theme-voca .curriculum-card-head {
+    min-height: 50px;
+    margin: 0 -12px;
+    padding: 0 14px;
+}
+
+.theme-voca .curriculum-card .curriculum-progress {
+    height: 14px;
+    margin: 22px 12px 10px;
+    border-radius: 999px;
+    background: #e5e9ee;
+}
+
+.theme-voca .curriculum-card-progress-copy {
+    min-height: 22px;
+    color: #17202d;
+    font-size: 0.67rem;
+}
+
+.theme-voca .curriculum-card-actions {
+    justify-content: stretch;
+    padding-top: 9px;
+}
+
+.theme-voca .curriculum-card-actions .btn-primary {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 5px;
+    box-shadow: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .theme-voca .curriculum-grid,
+    .theme-voca .curriculum-semesters .curriculum-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
     .theme-voca .curriculum-grid,
     .theme-voca .curriculum-semesters .curriculum-grid {
         grid-template-columns: 1fr;
