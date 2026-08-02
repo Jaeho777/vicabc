@@ -31,23 +31,24 @@
 
 {% block content %}
 <div class="learning-shell">
-    <nav class="section-tabs" aria-label="VOCA 과정 선택">
-        <button class="section-tab active" type="button" data-bs-toggle="tab" data-bs-target="#elementary-voca" aria-controls="elementary-voca" aria-selected="true">초등</button>
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#middle-voca" aria-controls="middle-voca" aria-selected="false">중등</button>
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#high-voca" aria-controls="high-voca" aria-selected="false">고등</button>
-        {% if current_user.is_admin and current_user.admin_type == 'A' %}
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#voca-trash" aria-controls="voca-trash" aria-selected="false"><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</button>
-        {% endif %}
-    </nav>
-
-    <div class="tab-content">
-        <section class="tab-pane fade show active curriculum-section" id="elementary-voca">
-            <div class="section-heading">
-                <div>
-                    <h2><i class="bi bi-translate" aria-hidden="true"></i> 단어 학습</h2>
-                </div>
+    <section class="curriculum-section voca-curriculum-section">
+        <div class="section-heading">
+            <div>
+                <h2>단어 학습</h2>
             </div>
+        </div>
 
+        <nav class="section-tabs" aria-label="VOCA 과정 선택">
+            <button class="section-tab active" type="button" data-bs-toggle="tab" data-bs-target="#elementary-voca" aria-controls="elementary-voca" aria-selected="true">초등</button>
+            <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#middle-voca" aria-controls="middle-voca" aria-selected="false">중등</button>
+            <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#high-voca" aria-controls="high-voca" aria-selected="false">고등</button>
+            {% if current_user.is_admin and current_user.admin_type == 'A' %}
+            <button class="section-tab section-tab-trash" type="button" data-bs-toggle="tab" data-bs-target="#voca-trash" aria-controls="voca-trash" aria-selected="false" aria-label="휴지통" title="휴지통"><i class="bi bi-trash3" aria-hidden="true"></i><span class="visually-hidden">휴지통</span></button>
+            {% endif %}
+        </nav>
+
+        <div class="tab-content voca-course-content">
+        <section class="tab-pane fade show active" id="elementary-voca">
             <nav class="voca-grade-tabs" aria-label="초등 학년 선택">
             {% for grade_group in village_curriculum %}
                 <button class="voca-grade-tab{% if loop.first %} active{% endif %}" type="button" data-voca-grade="{{ grade_group.grade }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ grade_group.label }}</button>
@@ -68,8 +69,8 @@
             {% endfor %}
         </section>
 
-        <section class="tab-pane fade curriculum-section" id="middle-voca">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="middle-voca">
+            <div class="voca-pane-heading">
                 <div>
                     <h2>중등 VOCA</h2>
                     <p>학년별 단어 과정</p>
@@ -90,8 +91,8 @@
             {% endfor %}
         </section>
 
-        <section class="tab-pane fade curriculum-section" id="high-voca">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="high-voca">
+            <div class="voca-pane-heading">
                 <div>
                     <h2>고등 VOCA</h2>
                     <p>학년별 단어 과정</p>
@@ -113,8 +114,8 @@
         </section>
 
         {% if current_user.is_admin and current_user.admin_type == 'A' %}
-        <section class="tab-pane fade curriculum-section" id="voca-trash">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="voca-trash">
+            <div class="voca-pane-heading">
                 <div>
                     <h2><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</h2>
                     <p>삭제한 Village VOCA 과정은 단어와 학습 기록을 유지한 채 복구할 수 있습니다.</p>
@@ -145,6 +146,7 @@
         </section>
         {% endif %}
     </div>
+    </section>
 </div>
 {% endblock %}
 

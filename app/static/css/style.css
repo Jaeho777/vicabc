@@ -3082,6 +3082,193 @@ body.theme-dashboard .dashboard-activity a {
     }
 }
 
+/* Keep the VOCA reference dimensions above the legacy learning-shell rules. */
+body.theme-voca .voca-curriculum-section {
+    padding: 0 35px 32px;
+}
+
+body.theme-voca .voca-curriculum-section > .section-tabs .section-tab-trash {
+    margin-left: auto;
+    padding-right: 7px;
+    padding-left: 7px;
+}
+
+/* VOCA screen: exact hierarchy and dimensions from the supplied reference. */
+.theme-voca .learning-shell {
+    width: min(954px, calc(100% - 32px));
+    max-width: 954px;
+    margin: 8px auto 36px;
+}
+
+.theme-voca .voca-curriculum-section {
+    padding: 0 35px 32px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+}
+
+.theme-voca .voca-curriculum-section > .section-heading {
+    min-height: 64px;
+    margin: 0 -35px;
+    padding: 0 18px;
+    border: 0;
+    background: #2e64e6;
+}
+
+.theme-voca .voca-curriculum-section > .section-heading h2 {
+    color: #111827;
+    font-size: 1.02rem;
+    font-weight: 750;
+}
+
+.theme-voca .voca-curriculum-section > .section-tabs {
+    display: flex;
+    width: auto;
+    min-height: 32px;
+    margin: 24px 0 12px;
+    gap: 4px;
+    overflow: visible;
+}
+
+.theme-voca .voca-curriculum-section > .section-tabs .section-tab {
+    min-height: 30px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: transparent;
+    color: #1761de;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.theme-voca .voca-curriculum-section > .section-tabs .section-tab.active,
+.theme-voca .voca-curriculum-section > .section-tabs .section-tab:hover {
+    background: transparent;
+    color: #111827;
+}
+
+.theme-voca .voca-course-content > .tab-pane {
+    padding: 0;
+}
+
+.theme-voca .voca-grade-tabs {
+    min-height: 29px;
+    margin: 0 0 11px;
+    gap: 4px;
+}
+
+.theme-voca .voca-grade-tab {
+    min-height: 29px;
+    padding: 4px 9px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.theme-voca .voca-course-content .curriculum-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 18px;
+    row-gap: 42px;
+}
+
+.theme-voca .voca-course-content .curriculum-card {
+    min-height: 205px;
+    padding: 0 12px 12px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.theme-voca .voca-course-content .curriculum-card-head {
+    min-height: 50px;
+    margin: 0 -12px;
+    padding: 0 18px;
+    background: #2e64e6;
+}
+
+.theme-voca .voca-course-content .curriculum-card h4 {
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 750;
+}
+
+.theme-voca .voca-course-content .curriculum-card-marker {
+    width: 11px;
+    height: 6px;
+    background: #ef4e67;
+}
+
+.theme-voca .voca-course-content .curriculum-card .curriculum-progress {
+    height: 14px;
+    margin: 24px 12px 10px;
+    background: #e5e9ee;
+}
+
+.theme-voca .voca-course-content .curriculum-card-progress-copy {
+    min-height: 21px;
+    color: #111827;
+    font-size: 0.68rem;
+}
+
+.theme-voca .voca-course-content .curriculum-card-status {
+    min-height: 30px;
+    padding-top: 3px;
+}
+
+.theme-voca .voca-course-content .curriculum-card-actions {
+    padding-top: 8px;
+}
+
+.theme-voca .voca-course-content .curriculum-card-actions .btn-primary {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 5px;
+    box-shadow: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.theme-voca .voca-pane-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.theme-voca .voca-pane-heading h2,
+.theme-voca .voca-pane-heading p {
+    margin: 0;
+}
+
+@media (max-width: 720px) {
+    .theme-voca .learning-shell {
+        width: calc(100% - 24px);
+    }
+
+    .theme-voca .voca-curriculum-section {
+        padding: 0 16px 24px;
+    }
+
+    .theme-voca .voca-curriculum-section > .section-heading {
+        margin: 0 -16px;
+    }
+
+    .theme-voca .voca-course-content .curriculum-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-voca .voca-curriculum-section > .section-tabs {
+        overflow-x: auto;
+    }
+
+    .theme-voca .voca-course-content .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Live dashboard content: keep the reference margins while using the full screen. */
 @media (min-width: 901px) {
     body.theme-dashboard .dashboard-navbar .container,
