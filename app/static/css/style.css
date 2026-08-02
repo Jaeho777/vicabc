@@ -3262,6 +3262,136 @@ body.theme-voca {
     }
 }
 
+/* VOCA word-list reference: main random study action and quiet table states. */
+.theme-voca .level-detail-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.theme-voca .level-detail-breadcrumb {
+    margin: 0;
+}
+
+.theme-voca .level-back-button {
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    font-weight: 750;
+}
+
+.theme-voca .voca-level-hero {
+    overflow: hidden;
+    margin-bottom: 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.theme-voca .voca-level-hero-head {
+    display: flex;
+    min-height: 66px;
+    align-items: center;
+    padding: 0 20px;
+    background: var(--page-accent);
+}
+
+.theme-voca .voca-level-hero h1 {
+    font-size: 1.35rem;
+}
+
+.theme-voca .voca-level-hero-body {
+    display: grid;
+    min-height: 96px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 24px;
+}
+
+.theme-voca .voca-level-hero-progress {
+    display: block;
+}
+
+.theme-voca .voca-level-hero-progress .curriculum-progress {
+    height: 14px;
+    margin: 0;
+    border-radius: 999px;
+    background: #e5e9ee;
+}
+
+.theme-voca .voca-level-hero-progress .curriculum-progress span {
+    background: var(--page-accent);
+}
+
+.theme-voca .voca-level-hero-progress > span {
+    display: block;
+    margin-top: 10px;
+    color: #17202d;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.theme-voca .voca-level-main-action {
+    display: inline-flex;
+    min-width: 176px;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 7px;
+    box-shadow: 0 3px 0 rgba(20, 63, 157, 0.28);
+    font-size: 0.87rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.theme-voca .vic-table tbody tr:hover > * {
+    background-color: transparent;
+}
+
+.theme-voca .word-learning-status {
+    color: #66717c;
+    font-size: 0.73rem;
+    font-weight: 600;
+}
+
+.theme-voca .word-learning-status.is-learning {
+    color: #b77700;
+}
+
+.theme-voca .word-learning-status.is-complete {
+    color: #187657;
+}
+
+.theme-voca .word-select-study {
+    min-width: 78px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+
+@media (max-width: 768px) {
+    .theme-voca .level-detail-navigation {
+        align-items: flex-start;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    .theme-voca .voca-level-hero-body {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 18px;
+    }
+
+    .theme-voca .voca-level-main-action {
+        width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .theme-story .story-hero-sentence {
         white-space: normal;
