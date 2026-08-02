@@ -3103,8 +3103,16 @@ body.theme-voca .voca-course-content .curriculum-card {
 }
 
 body.theme-voca .voca-course-content .curriculum-card-head {
+    display: flex;
     flex: 0 0 50px;
+    align-items: center;
+    justify-content: space-between;
     margin: 0 -24px;
+}
+
+body.theme-voca .voca-course-content .curriculum-card-head h4 {
+    margin: 0;
+    line-height: 1.2;
 }
 
 body.theme-voca .voca-course-content .curriculum-card .curriculum-progress {
