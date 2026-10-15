@@ -23,6 +23,25 @@ PPT_MIME = "application/vnd.ms-powerpoint"
 STORAGE_NAME = re.compile(r"[a-f0-9]{32}\.(?:ppt|pptx)\Z")
 
 
+class _SeekableUploadStream:
+    """Python 3.10 SpooledTemporaryFile lacks the seekable method ZipFile needs."""
+
+    def __init__(self, stream):
+        self.stream = stream
+
+    def read(self, size=-1):
+        return self.stream.read(size)
+
+    def seek(self, offset, whence=0):
+        return self.stream.seek(offset, whence)
+
+    def tell(self):
+        return self.stream.tell()
+
+    def seekable(self):
+        return True
+
+
 class AttachmentValidationError(ValueError):
     def __init__(self, message, status_code=400):
         super().__init__(message)
@@ -47,7 +66,7 @@ def attachment_mimetype(attachment):
 def _validate_pptx(stream):
     """Inspect the package without extracting or executing any embedded content."""
     try:
-        with zipfile.ZipFile(stream) as archive:
+        with zipfile.ZipFile(_SeekableUploadStream(stream)) as archive:
             entries = archive.infolist()
             if len(entries) > 10000:
                 raise AttachmentValidationError("슬라이드 파일의 내부 항목이 너무 많습니다.")

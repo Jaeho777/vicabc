@@ -21,6 +21,7 @@ from app.models.notice_attachment import NoticeAttachment
 from app.models.user import User
 from app.routes import main_bp
 from app.routes.auth import auth_bp
+from app.services.notice_attachments import _validate_pptx
 
 
 def presentation_bytes(extra_members=None):
@@ -70,6 +71,24 @@ def presentation_bytes(extra_members=None):
 
 
 class NoticeAttachmentTests(unittest.TestCase):
+    def test_python310_spooled_stream_without_seekable_is_supported(self):
+        class LegacyStream:
+            def __init__(self, data):
+                self.buffer = io.BytesIO(data)
+
+            def read(self, size=-1):
+                return self.buffer.read(size)
+
+            def seek(self, offset, whence=0):
+                return self.buffer.seek(offset, whence)
+
+            def tell(self):
+                return self.buffer.tell()
+
+        stream = LegacyStream(presentation_bytes())
+        self.assertFalse(hasattr(stream, "seekable"))
+        _validate_pptx(stream)
+
     def setUp(self):
         self.upload_directory = tempfile.TemporaryDirectory(prefix="vic-notice-test-")
         self.app = Flask("app")
