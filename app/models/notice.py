@@ -18,5 +18,13 @@ class Notice(db.Model):
         nullable=False,
     )
 
+    attachment = db.relationship(
+        "NoticeAttachment",
+        back_populates="notice",
+        uselist=False,
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
+
     def __repr__(self):
         return f"<Notice {self.id}: {self.title}>"

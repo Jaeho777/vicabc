@@ -2,6 +2,10 @@
 
 {% block title %}공지사항 - VIC 애플리케이션{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+{% endblock %}
+
 {% block content %}
 <section class="community-shell" aria-labelledby="notice-list-title">
     <header class="community-heading">
@@ -18,7 +22,12 @@
     <div class="notice-board" role="list">
         {% for notice in notices %}
         <a class="notice-row" href="{{ url_for('main.notice_detail', notice_id=notice.id) }}" role="listitem">
-            <span class="notice-row-title">{{ notice.title }}</span>
+            <span class="notice-row-title-group">
+                <span class="notice-row-title">{{ notice.title }}</span>
+                {% if notice.attachment %}
+                <span class="notice-row-attachment" aria-label="PowerPoint 첨부자료 있음" title="PowerPoint 첨부자료 있음"><i class="bi bi-paperclip" aria-hidden="true"></i><span class="visually-hidden">첨부자료 있음</span></span>
+                {% endif %}
+            </span>
             <time datetime="{{ notice.published_at.isoformat() }}">{{ notice.published_at.strftime('%Y.%m.%d') }}</time>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
         </a>

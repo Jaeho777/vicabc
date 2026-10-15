@@ -1,12 +1,21 @@
 from datetime import datetime
 
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import abort, current_app, flash, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.extensions import db
 from app.models.notice import Notice
 from app.routes import main_bp
 from app.services.dashboard import get_weekly_rankings
+from app.services.notice_attachments import (
+    AttachmentValidationError,
+    attachment_mimetype,
+    attachment_path,
+    delete_notice,
+    save_notice,
+)
+from app.services.notice_forms import notice_csrf_token, validate_notice_csrf_token
 
 
 @main_bp.route("/")
@@ -28,7 +37,31 @@ def notices():
 @login_required
 def notice_detail(notice_id):
     notice = Notice.query.get_or_404(notice_id)
-    return render_template("notices/detail.html", notice=notice)
+    return render_template("notices/detail.html", notice=notice, csrf_token=notice_csrf_token())
+
+
+@main_bp.route("/notices/<int:notice_id>/attachment")
+@login_required
+def notice_attachment(notice_id):
+    notice = Notice.query.get_or_404(notice_id)
+    if not notice.attachment:
+        abort(404)
+    path = attachment_path(notice.attachment.storage_name)
+    if not path.is_file():
+        abort(404)
+    response = send_file(
+        path,
+        as_attachment=True,
+        download_name=notice.attachment.original_name,
+        mimetype=attachment_mimetype(notice.attachment),
+        conditional=False,
+        etag=False,
+        max_age=0,
+    )
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.vary.add("Cookie")
+    return response
 
 
 @main_bp.route("/notices/new", methods=["GET", "POST"])
@@ -36,12 +69,8 @@ def notice_detail(notice_id):
 def notice_create():
     _require_notice_admin()
     if request.method == "POST":
-        notice = _notice_from_form()
-        db.session.add(notice)
-        db.session.commit()
-        flash("공지를 등록했습니다.", "success")
-        return redirect(url_for("main.notice_detail", notice_id=notice.id))
-    return render_template("notices/form.html", notice=None)
+        return _handle_notice_save()
+    return _render_notice_form()
 
 
 @main_bp.route("/notices/<int:notice_id>/edit", methods=["GET", "POST"])
@@ -50,23 +79,17 @@ def notice_edit(notice_id):
     _require_notice_admin()
     notice = Notice.query.get_or_404(notice_id)
     if request.method == "POST":
-        updated_notice = _notice_from_form()
-        notice.title = updated_notice.title
-        notice.body = updated_notice.body
-        notice.published_at = updated_notice.published_at
-        db.session.commit()
-        flash("공지를 수정했습니다.", "success")
-        return redirect(url_for("main.notice_detail", notice_id=notice.id))
-    return render_template("notices/form.html", notice=notice)
+        return _handle_notice_save(notice)
+    return _render_notice_form(notice)
 
 
 @main_bp.route("/notices/<int:notice_id>/delete", methods=["POST"])
 @login_required
 def notice_delete(notice_id):
     _require_notice_admin()
+    validate_notice_csrf_token()
     notice = Notice.query.get_or_404(notice_id)
-    db.session.delete(notice)
-    db.session.commit()
+    delete_notice(notice)
     flash("공지를 삭제했습니다.", "success")
     return redirect(url_for("main.notices"))
 
@@ -82,12 +105,56 @@ def _require_notice_admin():
         abort(403)
 
 
+def _render_notice_form(notice=None, error=None, status=200):
+    return render_template(
+        "notices/form.html",
+        notice=notice,
+        csrf_token=notice_csrf_token(),
+        form_error=error,
+        form_values=request.form if request.method == "POST" else None,
+    ), status
+
+
+def _handle_notice_save(notice=None):
+    try:
+        request.max_content_length = current_app.config["NOTICE_MAX_ATTACHMENT_BYTES"] + 1024 * 1024
+        validate_notice_csrf_token()
+        updated = _notice_from_form()
+        is_new = notice is None
+        if is_new:
+            notice = updated
+        else:
+            notice.title = updated.title
+            notice.body = updated.body
+            notice.published_at = updated.published_at
+        uploads = [file for file in request.files.getlist("attachment") if file.filename]
+        if len(uploads) > 1:
+            raise AttachmentValidationError("공지마다 첨부파일은 하나만 올릴 수 있습니다.")
+        save_notice(
+            notice,
+            upload=uploads[0] if uploads else None,
+            remove_attachment=request.form.get("remove_attachment") == "1",
+        )
+    except AttachmentValidationError as error:
+        db.session.rollback()
+        return _render_notice_form(None if is_new else notice, str(error), error.status_code)
+    except RequestEntityTooLarge:
+        # The oversized request body must not be parsed again by the error template.
+        return "첨부파일은 20MB 이하로 올려주세요. 뒤로 가서 다시 선택해주세요.", 413
+    flash("공지를 등록했습니다." if is_new else "공지를 수정했습니다.", "success")
+    return redirect(url_for("main.notice_detail", notice_id=notice.id))
+
+
 def _notice_from_form():
     title = request.form.get("title", "").strip()
     body = request.form.get("body", "").strip()
     published_at_value = request.form.get("published_at", "").strip()
     if not title:
         abort(400, "공지 제목을 입력해주세요.")
+    if len(title) > 200:
+        abort(400, "공지 제목은 200자 이하로 입력해주세요.")
+    if len(body) > 50000:
+        abort(400, "공지 내용은 50,000자 이하로 입력해주세요.")
 
     try:
         published_at = (

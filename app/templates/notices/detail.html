@@ -2,6 +2,10 @@
 
 {% block title %}{{ notice.title }} - 공지사항{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+{% endblock %}
+
 {% block content %}
 <section class="community-shell" aria-labelledby="notice-title">
     <div class="community-back-row">
@@ -14,10 +18,25 @@
             <time datetime="{{ notice.published_at.isoformat() }}">{{ notice.published_at.strftime('%Y년 %m월 %d일') }}</time>
         </header>
         <div class="notice-detail-body">{{ notice.body }}</div>
+        {% if notice.attachment %}
+        <section class="notice-attachment" aria-labelledby="notice-attachment-heading">
+            <div class="notice-attachment-icon"><i class="bi bi-file-earmark-ppt" aria-hidden="true"></i></div>
+            <div class="notice-attachment-info">
+                <h2 id="notice-attachment-heading">첨부자료</h2>
+                <p class="notice-attachment-name">{{ notice.attachment.original_name }}</p>
+                <p class="notice-attachment-meta">PowerPoint 파일 · {% if notice.attachment.size_bytes >= 1048576 %}{{ '%.1f'|format(notice.attachment.size_bytes / 1048576) }} MB{% else %}{{ '%.1f'|format(notice.attachment.size_bytes / 1024) }} KB{% endif %} · 다운로드 후 열어주세요.</p>
+            </div>
+            <a class="btn btn-primary notice-attachment-download" href="{{ url_for('main.notice_attachment', notice_id=notice.id) }}">
+                <i class="bi bi-download" aria-hidden="true"></i> 다운로드
+                <span class="visually-hidden">: {{ notice.attachment.original_name }}</span>
+            </a>
+        </section>
+        {% endif %}
         {% if current_user.is_admin %}
         <footer class="notice-detail-actions">
             <a class="btn btn-outline-primary" href="{{ url_for('main.notice_edit', notice_id=notice.id) }}">수정</a>
             <form method="post" action="{{ url_for('main.notice_delete', notice_id=notice.id) }}" onsubmit="return confirm('이 공지를 삭제할까요?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <button class="btn btn-outline-danger" type="submit">삭제</button>
             </form>
         </footer>

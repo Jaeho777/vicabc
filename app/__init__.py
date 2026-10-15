@@ -42,9 +42,11 @@ def create_app():
 
     with app.app_context():
         from app.models.notice import Notice
+        from app.models.notice_attachment import NoticeAttachment
         from app.services.dashboard import ensure_dashboard_notices
 
         Notice.__table__.create(bind=db.engine, checkfirst=True)
+        NoticeAttachment.__table__.create(bind=db.engine, checkfirst=True)
         ensure_dashboard_notices()
 
         table_names = set(inspect(db.engine).get_table_names())

@@ -11,3 +11,4 @@ from app.models.story_certification import StoryCertification
 from app.models.village_certification import VillageCertification
 from app.models.village_progress import VillageProgress
 from app.models.notice import Notice
+from app.models.notice_attachment import NoticeAttachment

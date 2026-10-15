@@ -1,5 +1,7 @@
 # vicabc
 
+공지사항에 PPT/PPTX 파일을 첨부할 수 있습니다. 관리자 작성 → 로그인한 학생 다운로드 흐름이며, 공지당 1개·최대 20MB입니다. [사용·배포·백업 안내](docs/NOTICE_ATTACHMENTS.md)를 확인하세요.
+
 Flask based English learning platform for vocabulary, story, exam, and admin flows.
 
 ## Local setup
