@@ -17,3 +17,5 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "change-me-in-production"
     SQLALCHEMY_DATABASE_URI = get_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    NOTICE_UPLOAD_DIR = os.environ.get("NOTICE_UPLOAD_DIR")
+    NOTICE_MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024

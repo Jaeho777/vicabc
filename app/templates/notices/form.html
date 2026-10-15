@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{% if notice %}공지 수정{% else %}공지 작성{% endif %} - VIC 애플리케이션{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+{% endblock %}
+
+{% block content %}
+{% set values = form_values|default({}, true) %}
+<section class="community-shell" aria-labelledby="notice-form-title">
+    <div class="community-back-row">
+        <a href="{{ url_for('main.notices') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> 공지사항</a>
+    </div>
+    <form class="notice-form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <header>
+            <p class="community-kicker">NOTICE</p>
+            <h1 id="notice-form-title">{% if notice %}공지 수정{% else %}공지 작성{% endif %}</h1>
+            <p class="notice-form-intro">안내할 내용과 PowerPoint 자료를 함께 공유하세요.</p>
+        </header>
+        {% if form_error %}
+        <div class="notice-form-error" role="alert">
+            <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+            <div>{{ form_error }}<p>첨부파일을 올리려면 파일을 다시 선택해 주세요.</p></div>
+        </div>
+        {% endif %}
+        <label for="notice-title">제목</label>
+        <input id="notice-title" name="title" type="text" maxlength="200" required value="{{ values.get('title', notice.title if notice else '') }}">
+        <label for="notice-published-at">게시 일시</label>
+        <input id="notice-published-at" name="published_at" type="datetime-local" value="{{ values.get('published_at', notice.published_at.strftime('%Y-%m-%dT%H:%M') if notice and notice.published_at else '') }}">
+        <label for="notice-body">내용</label>
+        <textarea id="notice-body" name="body" rows="10">{{ values.get('body', notice.body if notice else '') }}</textarea>
+        <fieldset class="notice-upload">
+            <legend>첨부자료 <span>선택</span></legend>
+            {% if notice and notice.attachment %}
+            <div class="notice-current-attachment">
+                <i class="bi bi-file-earmark-ppt" aria-hidden="true"></i>
+                <div>
+                    <span class="notice-current-attachment-label">현재 첨부파일</span>
+                    <a href="{{ url_for('main.notice_attachment', notice_id=notice.id) }}">{{ notice.attachment.original_name }}</a>
+                </div>
+            </div>
+            <label class="notice-remove-attachment" for="notice-remove-attachment">
+                <input id="notice-remove-attachment" name="remove_attachment" type="checkbox" value="1"{% if values.get('remove_attachment') == '1' %} checked{% endif %}>
+                <span>현재 첨부파일 삭제</span>
+            </label>
+            {% endif %}
+            <label for="notice-attachment">{% if notice and notice.attachment %}새 파일로 교체{% else %}PowerPoint 파일 선택{% endif %}</label>
+            <input id="notice-attachment" name="attachment" type="file" accept=".ppt,.pptx" aria-describedby="notice-attachment-help">
+            <p id="notice-attachment-help" class="notice-upload-help">PPT 또는 PPTX 파일 1개 · 최대 20 MB<br>{% if notice and notice.attachment %}새 파일을 선택하면 저장할 때 현재 파일을 교체합니다.{% else %}첨부한 자료는 공지 상세 화면에서 다운로드할 수 있습니다.{% endif %}</p>
+        </fieldset>
+        <div class="notice-form-actions">
+            <a class="btn btn-outline-secondary" href="{{ url_for('main.notices') }}">취소</a>
+            <button class="btn btn-primary" type="submit">저장</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

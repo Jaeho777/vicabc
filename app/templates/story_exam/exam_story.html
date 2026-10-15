@@ -139,12 +139,11 @@
         </div>
 
         <div class="exam-panel mb-4">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                 <div>
                     <div class="text-muted small">쓰기 제출</div>
                     <h5 class="mb-0">기억한 내용을 영어와 한글로 적어보세요</h5>
                 </div>
-                <button type="button" id="btn-check-writing" class="btn btn-primary">쓰기 점수 계산</button>
             </div>
 
             <div class="row g-3">
@@ -156,6 +155,10 @@
                     <label for="korean-input" class="form-label">한글 뜻</label>
                     <textarea id="korean-input" class="form-control" placeholder="한글 뜻을 입력하세요"></textarea>
                 </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3">
+                <button type="button" id="btn-check-writing" class="btn btn-primary">쓰기 점수 계산</button>
             </div>
 
             <div id="writing-feedback" class="alert alert-light border mt-3 mb-0 d-none"></div>

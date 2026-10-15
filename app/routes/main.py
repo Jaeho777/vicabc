@@ -1,78 +1,167 @@
-# app/routes/main.py
 from datetime import datetime
 
-from flask import render_template
+from flask import abort, current_app, flash, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.extensions import db
-from app.models.chapter import Chapter
-from app.models.story import Story
-from app.models.story_progress import StoryProgress
-from app.models.village_certification import VillageCertification
-from app.models.village_progress import VillageProgress
+from app.models.notice import Notice
 from app.routes import main_bp
-
-
-def get_latest_story_learning(user_id):
-    try:
-        progress = (
-            StoryProgress.query.filter_by(user_id=user_id)
-            .order_by(StoryProgress.last_studied_at.desc())
-            .first()
-        )
-        if not progress:
-            return None
-
-        story = Story.query.get(progress.story_id)
-        if not story:
-            return None
-
-        chapter = Chapter.query.get(story.chapter_id)
-        if not chapter:
-            return None
-
-        return {
-            "story": story,
-            "chapter": chapter,
-        }
-    except Exception as exc:
-        print(f"Story 대시보드 진도 조회 오류: {exc}")
-        return None
-
-
-def get_latest_village_learning(user_id):
-    try:
-        VillageProgress.__table__.create(bind=db.engine, checkfirst=True)
-        return (
-            VillageProgress.query.filter_by(user_id=user_id)
-            .order_by(VillageProgress.last_studied_at.desc())
-            .first()
-        )
-    except Exception as exc:
-        print(f"Village 대시보드 진도 조회 오류: {exc}")
-        return None
+from app.services.dashboard import get_weekly_rankings
+from app.services.notice_attachments import (
+    AttachmentValidationError,
+    attachment_mimetype,
+    attachment_path,
+    delete_notice,
+    save_notice,
+)
+from app.services.notice_forms import notice_csrf_token, validate_notice_csrf_token
 
 
 @main_bp.route("/")
 @login_required
 def index():
-    village_latest = None
-    story_latest_learning = get_latest_story_learning(current_user.id)
-    village_latest_learning = get_latest_village_learning(current_user.id)
+    notices = Notice.query.order_by(Notice.published_at.desc(), Notice.id.desc()).limit(5).all()
+    rankings = get_weekly_rankings(limit=5)
+    return render_template("index.html", notices=notices, rankings=rankings)
+
+
+@main_bp.route("/notices")
+@login_required
+def notices():
+    notice_list = Notice.query.order_by(Notice.published_at.desc(), Notice.id.desc()).all()
+    return render_template("notices/index.html", notices=notice_list)
+
+
+@main_bp.route("/notices/<int:notice_id>")
+@login_required
+def notice_detail(notice_id):
+    notice = Notice.query.get_or_404(notice_id)
+    return render_template("notices/detail.html", notice=notice, csrf_token=notice_csrf_token())
+
+
+@main_bp.route("/notices/<int:notice_id>/attachment")
+@login_required
+def notice_attachment(notice_id):
+    notice = Notice.query.get_or_404(notice_id)
+    if not notice.attachment:
+        abort(404)
+    path = attachment_path(notice.attachment.storage_name)
+    if not path.is_file():
+        abort(404)
+    response = send_file(
+        path,
+        as_attachment=True,
+        download_name=notice.attachment.original_name,
+        mimetype=attachment_mimetype(notice.attachment),
+        conditional=False,
+        etag=False,
+        max_age=0,
+    )
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.vary.add("Cookie")
+    return response
+
+
+@main_bp.route("/notices/new", methods=["GET", "POST"])
+@login_required
+def notice_create():
+    _require_notice_admin()
+    if request.method == "POST":
+        return _handle_notice_save()
+    return _render_notice_form()
+
+
+@main_bp.route("/notices/<int:notice_id>/edit", methods=["GET", "POST"])
+@login_required
+def notice_edit(notice_id):
+    _require_notice_admin()
+    notice = Notice.query.get_or_404(notice_id)
+    if request.method == "POST":
+        return _handle_notice_save(notice)
+    return _render_notice_form(notice)
+
+
+@main_bp.route("/notices/<int:notice_id>/delete", methods=["POST"])
+@login_required
+def notice_delete(notice_id):
+    _require_notice_admin()
+    validate_notice_csrf_token()
+    notice = Notice.query.get_or_404(notice_id)
+    delete_notice(notice)
+    flash("공지를 삭제했습니다.", "success")
+    return redirect(url_for("main.notices"))
+
+
+@main_bp.route("/ranking")
+@login_required
+def ranking():
+    return render_template("ranking/index.html", rankings=get_weekly_rankings())
+
+
+def _require_notice_admin():
+    if not current_user.is_admin:
+        abort(403)
+
+
+def _render_notice_form(notice=None, error=None, status=200):
+    return render_template(
+        "notices/form.html",
+        notice=notice,
+        csrf_token=notice_csrf_token(),
+        form_error=error,
+        form_values=request.form if request.method == "POST" else None,
+    ), status
+
+
+def _handle_notice_save(notice=None):
+    try:
+        request.max_content_length = current_app.config["NOTICE_MAX_ATTACHMENT_BYTES"] + 1024 * 1024
+        validate_notice_csrf_token()
+        updated = _notice_from_form()
+        is_new = notice is None
+        if is_new:
+            notice = updated
+        else:
+            notice.title = updated.title
+            notice.body = updated.body
+            notice.published_at = updated.published_at
+        uploads = [file for file in request.files.getlist("attachment") if file.filename]
+        if len(uploads) > 1:
+            raise AttachmentValidationError("공지마다 첨부파일은 하나만 올릴 수 있습니다.")
+        save_notice(
+            notice,
+            upload=uploads[0] if uploads else None,
+            remove_attachment=request.form.get("remove_attachment") == "1",
+        )
+    except AttachmentValidationError as error:
+        db.session.rollback()
+        return _render_notice_form(None if is_new else notice, str(error), error.status_code)
+    except RequestEntityTooLarge:
+        # The oversized request body must not be parsed again by the error template.
+        return "첨부파일은 20MB 이하로 올려주세요. 뒤로 가서 다시 선택해주세요.", 413
+    flash("공지를 등록했습니다." if is_new else "공지를 수정했습니다.", "success")
+    return redirect(url_for("main.notice_detail", notice_id=notice.id))
+
+
+def _notice_from_form():
+    title = request.form.get("title", "").strip()
+    body = request.form.get("body", "").strip()
+    published_at_value = request.form.get("published_at", "").strip()
+    if not title:
+        abort(400, "공지 제목을 입력해주세요.")
+    if len(title) > 200:
+        abort(400, "공지 제목은 200자 이하로 입력해주세요.")
+    if len(body) > 50000:
+        abort(400, "공지 내용은 50,000자 이하로 입력해주세요.")
 
     try:
-        village_latest = (
-            VillageCertification.query.filter_by(user_id=current_user.id)
-            .order_by(VillageCertification.exam_date.desc())
-            .first()
+        published_at = (
+            datetime.strptime(published_at_value, "%Y-%m-%dT%H:%M")
+            if published_at_value
+            else datetime.utcnow()
         )
-    except Exception as exc:
-        print(f"Village 대시보드 조회 오류: {exc}")
-
-    return render_template(
-        "index.html",
-        today_label=datetime.now().strftime("%Y년 %m월 %d일"),
-        village_latest=village_latest,
-        story_latest_learning=story_latest_learning,
-        village_latest_learning=village_latest_learning,
-    )
+    except ValueError:
+        abort(400, "공지 일시 형식이 올바르지 않습니다.")
+    return Notice(title=title, body=body, published_at=published_at)

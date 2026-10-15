@@ -1,0 +1,250 @@
+/* Notice attachment UI. Keep these styles separate from the shared site styles. */
+.notice-form .notice-form-intro {
+    margin: 10px 0 0;
+    color: #617185;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.notice-form-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 14px 16px;
+    border: 1px solid #edc3c5;
+    border-radius: 8px;
+    background: #fff4f4;
+    color: #a52b35;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.notice-form-error p {
+    margin: 4px 0 0;
+    font-size: 0.82rem;
+}
+
+.notice-form .notice-upload {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    margin-top: 16px;
+    padding: 20px;
+    border: 1px solid #dae3ef;
+    border-radius: 10px;
+    background: #f8faff;
+}
+
+.notice-upload legend {
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0 6px;
+    color: #263b54;
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.notice-upload legend span {
+    margin-left: 5px;
+    color: #6b7d91;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+.notice-form input[type="file"] {
+    height: auto;
+    min-height: 42px;
+    padding: 7px;
+    background: #fff;
+    font-size: 0.86rem;
+}
+
+.notice-form input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 5px;
+    background: #eaf0fd;
+    color: #2554a2;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.notice-upload-help {
+    margin: 0;
+    color: #617185;
+    font-size: 0.8rem;
+    line-height: 1.7;
+}
+
+.notice-current-attachment {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #e0e7f1;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.notice-current-attachment > .bi {
+    color: #b74e2a;
+    font-size: 1.5rem;
+}
+
+.notice-current-attachment > div {
+    min-width: 0;
+}
+
+.notice-current-attachment-label {
+    display: block;
+    margin-bottom: 3px;
+    color: #6b7d91;
+    font-size: 0.75rem;
+}
+
+.notice-current-attachment a {
+    color: #2b558e;
+    font-size: 0.86rem;
+    overflow-wrap: anywhere;
+}
+
+.notice-form .notice-remove-attachment {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 4px 0;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.notice-form .notice-remove-attachment input {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    padding: 0;
+    accent-color: #2e64e6;
+}
+
+.notice-attachment {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 26px;
+    padding: 20px;
+    border: 1px solid #dce5f0;
+    border-radius: 10px;
+    background: #f8faff;
+}
+
+.notice-attachment-icon {
+    display: grid;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 54px;
+    place-items: center;
+    border: 1px solid #f0d9ce;
+    border-radius: 9px;
+    background: #fff4eb;
+    color: #b74e2a;
+    font-size: 1.65rem;
+}
+
+.notice-attachment-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.notice-attachment-info h2 {
+    margin: 0 0 6px;
+    color: #617185;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.notice-attachment-name {
+    margin: 0;
+    color: #233b58;
+    font-size: 0.94rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.notice-attachment-meta {
+    margin: 7px 0 0;
+    color: #617185;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.notice-attachment-download {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.notice-attachment-download .bi {
+    margin-right: 4px;
+}
+
+.notice-row-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.notice-row-title-group .notice-row-title {
+    min-width: 0;
+}
+
+.notice-row .notice-row-attachment {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding: 3px 5px;
+    border-radius: 5px;
+    background: #edf2fb;
+}
+
+.notice-row .notice-row-attachment .bi {
+    color: #5270a2;
+    font-size: 0.94rem;
+}
+
+.notice-form input:focus-visible,
+.notice-form textarea:focus-visible,
+.notice-attachment a:focus-visible,
+.notice-row:focus-visible {
+    outline: 3px solid #92b3fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+    .notice-form .notice-upload {
+        padding: 14px;
+    }
+
+    .notice-attachment {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .notice-attachment-icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 46px;
+        font-size: 1.4rem;
+    }
+
+    .notice-attachment-download {
+        width: 100%;
+    }
+}

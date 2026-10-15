@@ -6,27 +6,29 @@
 {% block content %}
 {% set percent = (completed_words / total_words * 100) | round if total_words > 0 else 0 %}
 <div class="learning-shell">
-    <nav aria-label="breadcrumb" class="level-detail-breadcrumb">
+    <div class="level-detail-navigation">
+        <a href="{{ url_for('voca.index') }}" class="btn btn-outline-primary level-back-button">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            뒤로가기
+        </a>
+        <nav aria-label="breadcrumb" class="level-detail-breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('voca.index') }}">VOCA</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ level_display_name }}</li>
         </ol>
-    </nav>
+        </nav>
+    </div>
 
     <header class="voca-level-hero">
         <div class="voca-level-hero-head">
             <h1>{{ level_display_name }}</h1>
+        </div>
+        <div class="voca-level-hero-body">
             <div class="voca-level-hero-progress" aria-label="학습 진도">
                 <div class="curriculum-progress"><span style="width: {{ percent }}%"></span></div>
                 <span>{{ completed_words }}/{{ total_words }} 단어 완료</span>
             </div>
-        </div>
-        <div class="voca-level-hero-actions">
-            <a href="{{ url_for('voca.index') }}" class="btn btn-outline-primary">
-                <i class="bi bi-arrow-left" aria-hidden="true"></i>
-                뒤로가기
-            </a>
-            <a href="{{ url_for('voca.level_practice', level_id=level.id) }}" class="btn btn-primary">
+            <a href="{{ url_for('voca.level_practice', level_id=level.id) }}" class="btn btn-primary voca-level-main-action">
                 <i class="bi bi-shuffle" aria-hidden="true"></i>
                 랜덤 단어 학습
             </a>
@@ -72,7 +74,7 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
-                            <a href="{{ url_for('voca.level_practice', level_id=level.id, vocabulary_id=vocabulary.id) }}" class="btn btn-sm btn-outline-primary word-select-study">
+                            <a href="{{ url_for('voca.level_practice', level_id=level.id, vocabulary_id=vocabulary.id) }}" class="btn btn-sm btn-primary word-select-study">
                                 학습하기
                             </a>
                         </td>

@@ -25,113 +25,52 @@
         <a href="{{ url_for('voca.voca_level_words', level_id=level.id) }}" class="btn btn-sm btn-primary">
             학습하기
         </a>
-        {% if current_user.is_admin and current_user.admin_type == 'A' %}
-        <form method="post" action="{{ url_for('admin.delete_level', level_id=level.id) }}" onsubmit="return confirm('이 레벨을 삭제하시겠습니까?');">
-            <button class="btn btn-sm btn-outline-danger icon-button" type="submit" title="레벨 삭제" aria-label="{{ level.name }} 삭제">
-                <i class="bi bi-trash"></i>
-            </button>
-        </form>
-        {% endif %}
     </div>
 </article>
 {% endmacro %}
 
 {% block content %}
 <div class="learning-shell">
-    {% if current_village_level %}
-    {% set current_progress = level_progress[current_village_level.id] %}
-    <header class="voca-current-summary">
-        <div class="voca-current-summary-head">
+    <section class="curriculum-section voca-curriculum-section">
+        <div class="section-heading">
             <div>
-                <span class="page-kicker">현재 학습</span>
-                <h1>{{ village_level_display_names.get(current_village_level.id, current_village_level.name) }}</h1>
+                <h2>단어 학습</h2>
             </div>
-            <span class="status-chip{% if current_progress.progress_percent >= 100 %} is-success{% endif %}">
-                {% if current_progress.progress_percent >= 100 %}완료{% elif current_progress.in_progress_words %}진행 중{% else %}미시작{% endif %}
-            </span>
         </div>
-        <div class="voca-current-summary-progress">
-            <div class="curriculum-progress" aria-label="현재 과정 진도"><span style="width: {{ current_progress.progress_percent }}%"></span></div>
-            <span>{{ current_progress.completed_words }}/{{ current_progress.total_words }} 단어 완료</span>
-        </div>
-        <div class="voca-current-summary-actions">
-            <a href="{{ url_for('voca.voca_level_words', level_id=current_village_level.id) }}" class="btn btn-primary">학습하기</a>
-            <a href="{{ url_for('exam.voca_index') }}" class="btn btn-primary">인증시험</a>
-        </div>
-    </header>
-    {% endif %}
 
-    <nav class="section-tabs" aria-label="VOCA 과정 선택">
-        <button class="section-tab active" type="button" data-bs-toggle="tab" data-bs-target="#village-voca" aria-controls="village-voca" aria-selected="true">Village VOCA</button>
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#elementary-voca" aria-controls="elementary-voca" aria-selected="false">초등</button>
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#middle-voca" aria-controls="middle-voca" aria-selected="false">중등</button>
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#high-voca" aria-controls="high-voca" aria-selected="false">고등</button>
-        {% if current_user.is_admin and current_user.admin_type == 'A' %}
-        <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#voca-trash" aria-controls="voca-trash" aria-selected="false"><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</button>
-        {% endif %}
-    </nav>
+        <nav class="section-tabs" aria-label="VOCA 과정 선택">
+            <button class="section-tab active" type="button" data-bs-toggle="tab" data-bs-target="#elementary-voca" aria-controls="elementary-voca" aria-selected="true">초등</button>
+            <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#middle-voca" aria-controls="middle-voca" aria-selected="false">중등</button>
+            <button class="section-tab" type="button" data-bs-toggle="tab" data-bs-target="#high-voca" aria-controls="high-voca" aria-selected="false">고등</button>
+            {% if current_user.is_admin and current_user.admin_type == 'A' %}
+            <button class="section-tab section-tab-trash" type="button" data-bs-toggle="tab" data-bs-target="#voca-trash" aria-controls="voca-trash" aria-selected="false" aria-label="휴지통" title="휴지통"><i class="bi bi-trash3" aria-hidden="true"></i><span class="visually-hidden">휴지통</span></button>
+            {% endif %}
+        </nav>
 
-    <div class="tab-content">
-        <section class="tab-pane fade show active curriculum-section" id="village-voca">
-            <div class="section-heading">
-                <div>
-                    <h2><i class="bi bi-translate" aria-hidden="true"></i> 단어 학습</h2>
-                    <p>초등 1-6학년 학기별 Village 단어 과정</p>
-                </div>
-                <span class="status-chip">{{ village_total_words }}단어</span>
-            </div>
+        <div class="tab-content voca-course-content">
+        <section class="tab-pane fade show active" id="elementary-voca">
+            <nav class="voca-grade-tabs" aria-label="초등 학년 선택">
+            {% for grade_group in village_curriculum %}
+                <button class="voca-grade-tab{% if loop.first %} active{% endif %}" type="button" data-voca-grade="{{ grade_group.grade }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ grade_group.label }}</button>
+            {% endfor %}
+            </nav>
 
             {% for grade_group in village_curriculum %}
-            <section class="curriculum-grade">
-                <div class="curriculum-grade-title">
-                    <h3>{{ grade_group.label }}</h3>
-                    <span>{{ grade_group.semesters|length }}개 학기</span>
-                </div>
-                <div class="curriculum-semesters">
+            <section class="curriculum-grade voca-grade-panel{% if not loop.first %} d-none{% endif %}" data-voca-grade-panel="{{ grade_group.grade }}">
+                <div class="curriculum-grid">
                 {% for semester in grade_group.semesters %}
-                <div class="curriculum-semester">
-                    <div class="curriculum-semester-title">
-                        <h4>{{ semester.number }}학기</h4>
-                        <span>Village {{ semester.village_numbers|join(', ') }}</span>
-                    </div>
-                    <div class="curriculum-grid">
-                        {% for level in semester.levels %}
-                        {{ level_card(level) }}
-                        {% endfor %}
-                    </div>
-                </div>
+                    {% for level in semester.levels %}
+                    {{ level_card(level) }}
+                    {% endfor %}
                 {% endfor %}
-                </div>
             </section>
             {% else %}
             <div class="learning-empty">등록된 Village VOCA 과정이 없습니다.</div>
             {% endfor %}
         </section>
 
-        <section class="tab-pane fade curriculum-section" id="elementary-voca">
-            <div class="section-heading">
-                <div>
-                    <h2>초등 VOCA</h2>
-                    <p>학년별 단어 과정</p>
-                </div>
-                <span class="status-chip">1-6학년</span>
-            </div>
-            {% for grade in range(1, 7) %}
-            <section class="curriculum-grade">
-                <div class="curriculum-grade-title"><h3>초등 {{ grade }}학년</h3></div>
-                <div class="curriculum-grid">
-                    {% for level in elementary_levels %}
-                        {% if '초등' ~ grade ~ '-' in level.name %}
-                        {{ level_card(level) }}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </section>
-            {% endfor %}
-        </section>
-
-        <section class="tab-pane fade curriculum-section" id="middle-voca">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="middle-voca">
+            <div class="voca-pane-heading">
                 <div>
                     <h2>중등 VOCA</h2>
                     <p>학년별 단어 과정</p>
@@ -152,8 +91,8 @@
             {% endfor %}
         </section>
 
-        <section class="tab-pane fade curriculum-section" id="high-voca">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="high-voca">
+            <div class="voca-pane-heading">
                 <div>
                     <h2>고등 VOCA</h2>
                     <p>학년별 단어 과정</p>
@@ -175,8 +114,8 @@
         </section>
 
         {% if current_user.is_admin and current_user.admin_type == 'A' %}
-        <section class="tab-pane fade curriculum-section" id="voca-trash">
-            <div class="section-heading">
+        <section class="tab-pane fade" id="voca-trash">
+            <div class="voca-pane-heading">
                 <div>
                     <h2><i class="bi bi-trash3" aria-hidden="true"></i> 휴지통</h2>
                     <p>삭제한 Village VOCA 과정은 단어와 학습 기록을 유지한 채 복구할 수 있습니다.</p>
@@ -207,6 +146,7 @@
         </section>
         {% endif %}
     </div>
+    </section>
 </div>
 {% endblock %}
 
@@ -234,6 +174,20 @@ document.addEventListener('DOMContentLoaded', () => {
     tabs.forEach((tab) => {
         tab.addEventListener('click', () => activateTab(tab.dataset.bsTarget));
     });
+
+    const gradeTabs = [...document.querySelectorAll('.voca-grade-tab')];
+    const activateGrade = (grade) => {
+        gradeTabs.forEach((tab) => {
+            const isActive = tab.dataset.vocaGrade === grade;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', String(isActive));
+        });
+        document.querySelectorAll('.voca-grade-panel').forEach((panel) => {
+            panel.classList.toggle('d-none', panel.dataset.vocaGradePanel !== grade);
+        });
+    };
+
+    gradeTabs.forEach((tab) => tab.addEventListener('click', () => activateGrade(tab.dataset.vocaGrade)));
 
     const hashTarget = window.location.hash;
     if (tabs.some((tab) => tab.dataset.bsTarget === hashTarget)) {
