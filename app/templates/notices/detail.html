@@ -3,7 +3,7 @@
 {% block title %}{{ notice.title }} - 공지사항{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261016-preview-v1">
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <div class="community-back-row">
         <a href="{{ url_for('main.notices') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> 공지사항</a>
     </div>
-    <article class="notice-detail">
+    <article class="notice-detail{% if notice.attachment %} notice-detail-with-preview{% endif %}">
         <header>
             <p class="community-kicker">NOTICE</p>
             <h1 id="notice-title">{{ notice.title }}</h1>
@@ -24,12 +24,50 @@
             <div class="notice-attachment-info">
                 <h2 id="notice-attachment-heading">첨부자료</h2>
                 <p class="notice-attachment-name">{{ notice.attachment.original_name }}</p>
-                <p class="notice-attachment-meta">PowerPoint 파일 · {% if notice.attachment.size_bytes >= 1048576 %}{{ '%.1f'|format(notice.attachment.size_bytes / 1048576) }} MB{% else %}{{ '%.1f'|format(notice.attachment.size_bytes / 1024) }} KB{% endif %} · 다운로드 후 열어주세요.</p>
+                <p class="notice-attachment-meta">PowerPoint 파일 · {% if notice.attachment.size_bytes >= 1048576 %}{{ '%.1f'|format(notice.attachment.size_bytes / 1048576) }} MB{% else %}{{ '%.1f'|format(notice.attachment.size_bytes / 1024) }} KB{% endif %}</p>
             </div>
             <a class="btn btn-primary notice-attachment-download" href="{{ url_for('main.notice_attachment', notice_id=notice.id) }}">
-                <i class="bi bi-download" aria-hidden="true"></i> 다운로드
+                <i class="bi bi-download" aria-hidden="true"></i> 원본 다운로드
                 <span class="visually-hidden">: {{ notice.attachment.original_name }}</span>
             </a>
+        </section>
+        <section class="notice-preview" aria-labelledby="notice-preview-heading" tabindex="0"
+                 data-notice-preview
+                 data-status-url="{{ url_for('main.notice_preview_status', notice_id=notice.id) }}"
+                 data-prepare-url="{{ url_for('main.notice_preview_prepare', notice_id=notice.id) }}"
+                 data-page-url="{{ url_for('main.notice_preview_page', notice_id=notice.id, page=0) }}"
+                 data-csrf-token="{{ csrf_token }}">
+            <header class="notice-preview-header">
+                <div>
+                    <h2 id="notice-preview-heading">슬라이드 미리보기</h2>
+                    <p>파일을 내려받지 않고 바로 확인하세요.</p>
+                </div>
+                <button class="notice-preview-expand" type="button" data-preview-expand hidden
+                        aria-label="슬라이드 전체 화면으로 보기" aria-pressed="false">
+                    <i class="bi bi-arrows-fullscreen" aria-hidden="true"></i>
+                    <span data-preview-expand-label>전체 화면</span>
+                </button>
+            </header>
+            <div class="notice-preview-stage" data-preview-stage aria-busy="true">
+                <div class="notice-preview-message" data-preview-message role="status" aria-live="polite">
+                    <span class="notice-preview-spinner" data-preview-spinner aria-hidden="true"></span>
+                    <p data-preview-message-text>슬라이드를 준비하고 있습니다.</p>
+                    <p class="notice-preview-message-help" data-preview-message-help>첫 미리보기는 잠시 시간이 걸릴 수 있습니다.</p>
+                    <button class="notice-preview-retry" type="button" data-preview-retry hidden>다시 시도</button>
+                </div>
+                <img class="notice-preview-slide" data-preview-image hidden alt="첨부자료 슬라이드">
+            </div>
+            <div class="notice-preview-toolbar" data-preview-toolbar hidden>
+                <button class="notice-preview-page-button" type="button" data-preview-prev aria-label="이전 슬라이드" disabled>
+                    <i class="bi bi-chevron-left" aria-hidden="true"></i><span>이전</span>
+                </button>
+                <p class="notice-preview-counter" data-preview-counter role="status" aria-live="polite" aria-atomic="true"></p>
+                <button class="notice-preview-page-button" type="button" data-preview-next aria-label="다음 슬라이드" disabled>
+                    <span>다음</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+            <p class="notice-preview-footnote">정적 미리보기이므로 애니메이션·동영상·소리는 재생되지 않습니다. 원본과 글꼴이나 배치가 다를 수 있습니다.</p>
+            <noscript><p class="notice-preview-noscript">미리보기를 사용하려면 브라우저에서 JavaScript를 켜주세요. 위의 원본 다운로드로도 자료를 열 수 있습니다.</p></noscript>
         </section>
         {% endif %}
         {% if current_user.is_admin %}
@@ -43,4 +81,11 @@
         {% endif %}
     </article>
 </section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if notice.attachment %}
+<script src="{{ url_for('static', filename='js/notice-preview.js') }}?v=20261016-preview-v1" defer></script>
+{% endif %}
 {% endblock %}
