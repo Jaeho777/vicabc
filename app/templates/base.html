@@ -6,7 +6,8 @@
     <title>{% block title %}VIC 애플리케이션{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=20260802-voca-alignment-v8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=20260802-voca-alignment-v9">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/account-navigation.css') }}?v=20261016-profile-v1">
     {% block extra_head %}{% endblock %}
 
 
@@ -22,12 +23,19 @@
             {% if request.endpoint == 'main.index' %}
             <ul class="navbar-nav dashboard-account-nav">
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item vic-user-name">
-                        <span class="vic-user-avatar">{{ (current_user.full_name or current_user.username)[0] }}</span>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.notices') }}">공지사항</a></li>
+                    {% if current_user.is_admin %}
+                    <li class="nav-item"><a class="nav-link account-write-link" href="{{ url_for('main.notice_create') }}">공지 작성</a></li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link account-profile-link" href="{{ url_for('auth.profile') }}">
+                            <span class="vic-user-avatar" aria-hidden="true">{{ (current_user.full_name or current_user.username)[0] }}</span>
+                            <span>마이페이지</span>
+                        </a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a></li>
                 {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>
                 {% endif %}
             </ul>
             {% else %}
@@ -64,14 +72,22 @@
                 </ul>
                 <ul class="navbar-nav vic-account-nav">
                     {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if (request.endpoint or '').startswith('main.notice') %}active{% endif %}" href="{{ url_for('main.notices') }}">공지사항</a>
+                        </li>
                         {% if current_user.is_admin %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint.startswith('admin.') %}active{% endif %}" href="{{ url_for('admin.admin') }}">관리자</a>
+                            <a class="nav-link account-write-link" href="{{ url_for('main.notice_create') }}">공지 작성</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if (request.endpoint or '').startswith('admin.') %}active{% endif %}" href="{{ url_for('admin.admin') }}">관리자</a>
                         </li>
                         {% endif %}
-                        <li class="nav-item vic-user-name">
-                            <span class="vic-user-avatar">{{ (current_user.full_name or current_user.username)[0] }}</span>
-                            <span>{{ current_user.full_name or current_user.username }}</span>
+                        <li class="nav-item">
+                            <a class="nav-link account-profile-link {% if request.endpoint == 'auth.profile' %}active{% endif %}" href="{{ url_for('auth.profile') }}"{% if request.endpoint == 'auth.profile' %} aria-current="page"{% endif %}>
+                                <span class="vic-user-avatar" aria-hidden="true">{{ (current_user.full_name or current_user.username)[0] }}</span>
+                                <span>마이페이지</span>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a>

@@ -1,0 +1,30 @@
+/* Shared account links, kept separate from learning-page styles. */
+.vic-navbar .account-profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.vic-navbar .account-write-link { color: #225fbe; font-weight: 700; }
+.vic-navbar .nav-link { white-space: nowrap; }
+.account-notice-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+.account-notice-help { margin: 0 0 18px; color: #617185; font-size: .84rem; line-height: 1.7; }
+
+body.theme-dashboard .dashboard-navbar .container { flex-wrap: wrap; gap: 12px; }
+body.theme-dashboard .dashboard-account-nav { flex-wrap: wrap; justify-content: flex-end; column-gap: 16px; row-gap: 10px; }
+body.theme-dashboard .dashboard-account-nav .account-profile-link { display: inline-flex; align-items: center; gap: 7px; }
+
+@media (min-width: 992px) {
+    .vic-navbar:not(.dashboard-navbar) .vic-brand { font-size: 1rem; }
+    .vic-navbar .vic-account-nav { gap: 2px; }
+    .vic-navbar .vic-account-nav .nav-link { padding-inline: 6px; font-size: .8rem; }
+}
+
+@media (max-width: 560px) {
+    body.theme-dashboard .dashboard-navbar .container { padding-block: 13px; }
+    body.theme-dashboard .dashboard-account-nav { flex-basis: 100%; justify-content: flex-start; margin-left: 0; column-gap: 16px; }
+    body.theme-dashboard .dashboard-account-nav .nav-link { font-size: .78rem; }
+    body.theme-dashboard .dashboard-account-nav .vic-user-avatar { width: 25px; height: 25px; }
+    .account-notice-actions { gap: 10px; }
+}
