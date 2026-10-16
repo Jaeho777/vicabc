@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ notice.attachment.original_name }} - 슬라이드 미리보기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notice-viewer.css') }}?v=20261016-iframe-v2">
+    <script src="{{ url_for('static', filename='js/notice-preview.js') }}?v=20261016-iframe-v2" defer></script>
+</head>
+<body>
+    <main class="notice-preview" aria-labelledby="viewer-title" tabindex="0"
+          data-notice-preview
+          data-status-url="{{ url_for('main.notice_preview_status', notice_id=notice.id) }}"
+          data-prepare-url="{{ url_for('main.notice_preview_prepare', notice_id=notice.id) }}"
+          data-page-url="{{ url_for('main.notice_preview_page', notice_id=notice.id, page=0) }}"
+          data-csrf-token="{{ csrf_token }}">
+        <header class="notice-preview-header">
+            <div class="notice-preview-heading">
+                <h1 id="viewer-title" title="{{ notice.attachment.original_name }}">{{ notice.attachment.original_name }}</h1>
+                <p>슬라이드 미리보기</p>
+            </div>
+            <button class="notice-preview-expand" type="button" data-preview-expand hidden
+                    aria-label="슬라이드 전체 화면으로 보기" aria-pressed="false">
+                <span aria-hidden="true">⛶</span>
+                <span data-preview-expand-label>전체 화면</span>
+            </button>
+        </header>
+        <div class="notice-preview-stage" data-preview-stage aria-busy="true">
+            <div class="notice-preview-message" data-preview-message role="status" aria-live="polite">
+                <span class="notice-preview-spinner" data-preview-spinner aria-hidden="true"></span>
+                <p data-preview-message-text>슬라이드를 준비하고 있습니다.</p>
+                <p class="notice-preview-message-help" data-preview-message-help>첫 미리보기는 잠시 시간이 걸릴 수 있습니다.</p>
+                <button class="notice-preview-retry" type="button" data-preview-retry hidden>다시 시도</button>
+            </div>
+            <img class="notice-preview-slide" data-preview-image hidden alt="첨부자료 슬라이드">
+        </div>
+        <nav class="notice-preview-toolbar" data-preview-toolbar hidden aria-label="슬라이드 이동">
+            <button class="notice-preview-page-button" type="button" data-preview-prev aria-label="이전 슬라이드" disabled>
+                <span aria-hidden="true">‹</span><span>이전</span>
+            </button>
+            <p class="notice-preview-counter" data-preview-counter role="status" aria-live="polite" aria-atomic="true"></p>
+            <button class="notice-preview-page-button" type="button" data-preview-next aria-label="다음 슬라이드" disabled>
+                <span>다음</span><span aria-hidden="true">›</span>
+            </button>
+        </nav>
+        <footer class="notice-preview-footnote">정적 미리보기: 애니메이션·영상·소리는 재생되지 않으며 원본과 글꼴·배치가 다를 수 있습니다.</footer>
+        <noscript><p class="notice-preview-noscript">미리보기를 사용하려면 브라우저에서 JavaScript를 켜주세요.</p></noscript>
+    </main>
+</body>
+</html>

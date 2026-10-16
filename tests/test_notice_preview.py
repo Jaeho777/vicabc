@@ -103,19 +103,15 @@ class NoticePreviewRouteTests(unittest.TestCase):
         self.assertEqual(response.get_json(), payload)
         prepare.assert_called_once_with(self.notice.attachment)
 
-    def test_notice_detail_exposes_same_origin_viewer_and_csrf_endpoints(self):
+    def test_notice_detail_exposes_same_origin_iframe_instead_of_inline_viewer(self):
         self.sign_in(self.student)
         response = self.client.get(f"/notices/{self.notice.id}")
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        self.assertIn("data-notice-preview", html)
-        self.assertIn(f'data-status-url="{self.preview_url()}"', html)
-        self.assertIn(f'data-prepare-url="{self.preview_url("/prepare")}"', html)
-        self.assertIn(f'data-page-url="{self.preview_url("/pages/0")}"', html)
-        self.assertIn('data-csrf-token="notice-test-csrf"', html)
-        self.assertIn("data-preview-prev", html)
-        self.assertIn("data-preview-next", html)
-        self.assertIn("data-preview-expand", html)
+        self.assertIn("<iframe", html)
+        self.assertIn(f'src="{self.preview_url("/viewer")}"', html)
+        self.assertNotIn("data-status-url=", html)
+        self.assertNotIn("data-prepare-url=", html)
         self.assertNotIn("view.officeapps.live.com", html)
         self.assertNotIn("docs.google.com/gview", html)
 

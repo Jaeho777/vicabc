@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import abort, current_app, flash, jsonify, redirect, render_template, request, send_file, url_for
+from flask import abort, current_app, flash, jsonify, make_response, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
 from werkzeug.exceptions import RequestEntityTooLarge
 
@@ -27,7 +27,7 @@ def index():
     return render_template("index.html", notices=notices, rankings=rankings)
 
 
-@main_bp.route("/notices")
+@main_bp.route("/notices", strict_slashes=False)
 @login_required
 def notices():
     notice_list = Notice.query.order_by(Notice.published_at.desc(), Notice.id.desc()).all()
@@ -77,6 +77,23 @@ def _private_preview_response(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.vary.add("Cookie")
     return response
+
+
+@main_bp.route("/notices/<int:notice_id>/preview/viewer")
+@login_required
+def notice_preview_viewer(notice_id):
+    notice = _notice_with_attachment(notice_id)
+    response = make_response(render_template(
+        "notices/preview.html", notice=notice, csrf_token=notice_csrf_token(),
+    ))
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'none'; script-src 'self'; style-src 'self'; "
+        "img-src 'self' blob:; connect-src 'self'; frame-ancestors 'self'; "
+        "base-uri 'none'; form-action 'none'; object-src 'none'"
+    )
+    response.headers["Referrer-Policy"] = "same-origin"
+    return _private_preview_response(response)
 
 
 @main_bp.route("/notices/<int:notice_id>/preview")
