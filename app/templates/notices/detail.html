@@ -3,7 +3,7 @@
 {% block title %}{{ notice.title }} - 공지사항{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261016-iframe-v2">
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <div class="community-back-row">
         <a href="{{ url_for('main.notices') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> 공지사항</a>
     </div>
-    <article class="notice-detail">
+    <article class="notice-detail{% if notice.attachment %} notice-detail-with-preview{% endif %}">
         <header>
             <p class="community-kicker">NOTICE</p>
             <h1 id="notice-title">{{ notice.title }}</h1>
@@ -24,12 +24,24 @@
             <div class="notice-attachment-info">
                 <h2 id="notice-attachment-heading">첨부자료</h2>
                 <p class="notice-attachment-name">{{ notice.attachment.original_name }}</p>
-                <p class="notice-attachment-meta">PowerPoint 파일 · {% if notice.attachment.size_bytes >= 1048576 %}{{ '%.1f'|format(notice.attachment.size_bytes / 1048576) }} MB{% else %}{{ '%.1f'|format(notice.attachment.size_bytes / 1024) }} KB{% endif %} · 다운로드 후 열어주세요.</p>
+                <p class="notice-attachment-meta">PowerPoint 파일 · {% if notice.attachment.size_bytes >= 1048576 %}{{ '%.1f'|format(notice.attachment.size_bytes / 1048576) }} MB{% else %}{{ '%.1f'|format(notice.attachment.size_bytes / 1024) }} KB{% endif %}</p>
             </div>
             <a class="btn btn-primary notice-attachment-download" href="{{ url_for('main.notice_attachment', notice_id=notice.id) }}">
-                <i class="bi bi-download" aria-hidden="true"></i> 다운로드
+                <i class="bi bi-download" aria-hidden="true"></i> 원본 다운로드
                 <span class="visually-hidden">: {{ notice.attachment.original_name }}</span>
             </a>
+        </section>
+        <section class="notice-embed" aria-labelledby="notice-preview-heading">
+            <div class="notice-embed-heading">
+                <h2 id="notice-preview-heading">슬라이드 미리보기</h2>
+                <a href="{{ url_for('main.notice_preview_viewer', notice_id=notice.id) }}" target="_blank" rel="noopener">별도 창에서 보기 <span aria-hidden="true">↗</span></a>
+            </div>
+            <iframe class="notice-preview-frame" data-notice-preview-frame
+                    src="{{ url_for('main.notice_preview_viewer', notice_id=notice.id) }}"
+                    title="{{ notice.attachment.original_name }} 슬라이드 미리보기"
+                    allow="fullscreen" allowfullscreen>
+            </iframe>
+            <p class="notice-embed-help">미리보기가 보이지 않으면 위의 ‘별도 창에서 보기’를 눌러주세요.</p>
         </section>
         {% endif %}
         {% if current_user.is_admin %}

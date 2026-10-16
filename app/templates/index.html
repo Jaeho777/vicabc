@@ -49,7 +49,10 @@
         <section class="reference-panel" id="dashboard-notices" aria-labelledby="notice-title">
             <header class="reference-panel-heading">
                 <h2 id="notice-title"><span class="reference-heading-dot" aria-hidden="true"></span>공지사항</h2>
-                <a href="{{ url_for('main.notices') }}">더보기</a>
+                <div class="account-notice-actions">
+                    {% if current_user.is_admin %}<a href="{{ url_for('main.notice_create') }}">공지 작성 · PPT 업로드</a>{% endif %}
+                    <a href="{{ url_for('main.notices') }}">더보기</a>
+                </div>
             </header>
             <ul class="reference-notice-list">
                 {% for notice in notices %}

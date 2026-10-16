@@ -1,8 +1,11 @@
 # app/routes/auth.py (처음 부분만 수정)
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, current_app, make_response, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
+from sqlalchemy.exc import SQLAlchemyError
 from app.extensions import db
 from app.models.user import User
+from app.services.profile import ProfileValidationError, save_profile_name
+from app.services.profile_forms import profile_csrf_token, validate_profile_csrf_token
 # 나머지 코드는 동일
 import random
 import string
@@ -167,3 +170,41 @@ def forgot_password():
                 return redirect(url_for('auth.forgot_password'))
     
     return render_template('auth/forgot_password.html', step='find_user')
+
+
+@auth_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    """Let a signed-in user edit their own display name, and nothing else."""
+    user = current_user._get_current_object()
+    profile_name = user.full_name
+    profile_error = None
+    status = 200
+
+    if request.method == 'POST':
+        request.max_content_length = 8192
+        validate_profile_csrf_token()
+        profile_name = request.form.get('full_name', '')
+        try:
+            save_profile_name(user, profile_name)
+        except ProfileValidationError as error:
+            profile_error = str(error)
+            status = 400
+        except SQLAlchemyError:
+            current_app.logger.error('Could not save the profile display name.')
+            profile_error = '이름을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.'
+            status = 503
+        else:
+            flash('이름을 변경했습니다.', 'success')
+            return redirect(url_for('auth.profile'), code=303)
+
+    response = make_response(render_template(
+        'auth/profile.html',
+        csrf_token=profile_csrf_token(),
+        profile_name=profile_name,
+        profile_error=profile_error,
+    ), status)
+    response.headers['Cache-Control'] = 'private, no-store'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.vary.add('Cookie')
+    return response

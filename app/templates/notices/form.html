@@ -3,7 +3,7 @@
 {% block title %}{% if notice %}공지 수정{% else %}공지 작성{% endif %} - VIC 애플리케이션{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261015-ppt-v1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notices.css') }}?v=20261016-profile-v1">
 {% endblock %}
 
 {% block content %}
@@ -48,7 +48,7 @@
             {% endif %}
             <label for="notice-attachment">{% if notice and notice.attachment %}새 파일로 교체{% else %}PowerPoint 파일 선택{% endif %}</label>
             <input id="notice-attachment" name="attachment" type="file" accept=".ppt,.pptx" aria-describedby="notice-attachment-help">
-            <p id="notice-attachment-help" class="notice-upload-help">PPT 또는 PPTX 파일 1개 · 최대 20 MB<br>{% if notice and notice.attachment %}새 파일을 선택하면 저장할 때 현재 파일을 교체합니다.{% else %}첨부한 자료는 공지 상세 화면에서 다운로드할 수 있습니다.{% endif %}</p>
+            <p id="notice-attachment-help" class="notice-upload-help">PPT 또는 PPTX 파일 1개 · 최대 20 MB<br>{% if notice and notice.attachment %}새 파일을 선택하면 저장할 때 현재 파일을 교체합니다.{% else %}저장한 자료는 로그인한 사용자가 공지 안에서 바로 볼 수 있습니다.{% endif %}</p>
         </fieldset>
         <div class="notice-form-actions">
             <a class="btn btn-outline-secondary" href="{{ url_for('main.notices') }}">취소</a>

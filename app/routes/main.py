@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import abort, current_app, flash, redirect, render_template, request, send_file, url_for
+from flask import abort, current_app, flash, jsonify, make_response, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
 from werkzeug.exceptions import RequestEntityTooLarge
 
@@ -16,6 +16,7 @@ from app.services.notice_attachments import (
     save_notice,
 )
 from app.services.notice_forms import notice_csrf_token, validate_notice_csrf_token
+from app.services.notice_preview import prepare_preview, preview_page_path, preview_status
 
 
 @main_bp.route("/")
@@ -26,7 +27,7 @@ def index():
     return render_template("index.html", notices=notices, rankings=rankings)
 
 
-@main_bp.route("/notices")
+@main_bp.route("/notices", strict_slashes=False)
 @login_required
 def notices():
     notice_list = Notice.query.order_by(Notice.published_at.desc(), Notice.id.desc()).all()
@@ -62,6 +63,72 @@ def notice_attachment(notice_id):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.vary.add("Cookie")
     return response
+
+
+def _notice_with_attachment(notice_id):
+    notice = Notice.query.get_or_404(notice_id)
+    if not notice.attachment or not attachment_path(notice.attachment.storage_name).is_file():
+        abort(404)
+    return notice
+
+
+def _private_preview_response(response):
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.vary.add("Cookie")
+    return response
+
+
+@main_bp.route("/notices/<int:notice_id>/preview/viewer")
+@login_required
+def notice_preview_viewer(notice_id):
+    notice = _notice_with_attachment(notice_id)
+    response = make_response(render_template(
+        "notices/preview.html", notice=notice, csrf_token=notice_csrf_token(),
+    ))
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'none'; script-src 'self'; style-src 'self'; "
+        "img-src 'self' blob:; connect-src 'self'; frame-ancestors 'self'; "
+        "base-uri 'none'; form-action 'none'; object-src 'none'"
+    )
+    response.headers["Referrer-Policy"] = "same-origin"
+    return _private_preview_response(response)
+
+
+@main_bp.route("/notices/<int:notice_id>/preview")
+@login_required
+def notice_preview_status(notice_id):
+    notice = _notice_with_attachment(notice_id)
+    return _private_preview_response(jsonify(preview_status(notice.attachment)))
+
+
+@main_bp.route("/notices/<int:notice_id>/preview/prepare", methods=["POST"])
+@login_required
+def notice_preview_prepare(notice_id):
+    request.max_content_length = 4096
+    validate_notice_csrf_token()
+    notice = _notice_with_attachment(notice_id)
+    result = prepare_preview(notice.attachment)
+    response = jsonify(result)
+    response.status_code = {
+        "ready": 200, "pending": 202, "busy": 202, "unavailable": 503, "error": 422,
+    }.get(result["state"], 500)
+    if result.get("retry_after"):
+        response.headers["Retry-After"] = str(result["retry_after"])
+    return _private_preview_response(response)
+
+
+@main_bp.route("/notices/<int:notice_id>/preview/pages/<int:page>")
+@login_required
+def notice_preview_page(notice_id, page):
+    notice = _notice_with_attachment(notice_id)
+    try:
+        path = preview_page_path(notice.attachment, page)
+    except (ValueError, FileNotFoundError):
+        abort(404)
+    response = send_file(path, mimetype="image/png", conditional=False, etag=False, max_age=0)
+    return _private_preview_response(response)
 
 
 @main_bp.route("/notices/new", methods=["GET", "POST"])

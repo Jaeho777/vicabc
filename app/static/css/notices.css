@@ -193,6 +193,63 @@
     margin-right: 4px;
 }
 
+/* The slide viewer lives in its own document to avoid shared site CSS. */
+.notice-detail-with-preview .notice-detail-body {
+    min-height: 0;
+    padding: 22px 0;
+}
+
+.notice-embed {
+    overflow: hidden;
+    margin-bottom: 28px;
+    border: 1px solid #dce5f0;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.notice-embed-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e7ecf3;
+}
+
+.notice-embed-heading h2 {
+    margin: 0;
+    color: #233b58;
+    font-size: 0.94rem;
+    font-weight: 750;
+}
+
+.notice-embed-heading a {
+    flex: 0 0 auto;
+    color: #315b92;
+    font-size: 0.78rem;
+    text-decoration: none;
+}
+
+.notice-embed-heading a:hover { text-decoration: underline; }
+.notice-embed-heading a:focus-visible { outline: 3px solid #92b3fa; outline-offset: 3px; }
+
+.notice-preview-frame {
+    display: block;
+    width: 100%;
+    height: clamp(380px, calc(42vw + 150px), 720px);
+    border: 0;
+    background: #edf1f6;
+}
+
+.notice-embed-help {
+    margin: 0;
+    padding: 10px 18px;
+    border-top: 1px solid #edf1f6;
+    color: #6b7d91;
+    font-size: 0.73rem;
+    line-height: 1.7;
+}
+
 .notice-row-title-group {
     display: flex;
     align-items: center;
@@ -246,5 +303,27 @@
 
     .notice-attachment-download {
         width: 100%;
+    }
+
+    .notice-embed-heading {
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .notice-embed-heading h2 {
+        font-size: 0.86rem;
+    }
+
+    .notice-embed-heading a {
+        font-size: 0.72rem;
+    }
+
+    .notice-preview-frame {
+        height: 400px;
+    }
+
+    .notice-embed-help {
+        padding: 10px 14px;
+        font-size: 0.7rem;
     }
 }

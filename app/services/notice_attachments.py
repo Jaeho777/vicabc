@@ -166,6 +166,10 @@ def _remove_file(storage_name):
         attachment_path(storage_name).unlink(missing_ok=True)
     except OSError:
         current_app.logger.exception("Could not clean up notice attachment")
+    # Import locally: the preview service also uses the validated attachment path.
+    from app.services.notice_preview import remove_preview
+
+    remove_preview(storage_name)
 
 
 def save_notice(notice, upload=None, remove_attachment=False):
